@@ -11,4 +11,5 @@ public class MainActivity extends AppCompatActivity {
         int a;
         setContentView(R.layout.activity_main);
     }
+    private int UMUMUM;
 }
