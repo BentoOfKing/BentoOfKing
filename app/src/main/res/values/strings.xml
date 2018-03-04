@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">便當王</string>
+    <string name="location">地點</string>
+    <string name="sort">排序方式</string>
+    <string name="filter">過濾</string>
 </resources>
