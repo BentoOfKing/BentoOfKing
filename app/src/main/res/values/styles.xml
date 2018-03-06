@@ -10,7 +10,7 @@
     </style>
     <style name="myToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextColor">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
         <item name="contentInsetStart">0dp</item>
     </style>
-
 </resources>

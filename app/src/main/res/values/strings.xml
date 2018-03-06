@@ -3,4 +3,7 @@
     <string name="location">地點</string>
     <string name="sort">排序方式</string>
     <string name="filter">過濾</string>
+    <string name="menu_search">搜尋</string>
+    <string name="open">開啟</string>
+    <string name="close">關閉</string>
 </resources>
