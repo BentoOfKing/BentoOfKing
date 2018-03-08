@@ -6,4 +6,9 @@
     <string name="menu_search">搜尋</string>
     <string name="open">開啟</string>
     <string name="close">關閉</string>
+    <string name="map">地圖</string>
+    <string name="list">清單</string>
+    <string name="orderNow">立即訂購</string>
+    <string name="undo">還原</string>
+    <string name="clear">清除</string>
 </resources>

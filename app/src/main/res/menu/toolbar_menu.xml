@@ -7,4 +7,10 @@
         app:showAsAction="ifRoom"
         android:title="@string/menu_search"
         ></item>
+    <item
+        android:id="@+id/action_mode"
+        android:icon="@drawable/ic_map"
+        app:showAsAction="ifRoom"
+        android:title="@string/map"
+        ></item>
 </menu>

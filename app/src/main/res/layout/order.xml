@@ -11,6 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -21,47 +22,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!-- The main content view -->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <Button
+                android:id="@+id/orderButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/locationButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/location" />
-
-                <Button
-                    android:id="@+id/sortButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/sort" />
-
-                <Button
-                    android:id="@+id/filterButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/filter" />
-            </LinearLayout>
+                android:text="@string/orderNow" />
 
             <ListView
-                android:id="@+id/storeListView"
+                android:id="@+id/orderMenu"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/linearLayout" />
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/orderStatisticsLinearLayout"
+                android:layout_below="@+id/orderButton"></ListView>
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/orderStatisticsLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/orderStatisticsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="30"
+                    android:text="共 0 個便當，0 元"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/undoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/undo" />
+
+                <Button
+                    android:id="@+id/clearButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/clear" />
+            </LinearLayout>
+        </RelativeLayout>
         <!-- The navigation drawer -->
         <ListView
             android:id="@+id/drawerListView"
