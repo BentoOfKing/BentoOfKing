@@ -41,7 +41,7 @@
     <string name="push_name">推播名稱</string>
     <string name="send_time">發送時間</string>
     <string name="push_content">推播內容</string>
-
+    <string name="addpush">新增推播</string>
 
 
 </resources>
