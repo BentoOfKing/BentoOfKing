@@ -120,19 +120,18 @@
                 <TextView
                     android:id="@+id/Menu"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/menu"
                     android:textSize="30sp" />
 
-                <EditText
-                    android:id="@+id/menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
+                <ListView
+                    android:id="@+id/MenuListView"
+                    android:layout_width="160dp"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/linearLayout" />
+
+
 
                 <Button
                     android:id="@+id/menuupdate"
