@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/storename"
-                    android:textSize="36sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/userName"
@@ -72,8 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/storeaddress"
-                    android:textSize="36sp" />
-
+                    android:textSize="@dimen/title_size" />
 
 
                 <EditText
@@ -94,16 +93,16 @@
 
                 <TextView
                     android:id="@+id/Phone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/phone"
-                    android:textSize="36sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/phone"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textPersonName"
@@ -123,18 +122,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/menu"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <ListView
                     android:id="@+id/MenuListView"
-                    android:layout_width="160dp"
+                    android:layout_width="170dp"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/linearLayout" />
 
 
                 <Button
                     android:id="@+id/menuupdate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/update" />

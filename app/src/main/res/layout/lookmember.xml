@@ -46,11 +46,11 @@
 
                 <TextView
                     android:id="@+id/MemberNumber"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/member_number"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/memberNumber"
@@ -70,11 +70,11 @@
 
                 <TextView
                     android:id="@+id/Sex"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/sex"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/sex"
@@ -94,11 +94,11 @@
 
                 <TextView
                     android:id="@+id/Nickname"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/nickname"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/nickname"
@@ -118,11 +118,11 @@
 
                 <TextView
                     android:id="@+id/E-mail"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/email"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/e-mail"
@@ -142,11 +142,11 @@
 
                 <TextView
                     android:id="@+id/Belongstore"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/belongstore"
-                    android:textSize="36sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/belong"
@@ -171,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/commen"
-                    android:textSize="32sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/commen"
@@ -192,11 +192,11 @@
 
                 <TextView
                     android:id="@+id/Status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/status"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/status"

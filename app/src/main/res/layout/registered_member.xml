@@ -44,11 +44,11 @@
 
                 <TextView
                     android:id="@+id/MemberNumber"
-                    android:layout_width="wrap_content"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/member_number"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/memberNumber"
@@ -68,11 +68,11 @@
 
                 <TextView
                     android:id="@+id/Password"
-                    android:layout_width="wrap_content"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/password"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/password"
@@ -92,41 +92,42 @@
 
                 <TextView
                     android:id="@+id/Sex"
-                    android:layout_width="wrap_content"
+                    android:layout_width="275dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/sex"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/radiobutton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioGroup
+                <LinearLayout
+                    android:id="@+id/radiobutton"
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/radio_m"
+                    <RadioGroup
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="checkButton"
-                        android:text="@string/man" />
+                        android:layout_height="44dp"
+                        android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/radio_f"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="checkButton"
-                        android:text="@string/woman" />
-                </RadioGroup>
+                        <RadioButton
+                            android:id="@+id/radio_m"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="checkButton"
+                            android:text="@string/man" />
+
+                        <RadioButton
+                            android:id="@+id/radio_f"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="checkButton"
+                            android:text="@string/woman" />
+                    </RadioGroup>
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -137,11 +138,11 @@
 
                 <TextView
                     android:id="@+id/Nickname"
-                    android:layout_width="wrap_content"
+                    android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/nickname"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/nickname"
@@ -165,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/email"
-                    android:textSize="40sp" />
+                    android:textSize="@dimen/title_size" />
 
                 <EditText
                     android:id="@+id/e-mail"
