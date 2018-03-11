@@ -114,7 +114,7 @@
             <LinearLayout
                 android:id="@+id/Menu_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="197dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -128,9 +128,8 @@
                 <ListView
                     android:id="@+id/MenuListView"
                     android:layout_width="160dp"
-                    android:layout_height="60dp"
+                    android:layout_height="match_parent"
                     android:layout_below="@+id/linearLayout" />
-
 
 
                 <Button
