@@ -145,7 +145,7 @@
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/belongstore"
+                    android:text="@string/status"
                     android:textSize="@dimen/title_size" />
 
                 <EditText
@@ -173,14 +173,6 @@
                     android:text="@string/commen"
                     android:textSize="@dimen/title_size" />
 
-                <EditText
-                    android:id="@+id/commen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
             </LinearLayout>
 
 
@@ -190,22 +182,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/Status"
-                    android:layout_width="160dp"
+                <ListView
+                    android:id="@+id/orderMenu"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/status"
-                    android:textSize="@dimen/title_size" />
-
-                <EditText
-                    android:id="@+id/status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
+                    android:layout_above="@+id/orderStatisticsLinearLayout"
+                    android:layout_below="@+id/orderButton"></ListView>
             </LinearLayout>
 
 
