@@ -15,7 +15,9 @@
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="對手清單"
+        />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
