@@ -8,9 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/myToolbar</item>
     </style>
+
     <style name="myToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="contentInsetStart">0dp</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -16,7 +16,6 @@
     <string name="sex">性別：</string>
     <string name="man">男</string>
     <string name="woman">女</string>
-    <string name="nickname">暱稱：</string>
     <string name="email">e-mail：</string>
     <string name="confirm">確認</string>
     <string name="cancel">取消</string>
@@ -42,10 +41,10 @@
     <string name="send_time">發送時間</string>
     <string name="push_content">推播內容</string>
     <string name="addpush">新增推播</string>
-
-
-
-
-
-
+    <string name="nickname">暱稱：</string>
+    <string name="login">登入</string>
+    <string name="register">註冊</string>
+    <string name="becomeStore">成為店家</string>
+    <string name="about">關於</string>
+    <string name="title_activity_register">RegisterActivity</string>
 </resources>
