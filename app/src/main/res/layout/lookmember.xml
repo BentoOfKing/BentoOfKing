@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -12,11 +12,11 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_weight="1"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="查看店家"
+        />
 
 
     <android.support.v4.widget.DrawerLayout
@@ -134,6 +134,33 @@
                     android:text="Name" />
             </LinearLayout>
 
+<<<<<<< HEAD
+=======
+            <LinearLayout
+                android:id="@+id/Belongstoreframe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/Belongstore"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/status"
+                    android:textSize="@dimen/title_size" />
+
+                <EditText
+                    android:id="@+id/belong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:text="Name" />
+            </LinearLayout>
+
+>>>>>>> origin/master
 
             <LinearLayout
                 android:id="@+id/Commentframe"
@@ -141,6 +168,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+<<<<<<< HEAD
+=======
+                <TextView
+                    android:id="@+id/Commen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/commen"
+                    android:textSize="@dimen/title_size" />
+
+>>>>>>> origin/master
             </LinearLayout>
 
 
@@ -150,31 +188,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/Status"
-                    android:layout_width="160dp"
+                <ListView
+                    android:id="@+id/orderMenu"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/status"
-                    android:textSize="@dimen/title_size" />
-
-                <EditText
-                    android:id="@+id/status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
+                    android:layout_above="@+id/orderStatisticsLinearLayout"
+                    android:layout_below="@+id/orderButton"></ListView>
             </LinearLayout>
-
-
-
-
-
-
-
-
 
 
         </LinearLayout>
@@ -187,7 +207,7 @@
             android:background="#111"
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" >
+            android:dividerHeight="0dp">
 
 
         </ListView>
