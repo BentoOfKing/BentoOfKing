@@ -47,4 +47,5 @@
     <string name="becomeStore">成為店家</string>
     <string name="about">關於</string>
     <string name="title_activity_register">RegisterActivity</string>
-</resources>
+    <string name="mainActivity">主頁</string>
+    </resources>
