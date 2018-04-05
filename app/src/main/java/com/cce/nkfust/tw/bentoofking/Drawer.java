@@ -39,7 +39,7 @@ public class Drawer extends AppCompatActivity{
                     //主頁
                     intent.setClass(context,MainActivity.class);
                     context.startActivity(intent);
-                    //((Activity)context).finish();
+                    ((Activity)context).finish();
                     break;
                 case 1:
                     //登入
@@ -48,7 +48,7 @@ public class Drawer extends AppCompatActivity{
                     //註冊
                     intent.setClass(context,RegisterActivity.class);
                     context.startActivity(intent);
-                    //((Activity)context).finish();
+                    ((Activity)context).finish();
                     break;
                 case 3:
                     //成為店家

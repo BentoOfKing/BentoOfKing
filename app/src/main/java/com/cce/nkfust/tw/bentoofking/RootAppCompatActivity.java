@@ -13,7 +13,7 @@ public class RootAppCompatActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
-                Toast.makeText(this, "再按一次離開程式", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"再按一次離開程式", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
                 System.exit(0);
