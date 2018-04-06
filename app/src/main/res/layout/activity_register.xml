@@ -22,190 +22,165 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!-- The main content view -->
-        <LinearLayout
-            android:id="@+id/content_frame"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/Member_frame"
+            <RelativeLayout
+                android:id="@+id/content_frame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp">
 
-                <TextView
-                    android:id="@+id/MemberNumber"
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/member_number"
-                    android:textSize="@dimen/title_size" />
-
-                <EditText
-                    android:id="@+id/memberNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/Password_frame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/Password"
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/password"
-                    android:textSize="@dimen/title_size" />
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/Sex_frame"
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/Sex"
-                    android:layout_width="275dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/sex"
-                    android:textSize="@dimen/title_size" />
-
-                <LinearLayout
-                    android:id="@+id/radiobutton"
+                <TableLayout
+                    android:id="@+id/tableLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
 
-                    <RadioGroup
+                    <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:orientation="horizontal">
+                        android:layout_height="match_parent">
 
-                        <RadioButton
-                            android:id="@+id/radio_m"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                        <TextView
+                            android:id="@+id/MemberNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="@string/man" />
+                            android:gravity="center"
+                            android:text="@string/member_number"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
 
-                        <RadioButton
-                            android:id="@+id/radio_f"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                        <EditText
+                            android:id="@+id/memberNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/Password"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="@string/woman" />
-                    </RadioGroup>
-                </LinearLayout>
+                            android:gravity="center"
+                            android:text="@string/password"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
 
-            </LinearLayout>
+                        <EditText
+                            android:id="@+id/password"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
 
-            <LinearLayout
-                android:id="@+id/Nickname_frame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/Nickname"
-                    android:layout_width="105dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/nickname"
-                    android:textSize="@dimen/title_size" />
+                        <TextView
+                            android:id="@+id/Sex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/sex"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
 
-                <EditText
-                    android:id="@+id/nickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-            </LinearLayout>
+                        <RadioGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/Emailframe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                            <RadioButton
+                                android:id="@+id/radio_m"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/man" />
 
-                <TextView
-                    android:id="@+id/E-mail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/email"
-                    android:textSize="@dimen/title_size" />
+                            <RadioButton
+                                android:id="@+id/radio_f"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/woman" />
+                        </RadioGroup>
+                    </TableRow>
 
-                <EditText
-                    android:id="@+id/e-mail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-            </LinearLayout>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
+                        <TextView
+                            android:id="@+id/Nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/nickname"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
 
-            <LinearLayout
-                android:id="@+id/Button_frame"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/E-mail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/email"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <EditText
+                            android:id="@+id/e-mail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
+                </TableLayout>
 
 
                 <Button
                     android:id="@+id/registered"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tableLayout"
                     android:layout_weight="1"
                     android:text="@string/registered" />
 
-                <Button
-                    android:id="@+id/cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/cancel" />
-            </LinearLayout>
 
-
-
-
-
-
-
-
-        </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
 
         <!-- The navigation drawer -->
         <ListView
@@ -216,7 +191,9 @@
             android:background="@android:color/holo_orange_dark"
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
+            android:dividerHeight="0dp" >
+
+        </ListView>
     </android.support.v4.widget.DrawerLayout>
 
 
