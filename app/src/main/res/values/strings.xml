@@ -77,4 +77,9 @@
     <string name="repoteType">回報類型</string>
     <string name="reportContent">回報內容</string>
     <string name="deleteComment">刪除評論</string>
+    <string name="appealId">申訴ID</string>
+    <string name="appealContent">申訴內容</string>
+    <string name="appealReply">申訴回覆</string>
+    <string name="reply">回覆</string>
+    <string name="look">查看</string>
 </resources>
