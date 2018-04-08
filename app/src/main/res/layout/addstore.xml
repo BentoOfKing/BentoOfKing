@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/storename"
+                    android:text="@string/storeName"
                     android:textSize="@dimen/title_size" />
 
                 <EditText
@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/storeaddress"
+                    android:text="@string/storeAddress"
                     android:textSize="@dimen/title_size" />
 
 

@@ -17,9 +17,11 @@ import android.widget.ListView;
 
 public class Drawer extends AppCompatActivity{
     Context context;
+    Toolbar toolbar;
     void init(Context context, Toolbar toolbar, ListView drawerListView, DrawerLayout drawerLayout){
         String[] visitorMenuItem = {context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.login),context.getResources().getString(R.string.register),context.getResources().getString(R.string.becomeStore),context.getResources().getString(R.string.about)};
         this.context = context;
+        this.toolbar = toolbar;
         toolbar.setTitle("便當王");
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle((Activity) context,drawerLayout,toolbar,R.string.open,R.string.close);
         drawerToggle.syncState();
@@ -43,15 +45,18 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 1:
                     //登入
+                    intent.setClass(context,LoginActivity.class);
+                    context.startActivity(intent);
                     break;
                 case 2:
                     //註冊
                     intent.setClass(context,RegisterActivity.class);
                     context.startActivity(intent);
-                    ((Activity)context).finish();
                     break;
                 case 3:
                     //成為店家
+                    intent.setClass(context,BecomeStoreActivity.class);
+                    context.startActivity(intent);
                     break;
                 case 4:
                     //關於
@@ -61,4 +66,13 @@ public class Drawer extends AppCompatActivity{
             }
         }
     };
+    public void setToolbarNavigation(){
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Activity)context).finish();
+            }
+        });
+    }
 }

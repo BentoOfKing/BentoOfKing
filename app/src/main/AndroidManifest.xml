@@ -3,6 +3,8 @@
     package="com.cce.nkfust.tw.bentoofking">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <meta-data
         android:name="com.google.android.maps.v2.API_KEY"
@@ -22,10 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".BecomeStoreActivity" />
+        <activity android:name=".BecomeHaveStoreActivity" />
+        <activity android:name=".BecomeNotHaveStoreActivity" />
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
