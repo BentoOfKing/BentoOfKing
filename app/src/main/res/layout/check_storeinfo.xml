@@ -24,7 +24,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/storeImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="25dp"
@@ -50,7 +50,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="50dp"
             android:text="店名"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/storeImageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:text="評價"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/storeImageView"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:text="菜單"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/storeImageView"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <TextView
@@ -112,7 +112,7 @@
             android:layout_marginTop="20dp"
             android:text="店家地址"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/storeImageView" />
 
         <TextView
             android:id="@+id/textView9"
@@ -152,7 +152,7 @@
             android:layout_marginTop="20dp"
             android:text="高雄科大活動中心"
             app:layout_constraintStart_toEndOf="@+id/textView8"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/storeImageView" />
 
         <TextView
             android:id="@+id/textView13"
