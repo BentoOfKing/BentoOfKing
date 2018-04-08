@@ -14,16 +14,17 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="停權列表"
+        app:title="停權會員"
 
         />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="*"
+        android:paddingLeft="18dp"
 
-        >
+        android:paddingRight="18dp"
+        android:stretchColumns="*">
 
         <TableRow
             android:layout_width="match_parent"
@@ -33,20 +34,22 @@
 
             <TextView
                 android:id="@+id/textView37"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
 
-                android:text="@string/ban_member_id"
-                android:textAlignment="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/banMemberId"
+                android:textAlignment="textStart"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/font_size" />
 
-            <EditText
-                android:id="@+id/editText3"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:layout_weight="2"
+                android:text="TextView" />
         </TableRow>
 
         <TableRow
@@ -55,10 +58,13 @@
 
             <TextView
                 android:id="@+id/textView41"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/report_reason"
-                android:textAlignment="center"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/reportReason"
+                android:textAlignment="textStart"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/font_size" />
 
         </TableRow>
@@ -68,13 +74,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp">
 
         <TextView
             android:id="@+id/textView42"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/font_size" />
 
         <LinearLayout
@@ -87,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/ban_cancel" />
+                android:text="@string/banCancle" />
         </LinearLayout>
 
     </LinearLayout>

@@ -59,4 +59,21 @@
     <string name="touchToEdit">點一下編輯</string>
     <string name="next">下一步</string>
     <string name="lookOpponent">查看對手</string>
+    <string name="banMemberId">停權會員ID</string>
+    <string name="reportReason">檢舉原因</string>
+    <string name="banCancle">取消停權</string>
+    <string name="pushID">推播ID</string>
+    <string name="pushShop">推播店家</string>
+    <string name="pushTime">推播時間</string>
+    <string name="banContent">違規內容</string>
+    <string name="allow">允許</string>
+    <string name="refuse">拒絕</string>
+    <string name="reportId">回報ID</string>
+    <string name="reportUser">回報人</string>
+    <string name="commentContent">評論內容</string>
+    <string name="ban">停權</string>
+    <string name="delete">刪除</string>
+    <string name="repoteType">回報類型</string>
+    <string name="reportContent">回報內容</string>
+    <string name="deleteComment">刪除評論</string>
 </resources>
