@@ -60,6 +60,7 @@
     <string name="next">下一步</string>
     <string name="lookOpponent">查看對手</string>
     <string name="banMemberId">停權會員ID</string>
+    <string name="banReason">停權原因</string>
     <string name="reportReason">檢舉原因</string>
     <string name="banCancle">取消停權</string>
     <string name="pushID">推播ID</string>

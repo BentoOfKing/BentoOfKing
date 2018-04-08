@@ -16,7 +16,7 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="訊息回報"
+        app:title="回報錯誤"
         />
 
     <android.support.constraint.ConstraintLayout

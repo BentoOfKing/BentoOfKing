@@ -14,7 +14,7 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="回報訊息"
+        app:title="回報錯誤"
 
         />
 

@@ -131,21 +131,6 @@
             android:text="TextView"
             android:textSize="@dimen/font_size" />
 
-        <TextView
-            android:id="@+id/textView43"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/banContent"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/font_size" />
-
-        <TextView
-            android:id="@+id/textView44"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="@dimen/font_size" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

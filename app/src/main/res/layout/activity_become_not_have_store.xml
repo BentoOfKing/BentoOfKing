@@ -14,7 +14,7 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="成為店家"
+        app:title="編輯店家"
         />
 
     <android.support.v4.widget.DrawerLayout
