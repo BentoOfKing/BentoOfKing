@@ -52,4 +52,10 @@ public class BecomeStoreActivity extends AppCompatActivity {
             }
         }
     }
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
+            drawerLayout.closeDrawers();
+        else
+            super.onBackPressed();
+    }
 }

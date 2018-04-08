@@ -14,8 +14,7 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="便當王"
-        />
+        app:title="便當王" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"

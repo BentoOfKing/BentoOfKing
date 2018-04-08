@@ -22,4 +22,10 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.login));
 
     }
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
+            drawerLayout.closeDrawers();
+        else
+            super.onBackPressed();
+    }
 }

@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class MainActivity extends RootAppCompatActivity {
+public class MainActivity extends AppCompatActivity {
+    private long mExitTime;
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
@@ -29,6 +31,17 @@ public class MainActivity extends RootAppCompatActivity {
         public void run() {
             database = new Database();
             //database.Connect();
+        }
+    }
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
+            drawerLayout.closeDrawers();
+        else
+        if ((System.currentTimeMillis() - mExitTime) > 2000) {
+            Toast.makeText(this,"再按一次離開程式", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            System.exit(0);
         }
     }
 }

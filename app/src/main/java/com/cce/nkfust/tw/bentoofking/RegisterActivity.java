@@ -26,5 +26,10 @@ public class RegisterActivity extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout);
         toolbar.setTitle(getResources().getString(R.string.register));
     }
-
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
+            drawerLayout.closeDrawers();
+        else
+            super.onBackPressed();
+    }
 }

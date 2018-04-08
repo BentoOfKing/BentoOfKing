@@ -31,6 +31,7 @@ public class Drawer extends AppCompatActivity{
         drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,visitorMenuItem));
         drawerListView.setOnItemClickListener(drawerListener);
 
+
     }
     private ListView.OnItemClickListener drawerListener = new ListView.OnItemClickListener(){
         @Override
@@ -75,4 +76,5 @@ public class Drawer extends AppCompatActivity{
             }
         });
     }
+
 }
