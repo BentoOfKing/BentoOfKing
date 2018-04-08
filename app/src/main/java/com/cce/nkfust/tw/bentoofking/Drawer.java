@@ -41,6 +41,7 @@ public class Drawer extends AppCompatActivity{
                 case 0:
                     //主頁
                     intent.setClass(context,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
