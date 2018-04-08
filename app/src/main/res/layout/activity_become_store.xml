@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cce.nkfust.tw.bentoofking.RegisterActivity">
+    tools:context="com.cce.nkfust.tw.bentoofking.BecomeStoreActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -58,7 +58,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:inputType="textEmailAddress" />
                     </TableRow>
 
                     <TableRow
@@ -81,7 +81,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPassword" />
                     </TableRow>
 
                     <TableRow
@@ -104,83 +104,30 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPersonName" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/Sex"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/sex"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/font_size" />
-
-                        <RadioGroup
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/radio_m"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/man" />
-
-                            <RadioButton
-                                android:id="@+id/radio_f"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/woman" />
-                        </RadioGroup>
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/Nickname"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/nickname"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/font_size" />
-
-                        <EditText
-                            android:id="@+id/nickname"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPassword" />
                     </TableRow>
 
                 </TableLayout>
 
 
                 <Button
-                    android:id="@+id/registerButton"
+                    android:id="@+id/loginButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/tableLayout"
                     android:layout_weight="1"
-                    android:text="@string/registered" />
+                    android:text="@string/haveStore" />
+
+                <Button
+                    android:id="@+id/notHaveStoreButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/loginButton"
+                    android:text="@string/notHaveStore" />
+
             </RelativeLayout>
         </ScrollView>
-
         <!-- The navigation drawer -->
         <ListView
             android:id="@+id/drawerListView"
@@ -190,9 +137,7 @@
             android:background="@android:color/holo_orange_dark"
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" >
-
-        </ListView>
+            android:dividerHeight="0dp" />
     </android.support.v4.widget.DrawerLayout>
 
 
