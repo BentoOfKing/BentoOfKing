@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
     private Database database;
+    private Store store[];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,13 +25,17 @@ public class MainActivity extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout);
         toolbar.inflateMenu(R.menu.toolbar_menu);
         ConnectDatabase connectDatabase = new ConnectDatabase();
-        connectDatabase.run();
+        Thread thread = new Thread(connectDatabase);
+        thread.start();
     }
     public class ConnectDatabase implements Runnable{
         @Override
         public void run() {
             database = new Database();
-            //database.Connect();
+            if(database.GetStoreInit()) store = database.GetStore();
+            for(int i=0;i<store.length;i++){
+                System.out.println(store[i].getEmail());
+            }
         }
     }
     public void onBackPressed() {

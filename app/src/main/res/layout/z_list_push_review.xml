@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="推播店家"
+            android:text="推播內容"
             android:textSize="@dimen/font_size" />
 
         <Button
@@ -27,6 +27,6 @@
             android:id="@+id/button10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="刪除" />
+            android:text="發送" />
     </LinearLayout>
 </LinearLayout>

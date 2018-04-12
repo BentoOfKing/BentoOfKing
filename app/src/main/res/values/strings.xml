@@ -82,4 +82,5 @@
     <string name="appealReply">申訴回覆</string>
     <string name="reply">回覆</string>
     <string name="look">查看</string>
+    <string name="unban">解除</string>
 </resources>

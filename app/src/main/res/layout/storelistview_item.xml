@@ -27,7 +27,7 @@
                 android:id="@+id/storeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="店家名稱"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -35,7 +35,7 @@
                 android:id="@+id/storeStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="狀態"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
@@ -49,7 +49,7 @@
                 android:id="@+id/storeScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="店家評分"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </TableRow>
@@ -62,7 +62,7 @@
                 android:id="@+id/storePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="平均價位"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -70,7 +70,7 @@
                 android:id="@+id/storeDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="距離"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
