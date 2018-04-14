@@ -119,4 +119,8 @@ public class Database {
             return null;
         }
     }
+
+    public boolean GetStoreInit() {
+        return true;
+    }
 }

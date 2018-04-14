@@ -7,6 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private long mExitTime;
     private Toolbar toolbar;
@@ -14,6 +17,11 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Database database;
     private Store store[];
+
+    private ListView storelist;
+    List<store_list> storeLists = new ArrayList<store_list>();
+    private MyAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,14 +35,25 @@ public class MainActivity extends AppCompatActivity {
         ConnectDatabase connectDatabase = new ConnectDatabase();
         Thread thread = new Thread(connectDatabase);
         thread.start();
+
+
+
+
+
+
+
+        storelist=(ListView)findViewById(R.id.storeListView);
+        adapter = new MyAdapter(MainActivity.this,storeLists);
+        storelist.setAdapter(adapter);
     }
     public class ConnectDatabase implements Runnable{
         @Override
         public void run() {
             database = new Database();
-            store = database.GetStore();
+            if(database.GetStoreInit()) store = database.GetStore();
             for(int i=0;i<store.length;i++){
                 System.out.println(store[i].getEmail());
+                storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM"));
             }
         }
     }
