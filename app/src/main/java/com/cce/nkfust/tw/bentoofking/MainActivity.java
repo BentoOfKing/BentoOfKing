@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             database = new Database();
-            if(database.GetStoreInit()) store = database.GetStore();
+            store = database.GetStore();
             for(int i=0;i<store.length;i++){
                 System.out.println(store[i].getEmail());
             }

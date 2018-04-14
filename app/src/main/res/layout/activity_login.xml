@@ -53,7 +53,7 @@
                             android:textSize="@dimen/font_size" />
 
                         <EditText
-                            android:id="@+id/e-mailEditText"
+                            android:id="@+id/emailEditText"
                             android:layout_width="wrap_content"
                             android:layout_height="45dp"
                             android:layout_weight="2"
@@ -79,6 +79,8 @@
                             android:id="@+id/passwordEditText"
                             android:layout_width="wrap_content"
                             android:layout_height="45dp"
+                            android:layout_above="@+id/loginButton"
+                            android:layout_alignParentEnd="true"
                             android:layout_weight="2"
                             android:ems="10"
                             android:inputType="textPassword" />
