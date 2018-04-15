@@ -4,6 +4,7 @@ package com.cce.nkfust.tw.bentoofking;
  * Created by John on 2018/4/13.
  */
 
+
 public class Member {
     String Email,Password,Nickname,Sex,Favorite,State,Note;
     public Member(){}

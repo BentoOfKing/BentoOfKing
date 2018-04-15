@@ -1,6 +1,9 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -16,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private TextView loginPrompt;
     private Button loginButton;
     private Database database;
     private Member member;
@@ -29,8 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout);
         toolbar.setTitle(getResources().getString(R.string.login));
-        emailEditText = findViewById(R.id.emailEditText);
+        emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
+        loginPrompt = findViewById(R.id.loginPrompt);
         loginButton = findViewById(R.id.loginButton);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         loginButton.setOnClickListener(loginButtonHandler);
@@ -41,9 +49,36 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             DatabaseLogin databaseLogin = new DatabaseLogin();
             Thread thread = new Thread(databaseLogin);
+            
             thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if(member==null){
+                loginPrompt.setText("登入資料錯誤");
+            }
+            else{
+
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this , MainActivity.class);
+                startActivity(intent);
+            }
+
+
+
+
+
+
+
+
         }
     }
+
+
+
     public class DatabaseLogin implements Runnable{
         @Override
         public void run() {
