@@ -34,7 +34,7 @@ public class StoreLoginActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout);
+        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.storeLogin));
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -58,14 +58,22 @@ public class StoreLoginActivity extends AppCompatActivity {
             }
 
             if(store!=null){
+                userInfo = new UserInfo();
+                userInfo.setIdentity(2);
+                userInfo.putStore(store);
                 Intent intent = new Intent();
                 intent.setClass(StoreLoginActivity.this , MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);
             }else if(admin!=null){
+                userInfo = new UserInfo();
+                userInfo.setIdentity(3);
+                userInfo.putAdmin(admin);
                 Intent intent = new Intent();
                 intent.setClass(StoreLoginActivity.this , MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);;
             }else{
                 loginPrompt.setText("登入資料錯誤");

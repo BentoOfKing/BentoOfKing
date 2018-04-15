@@ -16,15 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class Drawer extends AppCompatActivity{
+    private static String passUserInfo = "USER_INFO";
     Context context;
     Toolbar toolbar;
     UserInfo userInfo;
-    int identity;
-    void init(Context context, Toolbar toolbar, ListView drawerListView, DrawerLayout drawerLayout){
-        String[] visitorMenuItem = {context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.memberLogin),context.getResources().getString(R.string.storeLogin),context.getResources().getString(R.string.register),context.getResources().getString(R.string.becomeStore),context.getResources().getString(R.string.about)};
-        String[] memberMenuItem ={context.getResources().getString(R.string.hello)+userInfo.getMember().getNickname(),context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.logout)};
-        String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.logout)};
-        String[] adminMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.logout)};
+    void init(Context context, Toolbar toolbar, ListView drawerListView, DrawerLayout drawerLayout,UserInfo userInfo){
+        this.userInfo = userInfo;
         this.context = context;
         this.toolbar = toolbar;
         toolbar.setTitle("便當王");
@@ -33,20 +30,24 @@ public class Drawer extends AppCompatActivity{
         drawerToggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(context,R.color.white));
         drawerLayout.addDrawerListener(drawerToggle);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
-        switch (identity){
+        switch (userInfo.getIdentity()){
             case 1:
+                String[] memberMenuItem ={context.getResources().getString(R.string.hello)+userInfo.getMember().getNickname(),context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.favorite),context.getResources().getString(R.string.addStore),context.getResources().getString(R.string.findOrders),context.getResources().getString(R.string.edidInfo),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,memberMenuItem));
                 drawerListView.setOnItemClickListener(memberDrawerListener);
                 break;
             case 2:
+                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,storeMenuItem));
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
             case 3:
+                String[] adminMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,adminMenuItem));
                 drawerListView.setOnItemClickListener(adminDrawerListener);
                 break;
             default:
+                String[] visitorMenuItem = {context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.memberLogin),context.getResources().getString(R.string.storeLogin),context.getResources().getString(R.string.register),context.getResources().getString(R.string.becomeStore),context.getResources().getString(R.string.about)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,visitorMenuItem));
                 drawerListView.setOnItemClickListener(visitorDrawerListener);
                 break;
@@ -64,33 +65,42 @@ public class Drawer extends AppCompatActivity{
                     //主頁
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
                 case 1:
                     //會員登入
                     intent.setClass(context,LoginActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     break;
                 case 2:
                     //店家登入
                     intent.setClass(context,StoreLoginActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     break;
                 case 3:
                     //註冊
                     intent.setClass(context,RegisterActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     break;
                 case 4:
                     //成為店家
                     intent.setClass(context,BecomeStoreActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     break;
                 case 5:
                     //關於
                     break;
                 default:
+                    intent.setClass(context,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(intent);
+                    ((Activity)context).finish();
                     break;
             }
         }
@@ -101,36 +111,32 @@ public class Drawer extends AppCompatActivity{
             Intent intent = new Intent();
             switch (i){
                 case 0:
+                    break;
+                case 1:
                     //主頁
+                    intent.setClass(context,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
+                    ((Activity)context).finish();
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
+                    break;
+                default:
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
                     ((Activity)context).finish();
-                    break;
-                case 1:
-                    //會員登入
-                    //intent.setClass(context,LoginActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 2:
-                    //店家登入
-                    //intent.setClass(context,StoreLoginActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 3:
-                    //註冊
-                    //intent.setClass(context,RegisterActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 4:
-                    //成為店家
-                    //intent.setClass(context,BecomeStoreActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 5:
-                    //關於
-                    break;
-                default:
                     break;
             }
         }
@@ -144,33 +150,33 @@ public class Drawer extends AppCompatActivity{
                     //主頁
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
                 case 1:
-                    //會員登入
-                    //intent.setClass(context,LoginActivity.class);
-                    //context.startActivity(intent);
+
                     break;
                 case 2:
-                    //店家登入
-                    //intent.setClass(context,StoreLoginActivity.class);
-                    //context.startActivity(intent);
+
                     break;
                 case 3:
-                    //註冊
-                    //intent.setClass(context,RegisterActivity.class);
-                    //context.startActivity(intent);
+
                     break;
                 case 4:
-                    //成為店家
-                    //intent.setClass(context,BecomeStoreActivity.class);
-                    //context.startActivity(intent);
+
                     break;
                 case 5:
-                    //關於
+
+                    break;
+                case 6:
+
                     break;
                 default:
+                    intent.setClass(context,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(intent);
+                    ((Activity)context).finish();
                     break;
             }
         }
@@ -184,33 +190,15 @@ public class Drawer extends AppCompatActivity{
                     //主頁
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
-                case 1:
-                    //會員登入
-                    //intent.setClass(context,LoginActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 2:
-                    //店家登入
-                    //intent.setClass(context,StoreLoginActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 3:
-                    //註冊
-                    //intent.setClass(context,RegisterActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 4:
-                    //成為店家
-                    //intent.setClass(context,BecomeStoreActivity.class);
-                    //context.startActivity(intent);
-                    break;
-                case 5:
-                    //關於
-                    break;
                 default:
+                    intent.setClass(context,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(intent);
+                    ((Activity)context).finish();
                     break;
             }
         }

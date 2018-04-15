@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 
-public class Member{
+public class Member implements Serializable{
     String Email,Password,Nickname,Sex,Favorite,State,Note;
     public Member(){}
     public Member(String Email,String Password,String Nickname,String Sex,String Favorite,String State,String Note){
