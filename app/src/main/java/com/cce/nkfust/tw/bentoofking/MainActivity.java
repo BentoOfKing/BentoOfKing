@@ -1,6 +1,7 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<store_list> storeLists = new ArrayList<store_list>();
     private StoreListViewBaseAdapter adapter;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         if(userInfo == null) userInfo = new UserInfo();
         toolbar = findViewById(R.id.toolbar);
+
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
