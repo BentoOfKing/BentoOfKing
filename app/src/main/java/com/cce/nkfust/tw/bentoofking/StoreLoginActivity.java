@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class StoreLoginActivity extends AppCompatActivity {
+    private static String passUserInfo = "USER_INFO";
+    private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
@@ -26,6 +28,8 @@ public class StoreLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_login);
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);

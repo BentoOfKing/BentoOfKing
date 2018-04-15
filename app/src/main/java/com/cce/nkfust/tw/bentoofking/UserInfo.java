@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/4/15.
  */
 
-public class UserInfo {
+public class UserInfo implements Serializable {
     private int identity;//visitor:0,member:1,,store:2,admin:3
     private Member member;
     private Store store;

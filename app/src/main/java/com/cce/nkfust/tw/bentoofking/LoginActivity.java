@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity {
+    private static String passUserInfo = "USER_INFO";
+    private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
@@ -25,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -56,10 +60,12 @@ public class LoginActivity extends AppCompatActivity {
                 loginPrompt.setText("登入資料錯誤");
             }
             else{
-
+                userInfo.putMember(member);
+                userInfo.setIdentity(1);
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this , MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);
             }
 

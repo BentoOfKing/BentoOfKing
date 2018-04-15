@@ -85,4 +85,6 @@
     <string name="unban">解除</string>
     <string name="storeLogin">店家登入</string>
     <string name="memberLogin">會員登入</string>
+    <string name="logout">登出</string>
+    <string name="hello">您好，</string>
 </resources>

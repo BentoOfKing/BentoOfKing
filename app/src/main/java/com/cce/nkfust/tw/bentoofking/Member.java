@@ -1,11 +1,13 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/4/13.
  */
 
 
-public class Member {
+public class Member{
     String Email,Password,Nickname,Sex,Favorite,State,Note;
     public Member(){}
     public Member(String Email,String Password,String Nickname,String Sex,String Favorite,String State,String Note){
