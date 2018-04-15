@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
 
         storelist=(ListView)findViewById(R.id.storeListView);
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         adapter = new MyAdapter(MainActivity.this,storeLists);
         storelist.setAdapter(adapter);
     }
