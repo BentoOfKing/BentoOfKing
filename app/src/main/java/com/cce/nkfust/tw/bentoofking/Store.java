@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/4/10.
  */
 
-public class Store {
+public class Store implements Serializable {
     String ID,Email,Password,Name,Address,Information,BusinessHours,Phone,Photo,Point,State,Note;
     public Store(){}
     public Store(String ID,String Email,String Password,String Name,String Address,String Information,String BusinessHours,String Phone,String Photo,String Point,String State,String Note){

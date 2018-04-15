@@ -28,7 +28,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout);
+        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.becomeStore));
         haveStoreButton = findViewById(R.id.storeLoginButton);
         notHaveStoreButton = findViewById(R.id.notHaveStoreButton);
@@ -44,10 +44,12 @@ public class BecomeStoreActivity extends AppCompatActivity {
             switch (view.getId()){
                 case R.id.storeLoginButton:
                     intent.setClass(BecomeStoreActivity.this,BecomeHaveStoreActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
                     startActivity(intent);
                     break;
                 case R.id.notHaveStoreButton:
                     intent.setClass(BecomeStoreActivity.this,BecomeNotHaveStoreActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
                     startActivity(intent);
                     break;
                 default:

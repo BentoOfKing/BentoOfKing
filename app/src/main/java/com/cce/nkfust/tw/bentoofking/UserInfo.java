@@ -11,7 +11,7 @@ public class UserInfo implements Serializable {
     private Member member;
     private Store store;
     private Admin admin;
-    public void reset(){
+    public UserInfo(){
         identity = 0;
         member = null;
         store = null;

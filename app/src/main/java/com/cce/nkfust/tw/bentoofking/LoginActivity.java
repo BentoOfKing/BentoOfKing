@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout);
+        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.memberLogin));
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -60,20 +60,16 @@ public class LoginActivity extends AppCompatActivity {
                 loginPrompt.setText("登入資料錯誤");
             }
             else{
+                userInfo = new UserInfo();
                 userInfo.putMember(member);
                 userInfo.setIdentity(1);
                 Intent intent = new Intent();
-                intent.setClass(LoginActivity.this , MainActivity.class);
+                intent.setClass(view.getContext() , MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);
+
             }
-
-
-
-
-
-
 
 
         }

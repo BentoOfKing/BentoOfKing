@@ -31,12 +31,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        if(userInfo == null) userInfo.reset();
+        if(userInfo == null) userInfo = new UserInfo();
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout);
+        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.inflateMenu(R.menu.toolbar_menu);
         ConnectDatabase connectDatabase = new ConnectDatabase();
         Thread thread = new Thread(connectDatabase);

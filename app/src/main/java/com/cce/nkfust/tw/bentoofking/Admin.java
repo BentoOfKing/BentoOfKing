@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/4/15.
  */
 
-public class Admin {
+public class Admin implements Serializable {
     private String Email;
     private String Password;
     public Admin(){}
