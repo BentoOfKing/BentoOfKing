@@ -86,15 +86,19 @@
                             android:inputType="textPassword" />
                     </TableRow>
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <TableRow>
 
                         <TextView
                             android:id="@+id/loginPrompt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_span="2"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+
+                            android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size" />
+
                     </TableRow>
 
                 </TableLayout>
