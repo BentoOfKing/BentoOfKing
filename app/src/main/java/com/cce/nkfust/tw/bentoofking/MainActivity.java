@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapter = new StoreListViewBaseAdapter(storeLists,inflater);
         storelist.setAdapter(adapter);
+        StoreListClickHandler storeListClickHandler = new StoreListClickHandler();
+        storelist.setOnItemClickListener(storeListClickHandler);
     }
     public class ConnectDatabase implements Runnable{
         @Override
@@ -77,4 +81,17 @@ public class MainActivity extends AppCompatActivity {
             System.exit(0);
         }
     }
+
+    private class StoreListClickHandler implements AdapterView.OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(MainActivity.this,CheckStoreInfo.class);
+            UserInfo storeInfoBundle = new UserInfo();
+            storeInfoBundle.setIdentity(2);
+            storeInfoBundle.putStore(MainActivity.this.store[position]);
+            intent.putExtra("storeInfo",storeInfoBundle);
+            startActivity(intent);
+        }
+    }
+
 }

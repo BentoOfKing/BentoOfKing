@@ -90,7 +90,7 @@
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size"
                             app:layout_constraintEnd_toStartOf="@+id/textView22"
-                            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                            app:layout_constraintTop_toBottomOf="@+id/storeAddress" />
 
                         <TextView
                             android:id="@+id/textView25"
@@ -102,7 +102,7 @@
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size"
                             app:layout_constraintStart_toEndOf="@+id/loginPrompt"
-                            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                            app:layout_constraintTop_toBottomOf="@+id/storeAddress" />
                     </TableRow>
                 </TableLayout>
 
