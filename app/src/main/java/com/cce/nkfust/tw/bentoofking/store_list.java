@@ -10,13 +10,14 @@ import android.widget.TextView;
 public class store_list {
 
 
-    private ImageView image;
+    private String imageURL;
     private String storename;
     private String evaluation;
     private String price;
     private String distance;
     private String status;
-    public store_list(String storename ,String evaluation ,String price ,String distance,String status){
+    public store_list(String storename ,String evaluation ,String price ,String distance,String status,String imageURL){
+        this.imageURL = imageURL;
         this.storename=storename;
         this.evaluation=evaluation;
         this.price=price;
@@ -51,4 +52,6 @@ public class store_list {
     public void setStatus(String status){
         this.status=status;
     }
+    public String getImageURL(){ return this.imageURL; }
+    public void setImageURL(String imageURL){ this.imageURL = imageURL; }
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/storeIcon"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginLeft="10dp"
@@ -75,7 +75,7 @@
                 android:text="距離"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
         </TableRow>
 
     </TableLayout>

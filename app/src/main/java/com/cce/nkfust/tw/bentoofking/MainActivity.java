@@ -2,6 +2,8 @@ package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        adapter = new StoreListViewBaseAdapter(storeLists,inflater);
+        adapter = new StoreListViewBaseAdapter(MainActivity.this,storeLists,inflater);
         storelist.setAdapter(adapter);
         StoreListClickHandler storeListClickHandler = new StoreListClickHandler();
         storelist.setOnItemClickListener(storeListClickHandler);
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             if(database.GetStoreInit()) store = database.GetStore();
             for(int i=0;i<store.length;i++){
                 System.out.println(store[i].getEmail());
-                storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM",store[i].getState()));
+                storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM",store[i].getState(),store[i].getPhoto()));
             }
         }
     }
@@ -94,4 +101,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private static Bitmap getBitmapFromURL(String imageUrl)
+    {
+        try
+        {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
