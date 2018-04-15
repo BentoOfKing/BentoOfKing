@@ -3,7 +3,7 @@ package com.cce.nkfust.tw.bentoofking;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class Check_StoreInfo extends AppCompatActivity {
+public class CheckStoreInfo extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
