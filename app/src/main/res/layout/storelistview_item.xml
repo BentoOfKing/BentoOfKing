@@ -75,7 +75,7 @@
                 android:text="距離"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
         </TableRow>
 
     </TableLayout>
