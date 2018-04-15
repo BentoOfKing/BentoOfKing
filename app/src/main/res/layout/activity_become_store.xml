@@ -111,7 +111,7 @@
 
 
                 <Button
-                    android:id="@+id/loginButton"
+                    android:id="@+id/storeLoginButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -123,7 +123,7 @@
                     android:id="@+id/notHaveStoreButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/loginButton"
+                    android:layout_below="@id/storeLoginButton"
                     android:text="@string/notHaveStore" />
 
             </RelativeLayout>

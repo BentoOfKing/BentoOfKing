@@ -24,9 +24,12 @@ import java.util.List;
 public class Database {
     private static String getStoreURL = "http://163.18.104.169/databaseConnect/getStore.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
+    private static String storeLoginURL = "http://163.18.104.169/databaseConnect/store_login.php";
+    private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
+    private static final String TAG_ADMINS = "admin";
     private static final String TAG_Message = "message";
     private static final String TAG_ID = "ID";
     private static final String TAG_Email = "Email";
@@ -43,7 +46,8 @@ public class Database {
     private static final String TAG_Point = "Point";
     private static final String TAG_State = "State";
     private static final String TAG_Note = "Note";
-
+    JSONParser jParser;
+    JSONObject json;
 
     int range,index=0;
     ArrayList<HashMap<String, String>> storesList;
@@ -55,11 +59,13 @@ public class Database {
     public Member MemberLogin(String Email,String Password){
         int success;
         try {
-            JSONParser jParser = new JSONParser();
+            jParser = null;
+            jParser = new JSONParser();
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Email", Email));
             params.add(new BasicNameValuePair("Password", Password));
-            JSONObject json = jParser.makeHttpRequest(memberLoginURL, "GET", params);
+            json = null;
+            json = jParser.makeHttpRequest(memberLoginURL, "GET", params);
             Log.d("Member login.", json.toString());
             success = json.getInt(TAG_SUCCESS);
             if (success == 1) {
@@ -77,12 +83,66 @@ public class Database {
         }
     }
 
+    public Store StoreLogin(String Email,String Password){
+        int success;
+        try {
+            jParser = null;
+            jParser = new JSONParser();
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Email", Email));
+            params.add(new BasicNameValuePair("Password", Password));
+            json = null;
+            json = jParser.makeHttpRequest(storeLoginURL, "GET", params);
+            Log.d("Store login.", json.toString());
+            success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
+                JSONObject s = productObj.getJSONObject(0);
+                Store store = new Store(s.getString(TAG_ID),s.getString(TAG_Email),s.getString(TAG_Password),s.getString(TAG_Name),s.getString(TAG_Address),s.getString(TAG_Information),s.getString(TAG_BusinessHours),s.getString(TAG_Phone),s.getString(TAG_Photo),s.getString(TAG_Point),s.getString(TAG_State),s.getString(TAG_Note));
+                return store;
+            }else{
+                Store store = new Store();
+                store.putEmail(json.getString(TAG_Message));
+                return null;
+            }
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    public Admin AdminLogin(String Email,String Password){
+        int success;
+        try {
+            jParser = null;
+            jParser = new JSONParser();
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Email", Email));
+            params.add(new BasicNameValuePair("Password", Password));
+            json = null;
+            json = jParser.makeHttpRequest(adminLoginURL, "GET", params);
+            Log.d("Admin login.", json.toString());
+            success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                JSONArray productObj = json.getJSONArray(TAG_ADMINS); // JSON Array
+                JSONObject a = productObj.getJSONObject(0);
+                Admin admin = new Admin(a.getString(TAG_Email),a.getString(TAG_Password));
+                return admin;
+            }else{
+                Admin admin = new Admin();
+                admin.putEmail(json.getString(TAG_Message));
+                return null;
+            }
+        }catch(Exception e){
+            return null;
+        }
+    }
 
 
     public Store[] GetStore() {
         JSONObject json;
         JSONArray stores = null;
-        JSONParser jParser = new JSONParser();
+        jParser = null;
+        jParser = new JSONParser();
         List<NameValuePair> params;
         Store returnStore[];
         try {

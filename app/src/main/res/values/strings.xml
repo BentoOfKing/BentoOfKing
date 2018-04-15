@@ -83,4 +83,6 @@
     <string name="reply">回覆</string>
     <string name="look">查看</string>
     <string name="unban">解除</string>
+    <string name="storeLogin">店家登入</string>
+    <string name="memberLogin">會員登入</string>
 </resources>

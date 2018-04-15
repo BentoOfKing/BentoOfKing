@@ -26,7 +26,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout);
         toolbar.setTitle(getResources().getString(R.string.becomeStore));
-        haveStoreButton = findViewById(R.id.loginButton);
+        haveStoreButton = findViewById(R.id.storeLoginButton);
         notHaveStoreButton = findViewById(R.id.notHaveStoreButton);
         ButtonHandler buttonHandler = new ButtonHandler();
         haveStoreButton.setOnClickListener(buttonHandler);
@@ -38,7 +38,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent();
             switch (view.getId()){
-                case R.id.loginButton:
+                case R.id.storeLoginButton:
                     intent.setClass(BecomeStoreActivity.this,BecomeHaveStoreActivity.class);
                     startActivity(intent);
                     break;

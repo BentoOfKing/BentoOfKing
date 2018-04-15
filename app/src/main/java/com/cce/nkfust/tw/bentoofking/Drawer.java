@@ -19,7 +19,7 @@ public class Drawer extends AppCompatActivity{
     Context context;
     Toolbar toolbar;
     void init(Context context, Toolbar toolbar, ListView drawerListView, DrawerLayout drawerLayout){
-        String[] visitorMenuItem = {context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.login),context.getResources().getString(R.string.register),context.getResources().getString(R.string.becomeStore),context.getResources().getString(R.string.about)};
+        String[] visitorMenuItem = {context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.memberLogin),context.getResources().getString(R.string.storeLogin),context.getResources().getString(R.string.register),context.getResources().getString(R.string.becomeStore),context.getResources().getString(R.string.about)};
         this.context = context;
         this.toolbar = toolbar;
         toolbar.setTitle("便當王");
@@ -46,21 +46,26 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
                 case 1:
-                    //登入
+                    //會員登入
                     intent.setClass(context,LoginActivity.class);
                     context.startActivity(intent);
                     break;
                 case 2:
+                    //店家登入
+                    intent.setClass(context,StoreLoginActivity.class);
+                    context.startActivity(intent);
+                    break;
+                case 3:
                     //註冊
                     intent.setClass(context,RegisterActivity.class);
                     context.startActivity(intent);
                     break;
-                case 3:
+                case 4:
                     //成為店家
                     intent.setClass(context,BecomeStoreActivity.class);
                     context.startActivity(intent);
                     break;
-                case 4:
+                case 5:
                     //關於
                     break;
                 default:
