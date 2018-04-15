@@ -78,12 +78,10 @@ public class MyAdapter extends BaseAdapter {
         }
         store_list store_list =  (store_list)getItem(position);
 
-        holder.textView21.setText(store_list.getStore());
-        holder.textView24.setText(store_list.getFraction());
+
         holder.textView32.setText(store_list.getPrice());
         holder.textView33.setText(store_list.getStorename());
-        holder.textView34.setText(store_list.getStar());
-        holder.textView35.setText(store_list.getMoney());
+
         holder.textView36.setText(store_list.getDistance());
 
         return convertView;
