@@ -8,6 +8,6 @@ public class Check_StoreInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_02_check_storeinfo);
+        setContentView(R.layout.activity_2_check_storeinfo);
     }
 }

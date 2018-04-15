@@ -59,7 +59,7 @@
                 android:layout_width="110dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/sentReport"
+                android:background="@drawable/sent_report"
                 android:text="送出"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/editText6" />
