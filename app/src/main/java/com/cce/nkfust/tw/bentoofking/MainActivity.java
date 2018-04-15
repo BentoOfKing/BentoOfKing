@@ -1,9 +1,11 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,10 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Database database;
     private Store store[];
-
     private ListView storelist;
-    List<store_list> storeLists = new ArrayList<store_list>();
-    private MyAdapter adapter;
+    ArrayList<store_list> storeLists = new ArrayList<store_list>();
+    private StoreListViewBaseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        adapter = new MyAdapter(MainActivity.this,storeLists);
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        adapter = new StoreListViewBaseAdapter(storeLists,inflater);
         storelist.setAdapter(adapter);
     }
     public class ConnectDatabase implements Runnable{
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             if(database.GetStoreInit()) store = database.GetStore();
             for(int i=0;i<store.length;i++){
                 System.out.println(store[i].getEmail());
-                storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM"));
+                storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM",store[i].getState()));
             }
         }
     }

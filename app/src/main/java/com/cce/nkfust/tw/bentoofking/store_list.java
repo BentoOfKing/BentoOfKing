@@ -11,62 +11,44 @@ public class store_list {
 
 
     private ImageView image;
-    private String store;
     private String storename;
-    private String fraction;
-    private String star;
+    private String evaluation;
     private String price;
-    private String money;
     private String distance;
-    public store_list(String storename ,String star ,String money ,String distance){
-        this.store="店名";
+    private String status;
+    public store_list(String storename ,String evaluation ,String price ,String distance,String status){
         this.storename=storename;
-        this.fraction="評分";
-        this.star=star;
-        this.price="價格";
-        this.money=money;
+        this.evaluation=evaluation;
+        this.price=price;
         this.distance=distance;
-    }
-    public String getStore(){
-        return store;
-    }
-    public void setStore(){
-        this.store=store;
+        this.status = status;
     }
     public String getStorename(){
-        return storename;
+        return this.storename;
     }
-    public void setStorename(){
+    public void setStorename(String storename){
         this.storename=storename;
     }
-    public String getFraction(){
-        return fraction;
+    public String getEvaluation(){
+        return this.evaluation;
     }
-    public void setFraction(){
-        this.fraction=fraction;
-    }
-    public String getStar(){
-        return star;
-    }
-    public void setStar(){
-        this.star=star;
+    public void setEvaluation(String evaluation){
+        this.evaluation=evaluation;
     }
     public String getPrice(){
-        return price;
+        return this.price;
     }
-    public void setPrice(){
+    public void setPrice(String price){
         this.price=price;
     }
-    public String getMoney(){
-        return money;
-    }
-    public void setMoney(){
-        this.money=money;
-    }
     public String getDistance(){
-        return distance;
+        return this.distance;
     }
-    public void setDistance(){
-        this.distance=distance;
+    public void setDistance(String distance){ this.distance=distance; }
+    public String getStatus(){
+        return this.status;
+    }
+    public void setStatus(String status){
+        this.status=status;
     }
 }

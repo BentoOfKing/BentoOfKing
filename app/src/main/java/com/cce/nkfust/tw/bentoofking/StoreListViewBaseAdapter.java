@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class StoreListViewBaseAdapter extends BaseAdapter {
-    private String[][] elementData;
+    private ArrayList<store_list> elementData;
     private LayoutInflater inflater;
     private int identionBase;
 
@@ -23,7 +25,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
         TextView storePrice;
     }
 
-    public StoreListViewBaseAdapter(String[][] data, LayoutInflater inflater){
+    public StoreListViewBaseAdapter(ArrayList<store_list> data, LayoutInflater inflater){
         this.elementData = data;
         this.inflater = inflater;
         this.identionBase = 100;
@@ -31,13 +33,11 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return this.elementData.length;
+        return this.elementData.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return this.elementData[position];
-    }
+    public store_list getItem(int position) { return this.elementData.get(position); }
 
     @Override
     public long getItemId(int position) {
@@ -60,6 +60,11 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
         }
+        viewHolder.storeName.setText("店家名稱:"+getItem(position).getStorename());
+        viewHolder.storePrice.setText("平均價位:"+getItem(position).getPrice());
+        viewHolder.storeStatus.setText("狀態:"+getItem(position).getStatus());
+        viewHolder.storeEvaluation.setText("評價:"+getItem(position).getEvaluation());
+        viewHolder.storeDistance.setText("距離:"+getItem(position).getDistance());
 
         return convertView;
     }
