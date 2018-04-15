@@ -29,7 +29,8 @@
         <activity android:name=".BecomeHaveStoreActivity" />
         <activity android:name=".BecomeNotHaveStoreActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".CheckStoreInfo"></activity>
+        <activity android:name=".CheckStoreInfo" />
+        <activity android:name=".StoreLoginActivity"></activity>
     </application>
 
 </manifest>

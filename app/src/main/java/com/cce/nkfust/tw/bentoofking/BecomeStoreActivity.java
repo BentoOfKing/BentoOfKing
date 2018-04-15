@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class BecomeStoreActivity extends AppCompatActivity {
+    private static String passUserInfo = "USER_INFO";
+    private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
@@ -20,13 +22,15 @@ public class BecomeStoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_become_store);
+        Intent intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout);
         toolbar.setTitle(getResources().getString(R.string.becomeStore));
-        haveStoreButton = findViewById(R.id.loginButton);
+        haveStoreButton = findViewById(R.id.storeLoginButton);
         notHaveStoreButton = findViewById(R.id.notHaveStoreButton);
         ButtonHandler buttonHandler = new ButtonHandler();
         haveStoreButton.setOnClickListener(buttonHandler);
@@ -38,7 +42,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent();
             switch (view.getId()){
-                case R.id.loginButton:
+                case R.id.storeLoginButton:
                     intent.setClass(BecomeStoreActivity.this,BecomeHaveStoreActivity.class);
                     startActivity(intent);
                     break;

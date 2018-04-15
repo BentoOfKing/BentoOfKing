@@ -12,6 +12,12 @@ public class Admin {
         this.Email=Email;
         this.Password=Password;
     }
+    public void putEmail(String Email){
+        this.Email=Email;
+    }
+    public void putPassword(String Password){
+        this.Password=Password;
+    }
     public String getEmail(){
         return Email;
     }

@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class LoginActivity extends AppCompatActivity {
+public class StoreLoginActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private UserInfo userInfo;
     private Toolbar toolbar;
@@ -20,13 +20,14 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView loginPrompt;
-    private Button loginButton;
+    private Button storeLoginButton;
     private Database database;
-    private Member member;
+    private Store store;
+    private Admin admin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_store_login);
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         toolbar = findViewById(R.id.toolbar);
@@ -34,13 +35,13 @@ public class LoginActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout);
-        toolbar.setTitle(getResources().getString(R.string.memberLogin));
+        toolbar.setTitle(getResources().getString(R.string.storeLogin));
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginPrompt = findViewById(R.id.loginPrompt);
-        loginButton = findViewById(R.id.storeLoginButton);
+        storeLoginButton = findViewById(R.id.storeLoginButton);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
-        loginButton.setOnClickListener(loginButtonHandler);
+        storeLoginButton.setOnClickListener(loginButtonHandler);
 
     }
     public class LoginButtonHandler implements View.OnClickListener{
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             DatabaseLogin databaseLogin = new DatabaseLogin();
             Thread thread = new Thread(databaseLogin);
-            
+
             thread.start();
             try {
                 thread.join();
@@ -56,17 +57,19 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            if(member==null){
-                loginPrompt.setText("登入資料錯誤");
-            }
-            else{
-                userInfo.putMember(member);
-                userInfo.setIdentity(1);
+            if(store!=null){
                 Intent intent = new Intent();
-                intent.setClass(LoginActivity.this , MainActivity.class);
+                intent.setClass(StoreLoginActivity.this , MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);
+            }else if(admin!=null){
+                Intent intent = new Intent();
+                intent.setClass(StoreLoginActivity.this , MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);;
+            }else{
+                loginPrompt.setText("登入資料錯誤");
+
             }
 
 
@@ -79,13 +82,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
-
     public class DatabaseLogin implements Runnable{
         @Override
         public void run() {
             database = new Database();
-            member = database.MemberLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
+            store = database.StoreLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
+            if(store == null) admin = database.AdminLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
         }
     }
     public void onBackPressed() {
