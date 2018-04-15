@@ -1,12 +1,20 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class CheckStoreInfo extends AppCompatActivity {
     private Button reportButton;
@@ -30,6 +38,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
         if(storeInfoBundle.getIdentity()==2)
             UpdateUI();
+
     }
 
     private void UpdateUI(){
@@ -38,8 +47,26 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeAddress.setText(storeInfoBundle.getStore().getAddress());
         this.storeEmail.setText(storeInfoBundle.getStore().getEmail());
         this.storeParkInfo.setText("後門有山豬戲水區");
-        String storeInfoString = getStoreInfoString();
+        final String storeInfoString = getStoreInfoString();
         this.storeFreeInfo.setText(storeInfoString);
+        Thread thread = new Thread (new Runnable() {
+            @Override
+            public void run() {
+                final Bitmap bitmap = getBitmapFromURL(storeInfoBundle.getStore().getPhoto());
+                CheckStoreInfo.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        storeIcon.setImageBitmap(bitmap);
+                    }
+                });
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getStoreInfoString(){
@@ -96,5 +123,24 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeFreeInfo = findViewById(R.id.storeFreeInfo);
         this.commentEditText = findViewById(R.id.commentEditText);
         this.sentCommentButton = findViewById(R.id.sentCommentButton);
+    }
+
+    private static Bitmap getBitmapFromURL(String imageUrl)
+    {
+        try
+        {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

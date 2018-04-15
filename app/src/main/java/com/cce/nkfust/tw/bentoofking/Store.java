@@ -19,7 +19,12 @@ public class Store implements Serializable {
         this.Information = Information;
         this.BusinessHours = BusinessHours;
         this.Phone = Phone;
-        this.Photo = storeIconURL + Photo;
+        String firstPhoto;
+        if(Photo.indexOf(',')>0)
+            firstPhoto = Photo.substring(0,Photo.indexOf(','));
+        else
+            firstPhoto = Photo;
+        this.Photo = storeIconURL + firstPhoto;
         this.Point = Point;
         this.State = State;
         this.Note = Note;
