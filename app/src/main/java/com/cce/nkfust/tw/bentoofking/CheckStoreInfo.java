@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -18,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class CheckStoreInfo extends AppCompatActivity {
+    private static String passUserInfo = "USER_INFO";
     private Button reportButton;
     private ImageView storeIcon;
     private TextView storeName;
@@ -30,14 +34,21 @@ public class CheckStoreInfo extends AppCompatActivity {
     private EditText commentEditText;
     private Button sentCommentButton;
     private UserInfo storeInfoBundle;
+    private Toolbar toolbar;
+    private ListView drawerListView;
+    private DrawerLayout drawerLayout;
+    private UserInfo userInfo;
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_2_check_storeinfo);
-        UIconnect();
-        Intent intent = getIntent();
+        intent = getIntent();
+        getUserInfo();
         this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
+        UIconnect();
         if(storeInfoBundle.getIdentity()==2)
             UpdateUI();
 
@@ -125,6 +136,11 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeFreeInfo = findViewById(R.id.storeFreeInfo);
         this.commentEditText = findViewById(R.id.commentEditText);
         this.sentCommentButton = findViewById(R.id.sentCommentButton);
+        this.toolbar = findViewById(R.id.toolbar);
+        this.drawerListView = findViewById(R.id.drawerListView);
+        this.drawerLayout = findViewById(R.id.drawerLayout);
+        Drawer drawer = new Drawer();
+        drawer.init(this,this.toolbar,drawerListView,drawerLayout,this.userInfo);
     }
 
     private static Bitmap getBitmapFromURL(String imageUrl)
@@ -144,5 +160,16 @@ public class CheckStoreInfo extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
+            drawerLayout.closeDrawers();
+        else
+            super.onBackPressed();
+    }
+
+    private void getUserInfo(){
+        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
+        if(userInfo == null) userInfo = new UserInfo();
     }
 }

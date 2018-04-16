@@ -97,26 +97,10 @@ public class MainActivity extends AppCompatActivity {
             storeInfoBundle.setIdentity(2);
             storeInfoBundle.putStore(MainActivity.this.store[position]);
             intent.putExtra("storeInfo",storeInfoBundle);
+            intent.putExtra( MainActivity.passUserInfo, MainActivity.this.userInfo);
             startActivity(intent);
         }
     }
 
-    private static Bitmap getBitmapFromURL(String imageUrl)
-    {
-        try
-        {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 }
