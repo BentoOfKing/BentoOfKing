@@ -88,17 +88,6 @@
 
                     <TableRow>
 
-                        <TextView
-                            android:id="@+id/loginPrompt"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_span="2"
-                            android:layout_weight="1"
-                            android:textAlignment="center"
-
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/font_size" />
-
                     </TableRow>
 
                 </TableLayout>
@@ -112,6 +101,19 @@
                     android:layout_below="@+id/tableLayout"
                     android:layout_weight="1"
                     android:text="@string/login" />
+
+                <TextView
+                    android:id="@+id/loginPrompt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/storeLoginButton"
+                    android:layout_alignParentStart="true"
+                    android:layout_span="2"
+
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/font_size" />
 
             </RelativeLayout>
         </ScrollView>

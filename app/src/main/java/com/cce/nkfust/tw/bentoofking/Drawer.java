@@ -20,10 +20,12 @@ public class Drawer extends AppCompatActivity{
     Context context;
     Toolbar toolbar;
     UserInfo userInfo;
+    DrawerLayout drawerLayout;
     void init(Context context, Toolbar toolbar, ListView drawerListView, DrawerLayout drawerLayout,UserInfo userInfo){
         this.userInfo = userInfo;
         this.context = context;
         this.toolbar = toolbar;
+        this.drawerLayout = drawerLayout;
         toolbar.setTitle("便當王");
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle((Activity) context,drawerLayout,toolbar,R.string.open,R.string.close);
         drawerToggle.syncState();
@@ -60,6 +62,7 @@ public class Drawer extends AppCompatActivity{
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
+            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     //主頁
@@ -109,6 +112,7 @@ public class Drawer extends AppCompatActivity{
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
+            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     break;
@@ -145,6 +149,7 @@ public class Drawer extends AppCompatActivity{
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
+            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     //主頁
@@ -185,6 +190,7 @@ public class Drawer extends AppCompatActivity{
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
+            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     //主頁
