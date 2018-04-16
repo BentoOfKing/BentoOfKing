@@ -29,6 +29,7 @@ public class Database {
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
     private static String storeLoginURL = "http://163.18.104.169/databaseConnect/store_login.php";
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
+    private static String memberRegisterURL = "http://163.18.104.169/databaseConnect/member_register.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -58,6 +59,35 @@ public class Database {
     String result = "";
     HttpURLConnection urlConnection = null;
     InputStream is = null;
+
+    public String MemberRegister(Member member){
+        String email = member.getEmail();
+        String password = member.getPassword();
+        String sex= member.getSex();
+        String nickname = member.getNickname();
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Email", email));
+        params.add(new BasicNameValuePair("Password", password));
+        params.add(new BasicNameValuePair("Sex", sex));
+        params.add(new BasicNameValuePair("Nickname", nickname));
+        json = null;
+        json = jParser.makeHttpRequest(memberRegisterURL,"POST", params);
+        Log.d("Register Response", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return json.getString(TAG_Message);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
 
     public Member MemberLogin(String Email,String Password){
         int success;

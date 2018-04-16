@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 public class BecomeStoreActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private Store storeRegister;
     private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView;
@@ -40,6 +41,8 @@ public class BecomeStoreActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            //缺抓取各Textfield資料，並新增至storeRegister
+
             Intent intent = new Intent();
             switch (view.getId()){
                 case R.id.storeLoginButton:
