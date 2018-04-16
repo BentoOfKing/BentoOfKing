@@ -141,6 +141,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.drawerLayout = findViewById(R.id.drawerLayout);
         Drawer drawer = new Drawer();
         drawer.init(this,this.toolbar,drawerListView,drawerLayout,this.userInfo);
+        drawer.setToolbarNavigation();
     }
 
     private static Bitmap getBitmapFromURL(String imageUrl)
