@@ -5,12 +5,13 @@ package com.cce.nkfust.tw.bentoofking;
  */
 
 public class Comment {
-    String ID,Member,Store,StoreContent,Time,Reply,Note;
+    String ID,Member,Store,Score,StoreContent,Time,Reply,Note;
     public Comment(){}
-    public Comment(String ID,String Member,String Store,String StoreContent,String Time,String Reply,String Note){
+    public Comment(String ID,String Member,String Store,String Score,String StoreContent,String Time,String Reply,String Note){
         this.ID = ID;
         this.Member = Member;
         this.Store = Store;
+        this.Score = Score;
         this.StoreContent = StoreContent;
         this.Time = Time;
         this.Reply = Reply;
@@ -25,10 +26,13 @@ public class Comment {
     public String getStore(){
         return Store;
     }
+    public String getScore(){
+        return Score;
+    }
     public String getStoreContent(){
         return StoreContent;
     }
-    public String getTime(){
+    public String getContentTime(){
         return Time;
     }
     public String getReply(){
@@ -46,10 +50,13 @@ public class Comment {
     public void putStore(String Store){
         this.Store = Store;
     }
+    public void putScore(String Score){
+        this.Score = Score;
+    }
     public void putStoreContent(String StoreContent){
         this.StoreContent = StoreContent;
     }
-    public void putTime(String Time){
+    public void putContentTime(String Time){
         this.Time = Time;
     }
     public void putReply(String Reply){
