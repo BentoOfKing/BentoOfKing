@@ -31,6 +31,7 @@ public class Database {
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
     private static String memberRegisterURL = "http://163.18.104.169/databaseConnect/member_register.php";
     private static String getCommentURL = "http://163.18.104.169/databaseConnect/getComment.php";
+    private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -69,7 +70,7 @@ public class Database {
     HttpURLConnection urlConnection = null;
     InputStream is = null;
 
-    public Comment[] getComment(String item,String content,String index){
+    public Comment[] getComment(String item,String content){
         JSONArray comments = null;
         Store returnStore[];
         jParser = null;
@@ -77,13 +78,14 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("Item", item));
         params.add(new BasicNameValuePair("Content", content));
-        params.add(new BasicNameValuePair("Index", index));
+        params.add(new BasicNameValuePair("Index", Integer.toString(index)));
         json = null;
         json = jParser.makeHttpRequest(getCommentURL, "GET", params);
         Log.d("Comments: ", json.toString());
         try{
             comments = json.getJSONArray(TAG_COMMENTS);
             Comment retrunComment[] = new Comment[comments.length()];
+            index +=comments.length();
             for(int i=0;i<comments.length();i++){
                 JSONObject c = comments.getJSONObject(i);
                 retrunComment[i] = new Comment(c.getString(TAG_ID),c.getString(TAG_Member),c.getString(TAG_Store),c.getString(TAG_Score),c.getString(TAG_StoreContent),c.getString(TAG_Time),c.getString(TAG_Reply),c.getString(TAG_Note));
@@ -243,6 +245,30 @@ public class Database {
         } catch (Exception e) {
             System.out.println("error");
             System.out.print(e);
+            return null;
+        }
+    }
+
+    public Member GetSingleMember(String Email){
+        int success;
+        try {
+            jParser = null;
+            jParser = new JSONParser();
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Email", Email));
+            json = null;
+            json = jParser.makeHttpRequest(getSingleMemberURL, "GET", params);
+            Log.d("Get single member.", json.toString());
+            success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
+                JSONObject m = productObj.getJSONObject(0);
+                Member member = new Member(m.getString(TAG_Email),"",m.getString(TAG_Nickname),m.getString(TAG_Sex),m.getString(TAG_Favorite),m.getString(TAG_State),m.getString(TAG_Note));
+                return member;
+            }else{
+                return null;
+            }
+        }catch(Exception e){
             return null;
         }
     }
