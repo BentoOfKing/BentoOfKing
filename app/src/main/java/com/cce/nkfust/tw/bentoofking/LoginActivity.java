@@ -1,15 +1,20 @@
+
 package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
@@ -23,6 +28,11 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Database database;
     private Member member;
+
+    private Handler LoginThreadHandler;
+    private HandlerThread LoginThread;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,29 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             DatabaseLogin databaseLogin = new DatabaseLogin();
-            Thread thread = new Thread(databaseLogin);
-            
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if(member==null){
-                loginPrompt.setText("登入資料錯誤");
-            }
-            else{
-                userInfo = new UserInfo();
-                userInfo.putMember(member);
-                userInfo.setIdentity(1);
-                Intent intent = new Intent();
-                intent.setClass(view.getContext() , MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra(passUserInfo,userInfo);
-                startActivity(intent);
-
-            }
+            LoginThread = new HandlerThread("Login1");
+            LoginThread.start();
+            LoginThreadHandler = new Handler(LoginThread.getLooper());
+            LoginThreadHandler.post(databaseLogin);
 
 
         }
@@ -80,10 +71,53 @@ public class LoginActivity extends AppCompatActivity {
     public class DatabaseLogin implements Runnable{
         @Override
         public void run() {
+            Handler LoginUiHandler = new Handler();  //修改
+            LoginConfirm  loginconfirm  = new LoginConfirm();
             database = new Database();
             member = database.MemberLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
+            LoginUiHandler.post(loginconfirm);
         }
     }
+
+    public class LoginConfirm implements  Runnable{
+        @Override
+        public void run() {
+            if(member==null){
+
+                //   loginPrompt.setText("登入資料錯誤");
+
+
+
+                    Toast toast = Toast.makeText(LoginActivity.this,
+                            "Hello world!", Toast.LENGTH_LONG);
+
+                    toast.show();
+                }
+
+
+
+            else{
+                userInfo = new UserInfo();
+                userInfo.putMember(member);
+                userInfo.setIdentity(1);
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this , MainActivity.class);//有修改
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra(passUserInfo,userInfo);
+                startActivity(intent);
+
+
+            }
+
+        }
+    }
+
+
+
+
+
+
+
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
