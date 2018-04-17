@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen"
+        <activity
+            android:name=".SplashScreen"
             android:theme="@style/AppStartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +34,9 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".CheckStoreInfo" />
         <activity android:name=".StoreLoginActivity" />
+        <activity
+            android:name=".AboutActivity"
+            android:theme="@style/AppStartTheme"></activity>
     </application>
 
 </manifest>
