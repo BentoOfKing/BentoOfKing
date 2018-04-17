@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(store[i].getEmail());
                 storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM",store[i].getState(),store[i].getPhoto()));
             }
-            database.GetSingleMember("123");
         }
     }
     public void onBackPressed() {
