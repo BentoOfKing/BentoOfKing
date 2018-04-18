@@ -63,7 +63,6 @@ public class Drawer extends AppCompatActivity{
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
-            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     //主頁
@@ -109,13 +108,13 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
+            drawerLayout.closeDrawers();
         }
     };
     private ListView.OnItemClickListener memberDrawerListener = new ListView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
-            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     break;
@@ -150,13 +149,13 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
+            drawerLayout.closeDrawers();
         }
     };
     private ListView.OnItemClickListener storeDrawerListener = new ListView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
-            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     //主頁
@@ -195,13 +194,13 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
+            drawerLayout.closeDrawers();
         }
     };
     private ListView.OnItemClickListener adminDrawerListener = new ListView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent();
-            drawerLayout.closeDrawers();
             switch (i){
                 case 0:
                     //主頁
@@ -218,6 +217,7 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
+            drawerLayout.closeDrawers();
         }
     };
     public void setToolbarNavigation(){
