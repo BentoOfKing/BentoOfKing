@@ -94,4 +94,5 @@
     <string name="editStore">編輯店家</string>
     <string name="lookStore">查看店家</string>
     <string name="storedPoint">儲值點數</string>
+    <string name="title_activity_about">AboutActivity</string>
 </resources>

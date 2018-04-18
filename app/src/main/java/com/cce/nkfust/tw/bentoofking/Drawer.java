@@ -34,12 +34,12 @@ public class Drawer extends AppCompatActivity{
         drawerLayout.setScrimColor(Color.TRANSPARENT);
         switch (userInfo.getIdentity()){
             case 1:
-                String[] memberMenuItem ={context.getResources().getString(R.string.hello)+userInfo.getMember().getNickname(),context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.favorite),context.getResources().getString(R.string.addStore),context.getResources().getString(R.string.findOrders),context.getResources().getString(R.string.edidInfo),context.getResources().getString(R.string.logout)};
+                String[] memberMenuItem ={context.getResources().getString(R.string.hello)+userInfo.getMember().getNickname(),context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.favorite),context.getResources().getString(R.string.addStore),context.getResources().getString(R.string.findOrders),context.getResources().getString(R.string.edidInfo),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,memberMenuItem));
                 drawerListView.setOnItemClickListener(memberDrawerListener);
                 break;
             case 2:
-                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.logout)};
+                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,storeMenuItem));
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
@@ -54,6 +54,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(visitorDrawerListener);
                 break;
         }
+
 
 
 
@@ -98,6 +99,8 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 5:
                     //關於
+                    intent.setClass(context,AboutActivity.class);
+                    context.startActivity(intent);
                     break;
                 default:
                     intent.setClass(context,MainActivity.class);
@@ -135,6 +138,10 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 5:
 
+                    break;
+                case 6:
+                    intent.setClass(context,AboutActivity.class);
+                    context.startActivity(intent);
                     break;
                 default:
                     intent.setClass(context,MainActivity.class);
@@ -176,6 +183,10 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 6:
 
+                    break;
+                case 7:
+                    intent.setClass(context,AboutActivity.class);
+                    context.startActivity(intent);
                     break;
                 default:
                     intent.setClass(context,MainActivity.class);

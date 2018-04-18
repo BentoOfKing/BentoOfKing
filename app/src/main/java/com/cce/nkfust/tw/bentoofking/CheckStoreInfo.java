@@ -1,23 +1,30 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class CheckStoreInfo extends AppCompatActivity {
+    private static String passUserInfo = "USER_INFO";
     private Button reportButton;
     private ImageView storeIcon;
     private TextView storeName;
@@ -28,16 +35,29 @@ public class CheckStoreInfo extends AppCompatActivity {
     private TextView storeParkInfo;
     private TextView storeFreeInfo;
     private EditText commentEditText;
+    private ListView commentListView;
     private Button sentCommentButton;
     private UserInfo storeInfoBundle;
+    private Toolbar toolbar;
+    private ListView drawerListView;
+    private DrawerLayout drawerLayout;
+    private UserInfo userInfo;
+    private Intent intent;
+    private Database database;
+    private Comment[] commentlist;
+    private ArrayList<Comment> commentArrayList;
+    private CommentListViewBaseAdapter adapter;
+    private Thread getArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_2_check_storeinfo);
-        UIconnect();
-        Intent intent = getIntent();
+        intent = getIntent();
+        getUserInfo();
         this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
+        ConnectDataBaseThread();
+        UIconnect();
         if(storeInfoBundle.getIdentity()==2)
             UpdateUI();
 
@@ -51,7 +71,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeParkInfo.setText("後門有山豬戲水區");
         final String storeInfoString = getStoreInfoString();
         this.storeFreeInfo.setText(storeInfoString);
-        Thread thread = new Thread (new Runnable() {
+        Thread bitMapthread = new Thread (new Runnable() {
             @Override
             public void run() {
                 final Bitmap bitmap = getBitmapFromURL(storeInfoBundle.getStore().getPhoto());
@@ -63,12 +83,20 @@ public class CheckStoreInfo extends AppCompatActivity {
                 });
             }
         });
-        thread.start();
+        bitMapthread.start();
         try {
-            thread.join();
+            bitMapthread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        try {
+            getArrayList.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        CommentListViewBaseAdapter adapter = new CommentListViewBaseAdapter(commentArrayList,inflater);
+        commentListView.setAdapter(adapter);
     }
 
     private String getStoreInfoString(){
@@ -125,7 +153,25 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeFreeInfo = findViewById(R.id.storeFreeInfo);
         this.commentEditText = findViewById(R.id.commentEditText);
         this.sentCommentButton = findViewById(R.id.sentCommentButton);
+        this.toolbar = findViewById(R.id.toolbar);
+        this.drawerListView = findViewById(R.id.drawerListView);
+        this.drawerLayout = findViewById(R.id.drawerLayout);
+        this.commentListView = findViewById(R.id.Dejavu);
+        newDrawer();
     }
+
+    private void newDrawer(){
+        Drawer drawer = new Drawer();
+        drawer.init(this,this.toolbar,drawerListView,drawerLayout,this.userInfo);
+        drawer.setToolbarNavigation();
+    }
+
+    private void ConnectDataBaseThread(){
+        ConnectDatabase connectDatabase = new ConnectDatabase();
+        getArrayList = new Thread(connectDatabase);
+        getArrayList.start();
+    }
+
 
     private static Bitmap getBitmapFromURL(String imageUrl)
     {
@@ -143,6 +189,31 @@ public class CheckStoreInfo extends AppCompatActivity {
         {
             e.printStackTrace();
             return null;
+        }
+    }
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
+            drawerLayout.closeDrawers();
+        else
+            super.onBackPressed();
+    }
+
+    private void getUserInfo(){
+        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
+        if(userInfo == null) userInfo = new UserInfo();
+    }
+
+    public class ConnectDatabase implements Runnable{
+        @Override
+        public void run() {
+            CheckStoreInfo.this.database = new Database();
+            commentArrayList = new ArrayList<Comment>();
+            commentlist = database.getComment("Store",CheckStoreInfo.this.storeInfoBundle.getStore().getID());
+            for(int i=0;i<commentlist.length;i++){
+                commentArrayList.add(commentlist[i]);
+                Member member = database.GetSingleMember(commentlist[i].getMember());
+                commentArrayList.get(i).setMemberNickName(member.getNickname());
+            }
         }
     }
 }
