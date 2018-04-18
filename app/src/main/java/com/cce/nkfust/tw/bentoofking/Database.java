@@ -223,7 +223,8 @@ public class Database {
             stores = json.getJSONArray(TAG_STORES);
 
         }catch (Exception e){
-            return null;
+            Store[] nullStore = new Store[0];
+            return nullStore;
         }
         try {
             System.out.println("OK");
@@ -245,7 +246,8 @@ public class Database {
         } catch (Exception e) {
             System.out.println("error");
             System.out.print(e);
-            return null;
+            Store[] nullStore = new Store[0];
+            return nullStore;
         }
     }
 
