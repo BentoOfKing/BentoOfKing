@@ -1,23 +1,14 @@
 package com.cce.nkfust.tw.bentoofking;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class CommentListViewBaseAdapter extends BaseAdapter {
@@ -59,7 +50,7 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
         if(convertView==null){
             viewHolder = new ViewHolder();
-            convertView = this.inflater.inflate(R.layout.comment_listitem,null);
+            convertView = this.inflater.inflate(R.layout.item_comment_listitem,null);
             viewHolder.commentMember = convertView.findViewById(R.id.commentMember);
             viewHolder.commentDate = convertView.findViewById(R.id.commentDate);
             viewHolder.commentText = convertView.findViewById(R.id.commentText);
