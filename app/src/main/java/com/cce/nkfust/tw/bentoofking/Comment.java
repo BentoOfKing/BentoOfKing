@@ -5,7 +5,7 @@ package com.cce.nkfust.tw.bentoofking;
  */
 
 public class Comment {
-    String ID,Member,Store,Score,StoreContent,Time,Reply,Note;
+    private String ID,Member,Store,Score,StoreContent,Time,Reply,Note,MemberNickName;
     public Comment(){}
     public Comment(String ID,String Member,String Store,String Score,String StoreContent,String Time,String Reply,String Note){
         this.ID = ID;
@@ -65,5 +65,7 @@ public class Comment {
     public void putNote(String Note){
         this.Note = Note;
     }
+    public void setMemberNickName(String nickName){ this.MemberNickName = nickName; }
+    public String getMemberNickName(){ return this.MemberNickName; }
 }
 
