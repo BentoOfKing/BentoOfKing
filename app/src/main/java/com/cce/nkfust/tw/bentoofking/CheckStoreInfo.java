@@ -5,12 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,10 +27,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private static final int NEW_COMMENT = 63;
     private Button reportButton;
     private ImageView storeIcon;
     private TextView storeName;
@@ -44,13 +53,18 @@ public class CheckStoreInfo extends AppCompatActivity {
     private UserInfo userInfo;
     private Intent intent;
     private Database database;
+    private Database databaseForComment;
     private Comment[] commentlist;
     private ArrayList<Comment> commentArrayList;
     private CommentListViewBaseAdapter adapter;
     private Thread getArrayList;
+    private HandlerThread sentCommentThread;
+    private Handler sentCmtHandler;
+    private Handler mainHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        createMainHandler();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_2_check_storeinfo);
         intent = getIntent();
@@ -61,6 +75,21 @@ public class CheckStoreInfo extends AppCompatActivity {
         if(storeInfoBundle.getIdentity()==2)
             UpdateUI();
 
+    }
+
+    private void createMainHandler(){
+        mainHandler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message msg){
+                super.handleMessage(msg);
+                switch(msg.what){
+                    case NEW_COMMENT:
+                        ConnectDataBaseThread();
+                        UpdateUI();
+                        break;
+                }
+            }
+        };
     }
 
     private void UpdateUI(){
@@ -97,6 +126,9 @@ public class CheckStoreInfo extends AppCompatActivity {
         }
         CommentListViewBaseAdapter adapter = new CommentListViewBaseAdapter(commentArrayList,inflater);
         commentListView.setAdapter(adapter);
+        SentComment sentCommentListener = new SentComment();
+        sentCommentButton.setOnClickListener(sentCommentListener);
+        adapter.notifyDataSetChanged();
     }
 
     private String getStoreInfoString(){
@@ -214,6 +246,45 @@ public class CheckStoreInfo extends AppCompatActivity {
                 Member member = database.GetSingleMember(commentlist[i].getMember());
                 commentArrayList.get(i).setMemberNickName(member.getNickname());
             }
+        }
+    }
+
+    private class SentComment implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            CheckStoreInfo.this.sentCommentThread = new HandlerThread("SentComment");
+            CheckStoreInfo.this.sentCommentThread.start();
+            CheckStoreInfo.this.sentCmtHandler = new Handler(CheckStoreInfo.this.sentCommentThread.getLooper());
+            sentCmtHandler.post(new SentCommentToDataBase());
+
+        }
+    }
+
+
+
+    public class SentCommentToDataBase implements Runnable{
+        @Override
+        public void run() {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
+            String timeString = formatter.format(curDate);
+            Comment newComment = new Comment("0",/*userInfo.getMember().getEmail()*/"john8654john@gmail.com",CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"",CheckStoreInfo.this.commentEditText.getText().toString());
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            CheckStoreInfo.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    CheckStoreInfo.this.commentEditText.setText("");
+                }
+            });
+            databaseForComment = new Database();
+            databaseForComment.addComment(newComment);
+            sentCmtHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mainHandler.sendEmptyMessage(NEW_COMMENT);
+                }
+            }, 500);
         }
     }
 }
