@@ -1,7 +1,11 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +29,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -268,13 +273,19 @@ public class CheckStoreInfo extends AppCompatActivity {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
             Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
             String timeString = formatter.format(curDate);
-            Comment newComment = new Comment("0",/*userInfo.getMember().getEmail()*/"john8654john@gmail.com",CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"",CheckStoreInfo.this.commentEditText.getText().toString());
+            String text = "";
+            try {
+                text = new String(CheckStoreInfo.this.commentEditText.getText().toString().getBytes(),"8859_1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Comment newComment = new Comment("0",/*userInfo.getMember().getEmail()*/"john8654john@gmail.com",CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"", text);
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             CheckStoreInfo.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    CheckStoreInfo.this.commentEditText.setText("");
+                    CheckStoreInfo.this.commentEditText.setText("") ;
                 }
             });
             databaseForComment = new Database();
@@ -287,4 +298,6 @@ public class CheckStoreInfo extends AppCompatActivity {
             }, 500);
         }
     }
+
+
 }

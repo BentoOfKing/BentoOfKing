@@ -36,7 +36,9 @@
         <activity android:name=".StoreLoginActivity" />
         <activity
             android:name=".AboutActivity"
-            android:theme="@style/AppStartTheme"></activity>
+            android:theme="@style/AppStartTheme" />
+        <activity android:name=".EditDataBaseCommentDialog"
+            android:theme="@android:style/Theme.Dialog"/>
     </application>
 
 </manifest>
