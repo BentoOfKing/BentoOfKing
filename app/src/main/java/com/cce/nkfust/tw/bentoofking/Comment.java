@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/4/17.
  */
 
-public class Comment {
+public class Comment implements Serializable{
     private String ID,Member,Store,Score,StoreContent,Time,Reply,Note,MemberNickName;
     public Comment(){}
     public Comment(String ID,String Member,String Store,String Score,String StoreContent,String Time,String Reply,String Note){

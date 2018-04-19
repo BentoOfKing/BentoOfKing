@@ -305,7 +305,12 @@ public class CheckStoreInfo extends AppCompatActivity {
     private class DoSomethingToComment implements AdapterView.OnItemClickListener{
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Comment selectComment = commentArrayList.get(position);
             Intent showDialog = new Intent(CheckStoreInfo.this,EditDataBaseCommentDialog.class);
+            Bundle bag = new Bundle();
+            bag.putSerializable("SelectComment",selectComment);
+            bag.putSerializable(passUserInfo,userInfo);
+            showDialog.putExtras(bag);
             startActivity(showDialog);
         }
     }
