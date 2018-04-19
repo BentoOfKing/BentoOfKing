@@ -1,21 +1,32 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CommentListViewBaseAdapter extends BaseAdapter {
+    private static final int DELETE_COMMENT = 64;
     private ArrayList<Comment> elementData;
     private LayoutInflater inflater;
     private Context context;
-
+    private Database databaseForComment;
+    private HandlerThread threadForDataBase;
+    private Handler handlerForTFDB;
     public static class ViewHolder{
         ConstraintLayout commentListViewLayout;
         TextView commentMember;
@@ -62,6 +73,8 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
             viewHolder.replyButton.setEnabled(false);
             viewHolder.reportButton = convertView.findViewById(R.id.reportButton);
             viewHolder.commentListViewLayout = convertView.findViewById(R.id.border);
+            DeleteButtonListener listener = new DeleteButtonListener(getItem(position).getID());
+            viewHolder.deleteButton.setOnClickListener(listener);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
@@ -74,6 +87,41 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    private class DeleteButtonListener implements View.OnClickListener{
+        private String id;
+        public DeleteButtonListener(String id){
+            this.id = id;
+        }
+        @Override
+        public void onClick(View view) {
+            threadForDataBase = new HandlerThread("DeleteCommentFromDataBase");
+            threadForDataBase.start();
+            handlerForTFDB = new Handler(threadForDataBase.getLooper()){
+                @Override
+                public void handleMessage(Message msg){
+                    switch (msg.what){
+                        case DELETE_COMMENT:
+                            databaseForComment = new Database();
+                            databaseForComment.deleteComment(msg.getData().getString("ID"));
+                            break;
+                    }
+
+                    super.handleMessage(msg);
+                }
+            };
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            data.putString("ID",this.id);
+            msg.setData(data);
+            msg.what = DELETE_COMMENT;
+            handlerForTFDB.sendMessage(msg);
+        }
+    }
+
+
+
+
 
 
 
