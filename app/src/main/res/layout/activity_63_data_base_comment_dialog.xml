@@ -3,7 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
+    android:background="#00ffffff"
+    android:orientation="vertical"
     tools:context=".EditDataBaseCommentDialog">
+
+    <LinearLayout
+        android:id="@+id/layoutForListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/drawlayout_background"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ListView
+            android:id="@+id/editCommentListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

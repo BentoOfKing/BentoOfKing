@@ -94,7 +94,7 @@ public class Database {
             }
             return retrunComment;
         }catch (Exception e){
-            return null;
+            return new Comment[0];
         }
     }
 

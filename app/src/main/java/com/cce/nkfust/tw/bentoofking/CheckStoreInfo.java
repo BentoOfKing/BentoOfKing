@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -134,6 +135,8 @@ public class CheckStoreInfo extends AppCompatActivity {
         SentComment sentCommentListener = new SentComment();
         sentCommentButton.setOnClickListener(sentCommentListener);
         adapter.notifyDataSetChanged();
+        DoSomethingToComment commentListListener = new DoSomethingToComment();
+        commentListView.setOnItemClickListener(commentListListener);
     }
 
     private String getStoreInfoString(){
@@ -299,5 +302,12 @@ public class CheckStoreInfo extends AppCompatActivity {
         }
     }
 
+    private class DoSomethingToComment implements AdapterView.OnItemClickListener{
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent showDialog = new Intent(CheckStoreInfo.this,EditDataBaseCommentDialog.class);
+            startActivity(showDialog);
+        }
+    }
 
 }
