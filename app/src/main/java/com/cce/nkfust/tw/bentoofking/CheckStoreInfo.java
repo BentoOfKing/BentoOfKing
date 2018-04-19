@@ -40,6 +40,7 @@ import java.util.Date;
 public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int NEW_COMMENT = 63;
+    private static final int ACTION_DIALOG = 71;
     private Button reportButton;
     private ImageView storeIcon;
     private TextView storeName;
@@ -137,6 +138,25 @@ public class CheckStoreInfo extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         DoSomethingToComment commentListListener = new DoSomethingToComment();
         commentListView.setOnItemClickListener(commentListListener);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ACTION_DIALOG){
+            if(resultCode == RESULT_OK){
+                UpdateCommment();
+            }
+        }
+    }
+
+    public void UpdateCommment(){
+        sentCmtHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mainHandler.sendEmptyMessage(NEW_COMMENT);
+            }
+        }, 500);
     }
 
     private String getStoreInfoString(){
@@ -311,7 +331,7 @@ public class CheckStoreInfo extends AppCompatActivity {
             bag.putSerializable("SelectComment",selectComment);
             bag.putSerializable(passUserInfo,userInfo);
             showDialog.putExtras(bag);
-            startActivity(showDialog);
+            startActivityForResult(showDialog,ACTION_DIALOG);
         }
     }
 
