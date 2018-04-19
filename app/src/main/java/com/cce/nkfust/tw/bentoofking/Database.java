@@ -202,7 +202,7 @@ public class Database {
             }else{
                 Member member = new Member();
                 member.putEmail(json.getString(TAG_Message));
-                return null;
+                return member;
             }
         }catch(Exception e){
             return null;
@@ -229,7 +229,7 @@ public class Database {
             }else{
                 Store store = new Store();
                 store.putEmail(json.getString(TAG_Message));
-                return null;
+                return store;
             }
         }catch(Exception e){
             return null;
