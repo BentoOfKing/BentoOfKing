@@ -32,6 +32,8 @@ public class Database {
     private static String memberRegisterURL = "http://163.18.104.169/databaseConnect/member_register.php";
     private static String getCommentURL = "http://163.18.104.169/databaseConnect/getComment.php";
     private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
+    private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
+    private static String deleteCommentURL = "http://163.18.104.169/databaseConnect/deleteComment.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -92,7 +94,62 @@ public class Database {
             }
             return retrunComment;
         }catch (Exception e){
-            return null;
+            return new Comment[0];
+        }
+    }
+
+    public String addComment(Comment comment){
+        String member = comment.getMember();
+        String store = comment.getStore();
+        String score = comment.getScore();
+        String storeContent = comment.getStoreContent();
+        String time = comment.getContentTime();
+        String reply = comment.getReply();
+        String note = comment.getNote();
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Member", member));
+        params.add(new BasicNameValuePair("Store", store));
+        params.add(new BasicNameValuePair("Score", score));
+        params.add(new BasicNameValuePair("StoreContent", storeContent));
+        params.add(new BasicNameValuePair("Time", time));
+        params.add(new BasicNameValuePair("Reply", reply));
+        params.add(new BasicNameValuePair("Note", note));
+        json = null;
+        json = jParser.makeHttpRequest(addCommentURL,"POST", params);
+        Log.d("Add Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+
+    public String deleteComment(String id){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", id));
+        json = null;
+        json = jParser.makeHttpRequest(deleteCommentURL,"POST", params);
+        Log.d("Delete Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
         }
     }
 
@@ -117,7 +174,7 @@ public class Database {
             if (success == 1) {
                 return "Successful.";
             } else {
-                return json.getString(TAG_Message);
+                return "An error occurred.";
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -223,7 +280,8 @@ public class Database {
             stores = json.getJSONArray(TAG_STORES);
 
         }catch (Exception e){
-            return null;
+            Store[] nullStore = new Store[0];
+            return nullStore;
         }
         try {
             System.out.println("OK");
@@ -245,7 +303,8 @@ public class Database {
         } catch (Exception e) {
             System.out.println("error");
             System.out.print(e);
-            return null;
+            Store[] nullStore = new Store[0];
+            return nullStore;
         }
     }
 

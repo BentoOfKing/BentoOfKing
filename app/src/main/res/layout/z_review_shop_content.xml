@@ -75,7 +75,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView40"
+                android:id="@+id/textView444"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/storeName"
@@ -96,7 +96,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textViewForAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/storeAddress"
@@ -117,7 +117,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView40"
+                android:id="@+id/textView404"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/workertime"
@@ -139,7 +139,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView40"
+                android:id="@+id/textView4021"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/phone"
@@ -147,7 +147,7 @@
                 android:textSize="@dimen/font_size" />
 
             <EditText
-                android:id="@+id/editText5"
+                android:id="@+id/editText233"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -161,7 +161,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView40"
+                android:id="@+id/textView40333"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/parking"
@@ -169,7 +169,7 @@
                 android:textSize="@dimen/font_size" />
 
             <EditText
-                android:id="@+id/editText5"
+                android:id="@+id/editText555"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"

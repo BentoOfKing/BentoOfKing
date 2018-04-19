@@ -27,7 +27,8 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraintLayout1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark">
 
             <ImageView
                 android:id="@+id/storeIcon"
@@ -189,17 +190,16 @@
                 android:id="@+id/commentEditText"
                 android:layout_width="0dp"
                 android:layout_height="17dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@android:color/transparent"
+                android:background="#f3c297"
                 android:ems="10"
+                android:hint="評論內容"
                 android:inputType="text"
                 android:selectAllOnFocus="true"
                 android:singleLine="false"
-                android:text="評論內容"
                 android:textAllCaps="false"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@+id/sentCommentButton"
                 app:layout_constraintEnd_toStartOf="@+id/sentCommentButton"
                 app:layout_constraintStart_toStartOf="@+id/Dejavu" />
 
@@ -219,8 +219,9 @@
                 android:id="@+id/sentCommentButton"
                 android:layout_width="61dp"
                 android:layout_height="36dp"
+                android:layout_marginBottom="5dp"
                 android:text="送出"
-                app:layout_constraintBaseline_toBaselineOf="@+id/commentEditText"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/Dejavu" />
         </android.support.constraint.ConstraintLayout>
 

@@ -36,7 +36,10 @@
         <activity android:name=".StoreLoginActivity" />
         <activity
             android:name=".AboutActivity"
-            android:theme="@style/AppStartTheme"></activity>
+            android:theme="@style/AppStartTheme" />
+        <activity android:name=".EditDataBaseCommentDialog"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/Theme.ActivityDialogStyle"/>
     </application>
 
 </manifest>

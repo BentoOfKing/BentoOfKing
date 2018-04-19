@@ -90,11 +90,12 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
             }
         });
         thread.start();
-        try {
+        //等待將會使滑動的時候lag
+        /*try {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         return convertView;
     }
 
