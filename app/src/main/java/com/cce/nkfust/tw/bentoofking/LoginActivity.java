@@ -82,30 +82,28 @@ public class LoginActivity extends AppCompatActivity {
     public class LoginConfirm implements  Runnable{
         @Override
         public void run() {
-            if(member==null){
-
-                //   loginPrompt.setText("登入資料錯誤");
-
-
-
+            if(member != null) {
+                if (member.getEmail().equals("Password error.")) {
                     Toast toast = Toast.makeText(LoginActivity.this,
-                            "Hello world!", Toast.LENGTH_LONG);
-
+                            "Password error.", Toast.LENGTH_LONG);
                     toast.show();
+                }else if(member.getEmail().equals("Email error.")){
+                    Toast toast = Toast.makeText(LoginActivity.this,
+                            "Email error.", Toast.LENGTH_LONG);
+                    toast.show();
+                }else {
+                    Toast toast = Toast.makeText(LoginActivity.this,
+                            "Successful.", Toast.LENGTH_LONG);
+                    toast.show();
+                    userInfo = new UserInfo();
+                    userInfo.putMember(member);
+                    userInfo.setIdentity(1);
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, MainActivity.class);//有修改
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo, userInfo);
+                    startActivity(intent);
                 }
-
-
-
-            else{
-                userInfo = new UserInfo();
-                userInfo.putMember(member);
-                userInfo.setIdentity(1);
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this , MainActivity.class);//有修改
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra(passUserInfo,userInfo);
-                startActivity(intent);
-
 
             }
 
@@ -125,3 +123,4 @@ public class LoginActivity extends AppCompatActivity {
             super.onBackPressed();
     }
 }
+
