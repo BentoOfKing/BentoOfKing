@@ -33,6 +33,7 @@ public class Database {
     private static String getCommentURL = "http://163.18.104.169/databaseConnect/getComment.php";
     private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
     private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
+    private static String deleteCommentURL = "http://163.18.104.169/databaseConnect/deleteComment.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -118,6 +119,27 @@ public class Database {
         json = null;
         json = jParser.makeHttpRequest(addCommentURL,"POST", params);
         Log.d("Add Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+
+    public String deleteComment(String id){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", id));
+        json = null;
+        json = jParser.makeHttpRequest(deleteCommentURL,"POST", params);
+        Log.d("Delete Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
             if (success == 1) {
