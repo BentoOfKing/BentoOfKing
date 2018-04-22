@@ -34,6 +34,7 @@ public class Database {
     private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
     private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
     private static String deleteCommentURL = "http://163.18.104.169/databaseConnect/deleteComment.php";
+    private static String updateCommentURL = "http://163.18.104.169/databaseConnect/updateComment.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -140,6 +141,29 @@ public class Database {
         json = null;
         json = jParser.makeHttpRequest(deleteCommentURL,"POST", params);
         Log.d("Delete Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+
+    public String updateComment(Comment comment){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", comment.getID()));
+        params.add(new BasicNameValuePair("Note", comment.getNote()));
+        params.add(new BasicNameValuePair("Reply", comment.getReply()));
+        json = null;
+        json = jParser.makeHttpRequest(updateCommentURL,"POST", params);
+        Log.d("Update Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
             if (success == 1) {
