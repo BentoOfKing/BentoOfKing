@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,7 +40,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(memberDrawerListener);
                 break;
             case 2:
-                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
+                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,storeMenuItem));
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
@@ -108,7 +109,13 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
-            drawerLayout.closeDrawers();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    drawerLayout.closeDrawers();
+                }}, 500);
+
         }
     };
     private ListView.OnItemClickListener memberDrawerListener = new ListView.OnItemClickListener(){
@@ -126,16 +133,18 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
-                case 2:
+                case 2://我的最愛
 
                     break;
-                case 3:
+                case 3://新增店家
+                    intent.setClass(context,BecomeNotHaveStoreActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
+                    break;
+                case 4://查看訂單
 
                     break;
-                case 4:
-
-                    break;
-                case 5:
+                case 5://修改資料
 
                     break;
                 case 6:
@@ -149,7 +158,12 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
-            drawerLayout.closeDrawers();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    drawerLayout.closeDrawers();
+                }}, 500);
         }
     };
     private ListView.OnItemClickListener storeDrawerListener = new ListView.OnItemClickListener(){
@@ -165,25 +179,24 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
-                case 1:
+                case 1://查看店家
+                    intent.setClass(context,CheckStoreInfo.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
+                    break;
+                case 2://編輯店家
 
                     break;
-                case 2:
+                case 3://查看對手
 
                     break;
-                case 3:
+                case 4://新增推播
 
                     break;
-                case 4:
-
-                    break;
-                case 5:
+                case 5://儲值點數
 
                     break;
                 case 6:
-
-                    break;
-                case 7:
                     intent.setClass(context,AboutActivity.class);
                     context.startActivity(intent);
                     break;
@@ -194,7 +207,12 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
-            drawerLayout.closeDrawers();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    drawerLayout.closeDrawers();
+                }}, 500);
         }
     };
     private ListView.OnItemClickListener adminDrawerListener = new ListView.OnItemClickListener(){
@@ -217,7 +235,12 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
             }
-            drawerLayout.closeDrawers();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    drawerLayout.closeDrawers();
+                }}, 500);
         }
     };
     public void setToolbarNavigation(){

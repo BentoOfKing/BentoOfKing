@@ -35,6 +35,9 @@ public class Database {
     private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
     private static String deleteCommentURL = "http://163.18.104.169/databaseConnect/deleteComment.php";
     private static String updateCommentURL = "http://163.18.104.169/databaseConnect/updateComment.php";
+    private static String updateMemberURL = "http://163.18.104.169/databaseConnect/updateMember.php";
+    private static String updateStoreURL = "http://163.18.104.169/databaseConnect/updateStore.php";
+
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -205,7 +208,28 @@ public class Database {
             return "Fail.";
         }
     }
-
+    public String UpdateMember(Member member){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Email", member.getEmail()));
+        params.add(new BasicNameValuePair("Password", member.getPassword()));
+        params.add(new BasicNameValuePair("Nickname", member.getNickname()));
+        json = null;
+        json = jParser.makeHttpRequest(updateMemberURL,"POST", params);
+        Log.d("Update Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
     public Member MemberLogin(String Email,String Password){
         int success;
         try {
@@ -232,6 +256,7 @@ public class Database {
             return null;
         }
     }
+
 
     public Store StoreLogin(String Email,String Password){
         int success;
@@ -329,6 +354,37 @@ public class Database {
             System.out.print(e);
             Store[] nullStore = new Store[0];
             return nullStore;
+        }
+    }
+
+    public String UpdateStore(Store store){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", store.getID()));
+        params.add(new BasicNameValuePair("Password", store.getPassword()));
+        params.add(new BasicNameValuePair("Name", store.getStoreName()));
+        params.add(new BasicNameValuePair("Address", store.getAddress()));
+        params.add(new BasicNameValuePair("Information", store.getInformation()));
+        params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
+        params.add(new BasicNameValuePair("Phone", store.getPhone()));
+        params.add(new BasicNameValuePair("Photo", store.getPhoto()));
+        //params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
+        //params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
+
+        json = null;
+        json = jParser.makeHttpRequest(updateStoreURL,"POST", params);
+        Log.d("Update Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
         }
     }
 

@@ -1,6 +1,7 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,12 +11,20 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -23,6 +32,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,8 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private ListView storelist;
     private ArrayList<store_list> storeLists = new ArrayList<store_list>();
     private StoreListViewBaseAdapter adapter;
-
-
+    private Button locationButton;
+    private Button sortButton;
+    private Button filterButton;
+    private CharSequence[] countryList;
+    private int locationState = 0,distanceState = 1 ,rankState = 0,priceState = 0,distanceKm = 25;
+    private boolean bussinessState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +67,14 @@ public class MainActivity extends AppCompatActivity {
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         if(userInfo == null) userInfo = new UserInfo();
         toolbar = findViewById(R.id.toolbar);
-
-
+        countryList = getResources().getStringArray(R.array.country);
+        locationButton = findViewById(R.id.locationButton);
+        sortButton = findViewById(R.id.sortButton);
+        filterButton = findViewById(R.id.filterButton);
+        ConditionButtonHandler conditionButtonHandler = new ConditionButtonHandler();
+        locationButton.setOnClickListener(conditionButtonHandler);
+        sortButton.setOnClickListener(conditionButtonHandler);
+        filterButton.setOnClickListener(conditionButtonHandler);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         storelist=(ListView)findViewById(R.id.storeListView);
@@ -76,6 +96,137 @@ public class MainActivity extends AppCompatActivity {
         }
         */
 
+    }
+    public class ConditionButtonHandler implements View.OnClickListener{
+        int locationStateTmp = locationState;
+        Spinner distanceSpinner;
+        Spinner rankSpinner;
+        Spinner priceSpinner;
+        LayoutInflater inflater;
+        View view;
+        AlertDialog.Builder builder;
+        AlertDialog alertDialog;
+        TextView distanceTextView;
+        int distanceKmTmp = distanceKm;
+        CheckBox bussinessCheckBox;
+
+        String[] sortState={getResources().getStringArray(R.array.distanceSetting)[distanceState],getResources().getStringArray(R.array.rankSetting)[rankState],getResources().getStringArray(R.array.priceSetting)[priceState]};
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.locationButton:
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle(getResources().getString(R.string.chooseCountry))
+                            .setSingleChoiceItems(countryList, locationState,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            locationStateTmp = which;
+                                        }
+                                    })
+                            .setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    locationState = locationStateTmp;
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                case R.id.sortButton:
+                    inflater = LayoutInflater.from(MainActivity.this);
+                    View view = inflater.inflate(R.layout.alertdialog_sort,null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(getResources().getString(R.string.chooseSort));
+                    builder.setView(view);
+                    distanceSpinner = view.findViewById(R.id.distanceSpinner);
+                    rankSpinner = view.findViewById(R.id.rankSpinner);
+                    priceSpinner = view.findViewById(R.id.priceSpinner);
+                    ArrayAdapter<CharSequence> distanceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.distanceSetting,android.R.layout.simple_spinner_dropdown_item);
+                    distanceSpinner.setAdapter(distanceList);
+                    distanceSpinner.setSelection(distanceState);
+                    ArrayAdapter<CharSequence> rankList = ArrayAdapter.createFromResource(MainActivity.this, R.array.rankSetting,android.R.layout.simple_spinner_dropdown_item);
+                    rankSpinner.setAdapter(rankList);
+                    rankSpinner.setSelection(rankState);
+                    ArrayAdapter<CharSequence> priceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.priceSetting,android.R.layout.simple_spinner_dropdown_item);
+                    priceSpinner.setAdapter(priceList);
+                    priceSpinner.setSelection(priceState);
+
+                    builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                    });
+                    builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            distanceState = (int)distanceSpinner.getSelectedItemId();
+                            rankState = (int)rankSpinner.getSelectedItemId();
+                            priceState = (int)priceSpinner.getSelectedItemId();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alertDialog = builder.create();
+                    alertDialog.show();
+                    break;
+                case R.id.filterButton:
+                    inflater = LayoutInflater.from(MainActivity.this);
+                    view = inflater.inflate(R.layout.alertdialog_filter,null);
+                    builder = new AlertDialog.Builder(MainActivity.this);
+                    SeekBar distanceSeekBar = view.findViewById(R.id.distanceSeekBar);
+                    distanceTextView = view.findViewById(R.id.distanceTextView);
+                    distanceTextView.setText(getResources().getString(R.string.distance) + "：" + distanceKm + getResources().getString(R.string.km));
+                    bussinessCheckBox = view.findViewById(R.id.bussinessCheckBox);
+                    bussinessCheckBox.setChecked(bussinessState);
+                    distanceSeekBar.setProgress(distanceKm);
+                    SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange
+                            = new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar){}
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar){}
+
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+                        {
+                            distanceKmTmp = progress;
+                            distanceTextView.setText(getResources().getString(R.string.distance) + "：" + Integer.toString(distanceKmTmp) + getResources().getString(R.string.km));
+                        }
+                    };
+                    distanceSeekBar.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
+                    builder.setTitle(getResources().getString(R.string.chooseFilter));
+                    builder.setView(view);
+                    builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            distanceKm = distanceKmTmp;
+                            if(bussinessCheckBox.isChecked()){
+                                bussinessState = true;
+                            }else{
+                                bussinessState = false;
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog = builder.create();
+                    alertDialog.show();
+                    break;
+            }
+        }
     }
     public class ConnectDatabase implements Runnable{
         @Override

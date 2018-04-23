@@ -28,7 +28,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
-        toolbar.setTitle(getResources().getString(R.string.becomeStore));
+        toolbar.setTitle(getResources().getString(R.string.addStore));
     }
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
