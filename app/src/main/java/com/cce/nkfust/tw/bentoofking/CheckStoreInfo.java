@@ -297,11 +297,7 @@ public class CheckStoreInfo extends AppCompatActivity {
             Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
             String timeString = formatter.format(curDate);
             String text = "";
-            try {
-                text = new String(CheckStoreInfo.this.commentEditText.getText().toString().getBytes(),"8859_1");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            text = CheckStoreInfo.this.commentEditText.getText().toString();
             Comment newComment = new Comment("0",/*userInfo.getMember().getEmail()*/"john8654john@gmail.com",CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"", text);
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);

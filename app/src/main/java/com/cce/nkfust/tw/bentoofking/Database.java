@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -113,13 +114,17 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
+        try {
         params.add(new BasicNameValuePair("Member", member));
         params.add(new BasicNameValuePair("Store", store));
         params.add(new BasicNameValuePair("Score", score));
-        params.add(new BasicNameValuePair("StoreContent", storeContent));
+        params.add(new BasicNameValuePair("StoreContent", new String(storeContent.getBytes(),"8859_1")));
         params.add(new BasicNameValuePair("Time", time));
-        params.add(new BasicNameValuePair("Reply", reply));
-        params.add(new BasicNameValuePair("Note", note));
+        params.add(new BasicNameValuePair("Reply", new String(reply.getBytes(),"8859_1")));
+        params.add(new BasicNameValuePair("Note", new String(note.getBytes(),"8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         json = null;
         json = jParser.makeHttpRequest(addCommentURL,"POST", params);
         Log.d("Add Comment.", json.toString());
@@ -161,9 +166,13 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
+        try {
         params.add(new BasicNameValuePair("ID", comment.getID()));
-        params.add(new BasicNameValuePair("Note", comment.getNote()));
-        params.add(new BasicNameValuePair("Reply", comment.getReply()));
+        params.add(new BasicNameValuePair("Note", new String(comment.getNote().getBytes(),"8859_1")));
+        params.add(new BasicNameValuePair("Reply", new String(comment.getReply().getBytes(),"8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         json = null;
         json = jParser.makeHttpRequest(updateCommentURL,"POST", params);
         Log.d("Update Comment.", json.toString());
@@ -189,10 +198,14 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
+        try {
         params.add(new BasicNameValuePair("Email", email));
         params.add(new BasicNameValuePair("Password", password));
         params.add(new BasicNameValuePair("Sex", sex));
-        params.add(new BasicNameValuePair("Nickname", nickname));
+        params.add(new BasicNameValuePair("Nickname", new String(nickname.getBytes(),"8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         json = null;
         json = jParser.makeHttpRequest(memberRegisterURL,"POST", params);
         Log.d("Register Response", json.toString());
@@ -212,9 +225,13 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
+        try {
         params.add(new BasicNameValuePair("Email", member.getEmail()));
         params.add(new BasicNameValuePair("Password", member.getPassword()));
-        params.add(new BasicNameValuePair("Nickname", member.getNickname()));
+        params.add(new BasicNameValuePair("Nickname", new String(member.getNickname().getBytes(),"8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         json = null;
         json = jParser.makeHttpRequest(updateMemberURL,"POST", params);
         Log.d("Update Comment.", json.toString());
@@ -361,17 +378,20 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
+        try {
         params.add(new BasicNameValuePair("ID", store.getID()));
         params.add(new BasicNameValuePair("Password", store.getPassword()));
-        params.add(new BasicNameValuePair("Name", store.getStoreName()));
-        params.add(new BasicNameValuePair("Address", store.getAddress()));
+        params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(),"8859_1")));
+        params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(),"8859_1")));
         params.add(new BasicNameValuePair("Information", store.getInformation()));
         params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
         params.add(new BasicNameValuePair("Phone", store.getPhone()));
         params.add(new BasicNameValuePair("Photo", store.getPhoto()));
         //params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
         //params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
-
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         json = null;
         json = jParser.makeHttpRequest(updateStoreURL,"POST", params);
         Log.d("Update Comment.", json.toString());
