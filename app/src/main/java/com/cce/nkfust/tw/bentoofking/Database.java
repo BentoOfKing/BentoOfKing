@@ -305,7 +305,7 @@ public class Database {
             }else{
                 Admin admin = new Admin();
                 admin.putEmail(json.getString(TAG_Message));
-                return null;
+                return admin; //台安修改   原本: return null;
             }
         }catch(Exception e){
             return null;

@@ -1,6 +1,8 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StoreLoginActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
@@ -22,8 +25,12 @@ public class StoreLoginActivity extends AppCompatActivity {
     private TextView loginPrompt;
     private Button storeLoginButton;
     private Database database;
+    private Database initial;
     private Store store;
     private Admin admin;
+    private Handler StoreLoginThreadHandler;
+    private HandlerThread StoreLoginLoginThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,43 +55,13 @@ public class StoreLoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             DatabaseLogin databaseLogin = new DatabaseLogin();
-            Thread thread = new Thread(databaseLogin);
 
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+         //多執行緒
 
-            if(store!=null){
-                userInfo = new UserInfo();
-                userInfo.setIdentity(2);
-                userInfo.putStore(store);
-                Intent intent = new Intent();
-                intent.setClass(StoreLoginActivity.this , MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra(passUserInfo,userInfo);
-                startActivity(intent);
-            }else if(admin!=null){
-                userInfo = new UserInfo();
-                userInfo.setIdentity(3);
-                userInfo.putAdmin(admin);
-                Intent intent = new Intent();
-                intent.setClass(StoreLoginActivity.this , MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra(passUserInfo,userInfo);
-                startActivity(intent);;
-            }else{
-                loginPrompt.setText("登入資料錯誤");
-
-            }
-
-
-
-
-
-
+            StoreLoginLoginThread = new HandlerThread("StoreLogin1");
+            StoreLoginLoginThread.start();
+            StoreLoginThreadHandler = new Handler(StoreLoginLoginThread.getLooper());
+            StoreLoginThreadHandler.post(databaseLogin);
 
 
         }
@@ -93,15 +70,102 @@ public class StoreLoginActivity extends AppCompatActivity {
     public class DatabaseLogin implements Runnable{
         @Override
         public void run() {
+
+            Handler StoreLoginUiHandler = new Handler();  //修改
+            StoreLoginConfirm storeLoginConfirm = new StoreLoginConfirm();
+
             database = new Database();
+            initial = new  Database();
             store = database.StoreLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
-            if(store == null) admin = database.AdminLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
+            if( store.getEmail().equals("Email error.") && (admin == null|| admin.getEmail().equals("Email error.")|| admin.getEmail().equals("Password error."))){
+                admin = database.AdminLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
+            }
+            StoreLoginUiHandler.post(storeLoginConfirm);
+
         }
     }
+
+    public class StoreLoginConfirm implements Runnable{
+
+        @Override
+        public void run() {
+
+            if (store.getEmail().equals("Password error.")&&(admin==null||admin.getEmail().equals("Email error."))) {
+                Toast toast = Toast.makeText(StoreLoginActivity.this,
+                        "Password error.", Toast.LENGTH_LONG);
+                toast.show();
+            }else if(store.getEmail().equals("Email error.")&&(admin==null||admin.getEmail().equals("Email error."))){
+                Toast toast = Toast.makeText(StoreLoginActivity.this,
+                        "Email error.", Toast.LENGTH_LONG);  //全空白
+                toast.show();
+            }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Email error.")){
+                Toast toast = Toast.makeText(StoreLoginActivity.this,
+                        "Email error.", Toast.LENGTH_LONG);
+                toast.show();
+            }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Password error.")){
+                Toast toast = Toast.makeText(StoreLoginActivity.this,
+                        "Password error.", Toast.LENGTH_LONG);
+                toast.show();
+            }
+
+
+            else {
+                Toast toast = Toast.makeText(StoreLoginActivity.this,
+                        "Successful.", Toast.LENGTH_LONG);
+                toast.show();
+                if(admin==null||admin.getEmail().equals("Email error.")){
+                    userInfo = new UserInfo();
+                    userInfo.setIdentity(2);
+                    userInfo.putStore(store);
+                    Intent intent = new Intent();
+                    intent.setClass(StoreLoginActivity.this , MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
+                    startActivity(intent);
+                }else if(admin!=null){
+                    userInfo = new UserInfo();
+                    userInfo.setIdentity(3);
+                    userInfo.putAdmin(admin);
+                    Intent intent = new Intent();
+                    intent.setClass(StoreLoginActivity.this , MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
+                    startActivity(intent);;
+                }else{
+                    loginPrompt.setText("登入資料錯誤");
+
+                }
+            }
+
+
+
+
+
+
+
+
+
+        }
+    }
+
+
+
+
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
         else
             super.onBackPressed();
     }
+
+
+
+
+    //身分別
+
+
+
+
+
+
 }

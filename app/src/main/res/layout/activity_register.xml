@@ -58,7 +58,7 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:inputType="textEmailAddress" />
                     </TableRow>
 
                     <TableRow
@@ -81,7 +81,8 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPassword"
+                            />
                     </TableRow>
 
                     <TableRow
@@ -104,7 +105,8 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPassword"
+                            />
                     </TableRow>
 
                     <TableRow
@@ -122,6 +124,7 @@
                             android:textSize="@dimen/font_size" />
 
                         <RadioGroup
+                            android:id="@+id/RadioSex"
                             android:layout_width="match_parent"
                             android:layout_height="45dp"
                             android:layout_weight="2"
@@ -133,7 +136,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="@string/man" />
+                                android:text="@string/man"
+                                />
 
                             <RadioButton
                                 android:id="@+id/radio_f"
