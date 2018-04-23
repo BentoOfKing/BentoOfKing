@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.inflateMenu(R.menu.toolbar_menu);
         ConnectDatabase connectDatabase = new ConnectDatabase();
         CDBTHandler.post(connectDatabase);
+        //GetCoordinate getCoordinate = new GetCoordinate();
+        //getCoordinate.requestUserLocation(this);
 
         /*
         Thread thread = new Thread(connectDatabase);
@@ -234,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
             database = new Database();
             if(database.GetStoreInit()) store = database.GetStore();
             for(int i=0;i<store.length;i++){
-                System.out.println(store[i].getEmail());
                 storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM",store[i].getState(),store[i].getPhoto()));
             }
             mainHandler.sendEmptyMessage(DATABASE_CONNECTED);
