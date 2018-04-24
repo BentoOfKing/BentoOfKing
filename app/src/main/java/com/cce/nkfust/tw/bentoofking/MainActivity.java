@@ -1,20 +1,28 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +34,9 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.ActivityCompat;
+
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +48,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static final int DATABASE_CONNECTED = 5278;
+    private static final int DATABASE_CONNECTED = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2;
     private Handler mainHandler;
     private HandlerThread CDBThread;
     private Handler CDBTHandler;
@@ -55,8 +66,11 @@ public class MainActivity extends AppCompatActivity {
     private Button sortButton;
     private Button filterButton;
     private CharSequence[] countryList;
-    private int locationState = 0,distanceState = 1 ,rankState = 0,priceState = 0,distanceKm = 25;
+    private int locationState = 1,distanceState = 0 ,rankState = 1,priceState = 0,distanceKm = 25;
     private boolean bussinessState = false;
+    private String Longitude,Latitude;
+    private LocationManager status;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public class ConditionButtonHandler implements View.OnClickListener{
-        int locationStateTmp = locationState;
         Spinner distanceSpinner;
         Spinner rankSpinner;
         Spinner priceSpinner;
@@ -113,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         CheckBox bussinessCheckBox;
 
         String[] sortState={getResources().getStringArray(R.array.distanceSetting)[distanceState],getResources().getStringArray(R.array.rankSetting)[rankState],getResources().getStringArray(R.array.priceSetting)[priceState]};
+        int locationStateTmp = locationState;
         @Override
         public void onClick(View v) {
             switch(v.getId()){
@@ -135,7 +149,11 @@ public class MainActivity extends AppCompatActivity {
                             .setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    locationState = locationStateTmp;
+                                    if(locationStateTmp == 0){
+                                        requestUserLocationPermission();
+                                    }else {
+                                        locationState = locationStateTmp;
+                                    }
                                     dialog.dismiss();
                                 }
                             })
@@ -153,6 +171,14 @@ public class MainActivity extends AppCompatActivity {
                     ArrayAdapter<CharSequence> distanceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.distanceSetting,android.R.layout.simple_spinner_dropdown_item);
                     distanceSpinner.setAdapter(distanceList);
                     distanceSpinner.setSelection(distanceState);
+                    if(locationState!=0) {
+                        distanceSpinner.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return true;
+                            }
+                        });
+                    }
                     ArrayAdapter<CharSequence> rankList = ArrayAdapter.createFromResource(MainActivity.this, R.array.rankSetting,android.R.layout.simple_spinner_dropdown_item);
                     rankSpinner.setAdapter(rankList);
                     rankSpinner.setSelection(rankState);
@@ -185,25 +211,37 @@ public class MainActivity extends AppCompatActivity {
                     builder = new AlertDialog.Builder(MainActivity.this);
                     SeekBar distanceSeekBar = view.findViewById(R.id.distanceSeekBar);
                     distanceTextView = view.findViewById(R.id.distanceTextView);
-                    distanceTextView.setText(getResources().getString(R.string.distance) + "：" + distanceKm + getResources().getString(R.string.km));
                     bussinessCheckBox = view.findViewById(R.id.bussinessCheckBox);
                     bussinessCheckBox.setChecked(bussinessState);
-                    distanceSeekBar.setProgress(distanceKm);
-                    SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange
-                            = new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar){}
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar){}
+                    if(locationState ==0) {
+                        distanceTextView.setText(getResources().getString(R.string.distance) + "：" + distanceKm + getResources().getString(R.string.km));
+                        distanceSeekBar.setProgress(distanceKm);
+                        SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange
+                                = new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                            }
 
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-                        {
-                            distanceKmTmp = progress;
-                            distanceTextView.setText(getResources().getString(R.string.distance) + "：" + Integer.toString(distanceKmTmp) + getResources().getString(R.string.km));
-                        }
-                    };
-                    distanceSeekBar.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                            }
+
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                distanceKmTmp = progress;
+                                distanceTextView.setText(getResources().getString(R.string.distance) + "：" + Integer.toString(distanceKmTmp) + getResources().getString(R.string.km));
+                            }
+                        };
+                        distanceSeekBar.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
+                    }else{
+                        distanceTextView.setText(getResources().getString(R.string.distance) + "：" + getResources().getString(R.string.canNotUse));
+                        distanceSeekBar.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return true;
+                            }
+                        });
+                    }
                     builder.setTitle(getResources().getString(R.string.chooseFilter));
                     builder.setView(view);
                     builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
@@ -233,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
     public class ConnectDatabase implements Runnable{
         @Override
         public void run() {
+            if(requestUserLocationPermission()) requestUserLocation();
             database = new Database();
             if(database.GetStoreInit()) store = database.GetStore();
             for(int i=0;i<store.length;i++){
@@ -289,7 +328,118 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //---以下為定位程式---
+    public boolean requestUserLocationPermission() {
+        int permissionFineLoaction = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCoarseLocation = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionFineLoaction != PackageManager.PERMISSION_GRANTED || permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions( this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, requestCodeFineLoaction );
+            ActivityCompat.requestPermissions( this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestCodeCoarseLocation );
+            return false;
+        }else{
+            requestUserLocation();
+            return true;
+        }
+
+    }
+    LocationManager mLocation;
+    public void requestUserLocation() {
+        mLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //判斷當前是否已經獲得了定位權限
+        int permissionFineLoaction = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCoarseLocation = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permissionFineLoaction != PackageManager.PERMISSION_GRANTED || permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
+            return;
+        } else {
+            boolean isGPSEnabled = mLocation.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isNetworkEnabled = mLocation.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            int LOCATION_UPDATE_MIN_DISTANCE = 1000;
+            int LOCATION_UPDATE_MIN_TIME = 50;
+            if(isNetworkEnabled || isGPSEnabled) {
+                Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.gettingLocation), Toast.LENGTH_SHORT);
+                toast.show();
+                if (isNetworkEnabled) {
+                    mLocation.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                            LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, mLocationListener);
+                }
+
+                if (isGPSEnabled) {
+                    mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, mLocationListener);
+                }
+            }
+            if(!isNetworkEnabled && !isGPSEnabled){
+                Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.canNotGetLocation), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+    }
 
 
+    private LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                Latitude = Double.toString(location.getLatitude());
+                Longitude = Double.toString(location.getLongitude());
+                mLocation.removeUpdates(mLocationListener);
+                if(userInfo.getIdentity()==1){
+                    userInfo.getMember().putLatitude(Latitude);
+                    userInfo.getMember().putLongitude(Longitude);
+                    UpdateUserLocation updateUserLocation = new UpdateUserLocation();
+                    Thread thread = new Thread(updateUserLocation);
+                    thread.start();
+                }
+                locationState = 0;
+            }
+        }
 
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+        }
+    };
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        switch (requestCode) {//根据请求码判断是哪一次申请的权限
+            case requestCodeFineLoaction:
+                if (grantResults.length > 0) {//grantResults 数组中存放的是授权结果
+                    if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {//同意授权
+                        Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.canNotGetLocation), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }else{
+                        requestUserLocation();
+                    }
+                }
+                break;
+            case requestCodeCoarseLocation:
+                if (grantResults.length > 0) {//grantResults 数组中存放的是授权结果
+                    if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {//同意授权
+                        Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.canNotGetLocation), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }else{
+
+                        requestUserLocation();
+                    }
+                }
+                break;
+            default: super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+    public class UpdateUserLocation implements Runnable{
+        @Override
+        public void run() {
+            database = new Database();
+            database.UpdateMember(userInfo.getMember());
+        }
+    }
+    //---以上為定位程式---
 }

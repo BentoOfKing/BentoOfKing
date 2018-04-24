@@ -127,22 +127,23 @@
     <string name="rank">評分</string>
     <string name="price">價格</string>
     <array name="distanceSetting">
-        <item>預設</item>
         <item>近到遠</item>
         <item>遠到近</item>
     </array>
     <array name="rankSetting">
-        <item>預設</item>
         <item>低到高</item>
         <item>高到低</item>
     </array>
     <array name="priceSetting">
-        <item>預設</item>
         <item>低到高</item>
         <item>高到低</item>
     </array>
     <string name="business">營業中</string>
     <string name="km">公里</string>
-
-
+    <string name="canNotGetLocation">無法取得定位資訊</string>
+    <string name="gettingLocation">正在取得定位資訊</string>
+    <string name="loginSuccessful">登入成功</string>
+    <string name="emailError">Email錯誤</string>
+    <string name="passwordError">密碼錯誤</string>
+    <string name="canNotUse">不適用</string>
 </resources>

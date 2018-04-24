@@ -231,6 +231,9 @@ public class Database {
         params.add(new BasicNameValuePair("Email", member.getEmail()));
         params.add(new BasicNameValuePair("Password", member.getPassword()));
         params.add(new BasicNameValuePair("Nickname", new String(member.getNickname().getBytes(),"8859_1")));
+        params.add(new BasicNameValuePair("Longitude", member.getLongitude()));
+        params.add(new BasicNameValuePair("Latitude", member.getLatitude()));
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

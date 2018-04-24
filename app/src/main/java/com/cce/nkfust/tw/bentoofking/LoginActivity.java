@@ -84,15 +84,15 @@ public class LoginActivity extends AppCompatActivity {
             if(member != null) {
                 if (member.getEmail().equals("Password error.")) {
                     Toast toast = Toast.makeText(LoginActivity.this,
-                            "Password error.", Toast.LENGTH_LONG);
+                            getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                     toast.show();
                 }else if(member.getEmail().equals("Email error.")){
                     Toast toast = Toast.makeText(LoginActivity.this,
-                            "Email error.", Toast.LENGTH_LONG);
+                            getResources().getString(R.string.emailError), Toast.LENGTH_LONG);
                     toast.show();
                 }else {
                     Toast toast = Toast.makeText(LoginActivity.this,
-                            "Successful.", Toast.LENGTH_LONG);
+                            getResources().getString(R.string.loginSuccessful), Toast.LENGTH_LONG);
                     toast.show();
                     userInfo = new UserInfo();
                     userInfo.putMember(member);
