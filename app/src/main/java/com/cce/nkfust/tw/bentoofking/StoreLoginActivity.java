@@ -92,26 +92,26 @@ public class StoreLoginActivity extends AppCompatActivity {
 
             if (store.getEmail().equals("Password error.")&&(admin==null||admin.getEmail().equals("Email error."))) {
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        "Password error.", Toast.LENGTH_LONG);
+                        getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                 toast.show();
             }else if(store.getEmail().equals("Email error.")&&(admin==null||admin.getEmail().equals("Email error."))){
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        "Email error.", Toast.LENGTH_LONG);  //全空白
+                        getResources().getString(R.string.emailError), Toast.LENGTH_LONG);  //全空白
                 toast.show();
             }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Email error.")){
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        "Email error.", Toast.LENGTH_LONG);
+                        getResources().getString(R.string.emailError), Toast.LENGTH_LONG);
                 toast.show();
             }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Password error.")){
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        "Password error.", Toast.LENGTH_LONG);
+                        getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                 toast.show();
             }
 
 
             else {
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        "Successful.", Toast.LENGTH_LONG);
+                        getResources().getString(R.string.loginSuccessful), Toast.LENGTH_LONG);
                 toast.show();
                 if(admin==null||admin.getEmail().equals("Email error.")){
                     userInfo = new UserInfo();

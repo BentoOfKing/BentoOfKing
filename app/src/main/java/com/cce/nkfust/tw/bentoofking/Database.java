@@ -68,6 +68,9 @@ public class Database {
     private static final String TAG_Reply = "Reply";
     private static final String TAG_Longitude = "Longitude";
     private static final String TAG_Latitude = "Latitude";
+    private static final String TAG_Rank = "Rank";
+    private static final String TAG_Price = "Price";
+
 
     JSONParser jParser;
     JSONObject json;
@@ -295,7 +298,7 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
                 JSONObject s = productObj.getJSONObject(0);
-                Store store = new Store(s.getString(TAG_ID),s.getString(TAG_Email),s.getString(TAG_Password),s.getString(TAG_Name),s.getString(TAG_Address),s.getString(TAG_Information),s.getString(TAG_BusinessHours),s.getString(TAG_Phone),s.getString(TAG_Photo),s.getString(TAG_Point),s.getString(TAG_State),s.getString(TAG_Note),s.getString(TAG_Longitude),s.getString(TAG_Latitude));
+                Store store = new Store(s.getString(TAG_ID),s.getString(TAG_Email),s.getString(TAG_Password),s.getString(TAG_Name),s.getString(TAG_Address),s.getString(TAG_Information),s.getString(TAG_BusinessHours),s.getString(TAG_Phone),s.getString(TAG_Photo),s.getString(TAG_Point),s.getString(TAG_State),s.getString(TAG_Note),s.getString(TAG_Longitude),s.getString(TAG_Latitude),s.getString(TAG_Rank),s.getString(TAG_Price));
                 return store;
             }else{
                 Store store = new Store();
@@ -335,19 +338,26 @@ public class Database {
     }
 
 
-    public Store[] GetStore() {
+    public Store[] GetStore(String country,int rankState,int priceState) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
         jParser = new JSONParser();
         List<NameValuePair> params;
-
-
+        String rankString,priceString;
+        if(rankState == 0 )rankString="ASC";
+        else rankString = "DESC";
+        if(priceState == 0 )priceString="ASC";
+        else priceString = "DESC";
         Store returnStore[];
+        country +="%";
         try {
             storesList = new ArrayList<HashMap<String, String>>();
             params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+            params.add(new BasicNameValuePair("Country", country));
+            params.add(new BasicNameValuePair("RankString", rankString));
+            params.add(new BasicNameValuePair("PriceString",priceString));
             json = jParser.makeHttpRequest(getStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
@@ -371,7 +381,7 @@ public class Database {
                     JSONObject c = stores.getJSONObject(i);
 
                     // Storing each json item in variable
-                    returnStore[i] = new Store(c.getString(TAG_ID),c.getString(TAG_Email),c.getString(TAG_Password),c.getString(TAG_Name),c.getString(TAG_Address),c.getString(TAG_Information),c.getString(TAG_BusinessHours),c.getString(TAG_Phone),c.getString(TAG_Photo),c.getString(TAG_Point),c.getString(TAG_State),c.getString(TAG_Note),c.getString(TAG_Longitude),c.getString(TAG_Latitude));
+                    returnStore[i] = new Store(c.getString(TAG_ID),c.getString(TAG_Email),c.getString(TAG_Password),c.getString(TAG_Name),c.getString(TAG_Address),c.getString(TAG_Information),c.getString(TAG_BusinessHours),c.getString(TAG_Phone),c.getString(TAG_Photo),c.getString(TAG_Point),c.getString(TAG_State),c.getString(TAG_Note),c.getString(TAG_Longitude),c.getString(TAG_Latitude),c.getString(TAG_Rank),c.getString(TAG_Price));
                 }
                 index+=range;
             return returnStore;

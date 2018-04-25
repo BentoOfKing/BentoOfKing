@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 public class Store implements Serializable {
     private static String storeIconURL = "http://163.18.104.169/storeImage/";
-    String ID,Email,Password,Name,Address,Information,BusinessHours,Phone,Photo,Point,State,Note,Longitude,Latitude;
+    String ID,Email,Password,Name,Address,Information,BusinessHours,Phone,Photo,Point,State,Note,Longitude,Latitude,Rank,Price;
     public Store(){}
-    public Store(String ID,String Email,String Password,String Name,String Address,String Information,String BusinessHours,String Phone,String Photo,String Point,String State,String Note,String Longitude,String Latitude){
+    public Store(String ID,String Email,String Password,String Name,String Address,String Information,String BusinessHours,String Phone,String Photo,String Point,String State,String Note,String Longitude,String Latitude,String Rank,String Price){
         this.ID = ID;
         this.Email = Email;
         this.Password = Password;
@@ -30,6 +30,8 @@ public class Store implements Serializable {
         this.Note = Note;
         this.Longitude = Longitude;
         this.Latitude = Latitude;
+        this.Rank = Rank;
+        this.Price = Price;
     }
     void putID(String ID){
         this.ID = ID;
@@ -73,6 +75,12 @@ public class Store implements Serializable {
     void putLatitude(String Latitude){
         this.Latitude = Latitude;
     }
+    void putRank(String Rank){
+        this.Rank = Rank;
+    }
+    void putPrice(String Price){
+        this.Price = Price;
+    }
     String getID(){
         return ID;
     }
@@ -114,5 +122,11 @@ public class Store implements Serializable {
     }
     String getLatitude(String Latitude){
         return Latitude;
+    }
+    String getRank(){
+        return Rank;
+    }
+    String getPrice(){
+        return Price;
     }
 }

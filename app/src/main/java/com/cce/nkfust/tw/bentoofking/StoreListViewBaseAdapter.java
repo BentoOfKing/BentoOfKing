@@ -71,7 +71,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
         }
-        viewHolder.storeName.setText("店家名稱:"+getItem(position).getStorename());
+        viewHolder.storeName.setText(getItem(position).getStorename());
         viewHolder.storePrice.setText("平均價位:"+getItem(position).getPrice());
         viewHolder.storeStatus.setText("狀態:"+getItem(position).getStatus());
         viewHolder.storeEvaluation.setText("評價:"+getItem(position).getEvaluation());

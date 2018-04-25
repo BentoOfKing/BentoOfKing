@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private Button sortButton;
     private Button filterButton;
     private CharSequence[] countryList;
-    private int locationState = 1,distanceState = 0 ,rankState = 1,priceState = 0,distanceKm = 25;
+    private int locationState = 15,distanceState = 0 ,rankState = 1,priceState = 0,distanceKm = 25;
     private boolean bussinessState = false;
     private String Longitude,Latitude;
     private LocationManager status;
@@ -273,9 +273,10 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             if(requestUserLocationPermission()) requestUserLocation();
             database = new Database();
-            if(database.GetStoreInit()) store = database.GetStore();
+            //array index need fix
+            if(database.GetStoreInit()) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
             for(int i=0;i<store.length;i++){
-                storeLists.add(new store_list(store[i].getStoreName()," * * * * *",100+i+" ","10KM",store[i].getState(),store[i].getPhoto()));
+                storeLists.add(new store_list(store[i].getStoreName(),store[i].getRank(),store[i].getPrice(),"10KM",store[i].getState(),store[i].getPhoto()));
             }
             mainHandler.sendEmptyMessage(DATABASE_CONNECTED);
         }
