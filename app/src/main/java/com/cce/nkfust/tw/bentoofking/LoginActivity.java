@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public class LoginConfirm implements  Runnable{
+    public class LoginConfirm implements Runnable{
         @Override
         public void run() {
             if(member != null) {
