@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class Store implements Serializable {
     private static String storeIconURL = "http://163.18.104.169/storeImage/";
-    String ID,Email,Password,Name,Address,Information,BusinessHours,Phone,Photo,Point,State,Note,Longitude,Latitude,Rank,Price;
+    String ID,Email,Password,Name,Address,Information,BusinessHours,Phone,Photo,Point,State,Note,Longitude,Latitude,Rank,Price,Distance;
     public Store(){}
     public Store(String ID,String Email,String Password,String Name,String Address,String Information,String BusinessHours,String Phone,String Photo,String Point,String State,String Note,String Longitude,String Latitude,String Rank,String Price){
         this.ID = ID;
@@ -81,6 +81,9 @@ public class Store implements Serializable {
     void putPrice(String Price){
         this.Price = Price;
     }
+    void putDistance(String Distance){
+        this.Distance = Distance;
+    }
     String getID(){
         return ID;
     }
@@ -105,9 +108,7 @@ public class Store implements Serializable {
     String getPhone(){
         return Phone;
     }
-    String getPhoto(){
-        return Photo;
-    }
+    String getPhoto(){return Photo; }
     String getPoint(){
         return Point;
     }
@@ -117,16 +118,17 @@ public class Store implements Serializable {
     String getNote(){
         return Note;
     }
-    String getLongitude(String Longitude){
+    String getLongitude(){
         return Longitude;
     }
-    String getLatitude(String Latitude){
-        return Latitude;
-    }
+    String getLatitude(){return Latitude;}
     String getRank(){
         return Rank;
     }
     String getPrice(){
         return Price;
+    }
+    String getDistance(){
+        return Distance;
     }
 }

@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.inflateMenu(R.menu.toolbar_menu);
         ConnectDatabase connectDatabase = new ConnectDatabase();
         CDBTHandler.post(connectDatabase);
-        //GetCoordinate getCoordinate = new GetCoordinate();
-        //getCoordinate.requestUserLocation(this);
 
         /*
         Thread thread = new Thread(connectDatabase);
@@ -149,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                             .setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    //缺更新資料
                                     if(locationStateTmp == 0){
                                         requestUserLocationPermission();
                                     }else {
@@ -195,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            //缺更新資料
                             distanceState = (int)distanceSpinner.getSelectedItemId();
                             rankState = (int)rankSpinner.getSelectedItemId();
                             priceState = (int)priceSpinner.getSelectedItemId();
@@ -253,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            //缺更新資料
                             distanceKm = distanceKmTmp;
                             if(bussinessCheckBox.isChecked()){
                                 bussinessState = true;
@@ -274,7 +275,9 @@ public class MainActivity extends AppCompatActivity {
             if(requestUserLocationPermission()) requestUserLocation();
             database = new Database();
             //array index need fix
-            if(database.GetStoreInit()) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
+
+            if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
+            //store = database.GetStoreByPosition(Longitude,Latitude,distanceState,rankState,priceState,distanceKm);
             for(int i=0;i<store.length;i++){
                 storeLists.add(new store_list(store[i].getStoreName(),store[i].getRank(),store[i].getPrice(),"10KM",store[i].getState(),store[i].getPhoto()));
             }
@@ -383,7 +386,6 @@ public class MainActivity extends AppCompatActivity {
             if (location != null) {
                 Latitude = Double.toString(location.getLatitude());
                 Longitude = Double.toString(location.getLongitude());
-                mLocation.removeUpdates(mLocationListener);
                 if(userInfo.getIdentity()==1){
                     userInfo.getMember().putLatitude(Latitude);
                     userInfo.getMember().putLongitude(Longitude);
@@ -391,7 +393,9 @@ public class MainActivity extends AppCompatActivity {
                     Thread thread = new Thread(updateUserLocation);
                     thread.start();
                 }
+                //更新資料
                 locationState = 0;
+                mLocation.removeUpdates(mLocationListener);
             }
         }
 
