@@ -293,7 +293,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                     Message msg = new Message();
                     msg.what = SENT_COMMENT;
                     Bundle commentInfo = new Bundle();
-                    commentInfo.putString("Score",commentScoreArray[which]);
+                    commentInfo.putString("Score",String.valueOf(5-which));
                     msg.setData(commentInfo);
                     sentCmtHandler.sendMessage(msg);
                 }
