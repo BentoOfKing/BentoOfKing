@@ -61,13 +61,22 @@
                     android:background="@drawable/main_button_style"
                     android:text="@string/filter"
                     android:textColor="@color/white" />
+
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/storeListView"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/linearLayout" />
+                android:layout_weight="1">
+
+                <ListView
+                    android:id="@+id/storeListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/linearLayout"
+                    tools:layout_editor_absoluteY="48dp" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
         </LinearLayout>
         <!-- The navigation drawer -->

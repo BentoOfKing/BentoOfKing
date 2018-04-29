@@ -18,6 +18,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,10 +49,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static final int DATABASE_CONNECTED = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2;
+    private static final int DATABASE_CONNECTED = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2, CONNECT_DATABASE = 5279;
     private Handler mainHandler;
     private HandlerThread CDBThread;
-    private Handler CDBTHandler;
+    private Handler_A CDBTHandler;
     private UserInfo userInfo;
     private long mExitTime;
     private Toolbar toolbar;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private Button locationButton;
     private Button sortButton;
     private Button filterButton;
+    private SwipeRefreshLayout swipeLayout;
     private CharSequence[] countryList;
     private int locationState = 15,distanceState = 0 ,rankState = 1,priceState = 0,distanceKm = 25;
     private boolean bussinessState = false;
@@ -92,23 +94,19 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         storelist=(ListView)findViewById(R.id.storeListView);
+        swipeLayout = findViewById(R.id.swipeLayout);
+        swipeLayout.setOnRefreshListener(new StoreRefreshListener());
+        swipeLayout.setColorSchemeResources(
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.inflateMenu(R.menu.toolbar_menu);
         ConnectDatabase connectDatabase = new ConnectDatabase();
         CDBTHandler.post(connectDatabase);
 
-        /*
-        Thread thread = new Thread(connectDatabase);
-        thread.start();
-
-
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
 
     }
     public class ConditionButtonHandler implements View.OnClickListener{
@@ -307,14 +305,39 @@ public class MainActivity extends AppCompatActivity {
                         storelist.setAdapter(adapter);
                         StoreListClickHandler storeListClickHandler = new StoreListClickHandler();
                         storelist.setOnItemClickListener(storeListClickHandler);
+                        swipeLayout.setRefreshing(false);
                         break;
                 }
             }
         };
         CDBThread = new HandlerThread("ConnectDataBase");
         CDBThread.start();
-        CDBTHandler = new Handler(CDBThread.getLooper());
+        CDBTHandler = new Handler_A(CDBThread.getLooper());
     }
+
+
+    private class Handler_A extends Handler{
+        public Handler_A(Looper looper){
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
+            switch (msg.what){
+                case CONNECT_DATABASE:
+                    if(requestUserLocationPermission()) requestUserLocation();
+                    database = new Database();
+                    if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
+                    for(int i=0;i<store.length;i++){
+                        storeLists.add(new store_list(store[i].getStoreName(),store[i].getRank(),store[i].getPrice(),"10KM",store[i].getState(),store[i].getPhoto()));
+                    }
+                    mainHandler.sendEmptyMessage(DATABASE_CONNECTED);
+                    break;
+            }
+        }
+
+    }
+
 
 
 
@@ -411,6 +434,14 @@ public class MainActivity extends AppCompatActivity {
         public void onProviderDisabled(String s) {
         }
     };
+
+    private class StoreRefreshListener implements SwipeRefreshLayout.OnRefreshListener{
+        @Override
+        public void onRefresh() {
+            CDBTHandler.sendEmptyMessage(CONNECT_DATABASE);
+        }
+    }
+
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
