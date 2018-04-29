@@ -262,6 +262,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            /*
             if(nameEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
@@ -297,11 +298,11 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 toast.show();
                 e.printStackTrace();
                 return;
-            }
+            }*/
             Intent intent = new Intent();
             intent.setClass(context,EditMenuActivity.class);
             intent.putExtra(passUserInfo,userInfo);
-            intent.putExtra(passStoreInfo,store);
+            //intent.putExtra(passStoreInfo,store);
             context.startActivity(intent);
         }
     }
