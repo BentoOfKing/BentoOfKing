@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -70,6 +71,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private HandlerThread sentCommentThread;
     private CommentHandler sentCmtHandler;
     private Handler mainHandler;
+    private Snackbar snackbar;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -283,6 +285,15 @@ public class CheckStoreInfo extends AppCompatActivity {
         AlertDialog.Builder askForCommentScore = new AlertDialog.Builder(CheckStoreInfo.this);
         @Override
         public void onClick(View v) {
+            if(userInfo.getIdentity()==0){
+                snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView),"訪客無法進行留言",Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                return;
+            }else if(userInfo.getIdentity()==2){
+                snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView),"店家帳號無法進行留言",Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                return;
+            }
             askForCommentScore.setTitle("請給這個店家一個評分");
             askForCommentScore.setItems(commentScoreArray, new DialogInterface.OnClickListener() {
                 @Override
