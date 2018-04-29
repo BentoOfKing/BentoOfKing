@@ -172,5 +172,7 @@
     <string name="moveTo">移動到</string>
     <string name="someonePosition">的位置</string>
     <string name="editPhoto">編輯相片</string>
-
+    <string name="chooseMainPhoto">請選擇主要店家相片</string>
+    <string name="chooseOtherPhoto">請選擇其他店家相片</string>
+    <string name="quickChoose">快速選擇</string>
 </resources>
