@@ -175,4 +175,9 @@
     <string name="chooseMainPhoto">請選擇主要店家相片</string>
     <string name="chooseOtherPhoto">請選擇其他店家相片</string>
     <string name="quickChoose">快速選擇</string>
+    <string name="errorPermission">無法取得權限</string>
+    <array name="editPhoto">
+        <item>變更</item>
+        <item>刪除</item>
+    </array>
 </resources>
