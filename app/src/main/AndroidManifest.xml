@@ -44,7 +44,8 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/Theme.ActivityDialogStyle" />
         <activity android:name=".EditMenuActivity" />
-        <activity android:name=".EditPhotoActivity"></activity>
+        <activity android:name=".EditPhotoActivity" />
+        <activity android:name=".EditStoreActivity"></activity>
     </application>
 
 </manifest>
