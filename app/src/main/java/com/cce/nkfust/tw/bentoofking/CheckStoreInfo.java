@@ -298,7 +298,7 @@ public class CheckStoreInfo extends AppCompatActivity {
             String timeString = formatter.format(curDate);
             String text = "";
             text = CheckStoreInfo.this.commentEditText.getText().toString();
-            Comment newComment = new Comment("0",/*userInfo.getMember().getEmail()*/"john8654john@gmail.com",CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"", text);
+            Comment newComment = new Comment("0",userInfo.getMember().getEmail()/*"john8654john@gmail.com"*/,CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"", text);
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             CheckStoreInfo.this.runOnUiThread(new Runnable() {
