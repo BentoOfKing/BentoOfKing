@@ -29,13 +29,12 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
     private Handler handlerForTFDB;
     public static class ViewHolder{
         ConstraintLayout commentListViewLayout;
+        TextView commentScore;
+        TextView replyTitle;
+        TextView storeReply;
         TextView commentMember;
         TextView commentDate;
         TextView commentText;
-        Button editButton;
-        Button reportButton;
-        Button deleteButton;
-        Button replyButton;
     }
 
     public CommentListViewBaseAdapter(ArrayList<Comment> data, LayoutInflater inflater){
@@ -65,16 +64,10 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
             viewHolder.commentMember = convertView.findViewById(R.id.commentMember);
             viewHolder.commentDate = convertView.findViewById(R.id.commentDate);
             viewHolder.commentText = convertView.findViewById(R.id.commentText);
-            viewHolder.deleteButton = convertView.findViewById(R.id.deleteButton);
-            viewHolder.deleteButton.setEnabled(false);
-            viewHolder.editButton = convertView.findViewById(R.id.editButton);
-            viewHolder.editButton.setEnabled(false);
-            viewHolder.replyButton = convertView.findViewById(R.id.replyButton);
-            viewHolder.replyButton.setEnabled(false);
-            viewHolder.reportButton = convertView.findViewById(R.id.reportButton);
+            viewHolder.commentScore = convertView.findViewById(R.id.ScoreTextView);
+            viewHolder.replyTitle = convertView.findViewById(R.id.replyTitle);
+            viewHolder.storeReply = convertView.findViewById(R.id.storeReply);
             viewHolder.commentListViewLayout = convertView.findViewById(R.id.border);
-            DeleteButtonListener listener = new DeleteButtonListener(getItem(position).getID());
-            viewHolder.deleteButton.setOnClickListener(listener);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)convertView.getTag();
@@ -82,42 +75,22 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
         viewHolder.commentMember.setText(getItem(position).getMemberNickName());
         viewHolder.commentDate.setText(getItem(position).getContentTime());
         viewHolder.commentText.setText(getItem(position).getNote());
+        if (getItem(position).getReply().equals(""))
+            viewHolder.replyTitle.setVisibility(View.INVISIBLE);
+        else
+            viewHolder.storeReply.setText(getItem(position).getReply());
+        String star = "(";
+        int score = Integer.valueOf(getItem(position).getScore());
+        for(int i=0;i<score;i++)
+            star+="☆";
+        star+=")";
+        viewHolder.commentScore.setText(star);
 
 
 
         return convertView;
     }
 
-    private class DeleteButtonListener implements View.OnClickListener{
-        private String id;
-        public DeleteButtonListener(String id){
-            this.id = id;
-        }
-        @Override
-        public void onClick(View view) {
-            threadForDataBase = new HandlerThread("DeleteCommentFromDataBase");
-            threadForDataBase.start();
-            handlerForTFDB = new Handler(threadForDataBase.getLooper()){
-                @Override
-                public void handleMessage(Message msg){
-                    switch (msg.what){
-                        case DELETE_COMMENT:
-                            databaseForComment = new Database();
-                            databaseForComment.deleteComment(msg.getData().getString("ID"));
-                            break;
-                    }
-
-                    super.handleMessage(msg);
-                }
-            };
-            Message msg = new Message();
-            Bundle data = new Bundle();
-            data.putString("ID",this.id);
-            msg.setData(data);
-            msg.what = DELETE_COMMENT;
-            handlerForTFDB.sendMessage(msg);
-        }
-    }
 
 
 
