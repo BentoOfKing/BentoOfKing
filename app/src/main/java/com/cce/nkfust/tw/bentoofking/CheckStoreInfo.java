@@ -41,6 +41,8 @@ public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int NEW_COMMENT = 63;
     private static final int ACTION_DIALOG = 71;
+    private static final int SENT_COMMENT = 64;
+    private String[] commentScoreArray = {"☆☆☆☆☆","☆☆☆☆","☆☆☆","☆☆","☆"};
     private Button reportButton;
     private ImageView storeIcon;
     private TextView storeName;
@@ -66,7 +68,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private CommentListViewBaseAdapter adapter;
     private Thread getArrayList;
     private HandlerThread sentCommentThread;
-    private Handler sentCmtHandler;
+    private CommentHandler sentCmtHandler;
     private Handler mainHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -278,13 +280,62 @@ public class CheckStoreInfo extends AppCompatActivity {
     }
 
     private class SentComment implements View.OnClickListener{
+        AlertDialog.Builder askForCommentScore = new AlertDialog.Builder(CheckStoreInfo.this);
         @Override
         public void onClick(View v) {
-            CheckStoreInfo.this.sentCommentThread = new HandlerThread("SentComment");
-            CheckStoreInfo.this.sentCommentThread.start();
-            CheckStoreInfo.this.sentCmtHandler = new Handler(CheckStoreInfo.this.sentCommentThread.getLooper());
-            sentCmtHandler.post(new SentCommentToDataBase());
+            askForCommentScore.setTitle("請給這個店家一個評分");
+            askForCommentScore.setItems(commentScoreArray, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    CheckStoreInfo.this.sentCommentThread = new HandlerThread("SentComment");
+                    CheckStoreInfo.this.sentCommentThread.start();
+                    CheckStoreInfo.this.sentCmtHandler = new CommentHandler(CheckStoreInfo.this.sentCommentThread.getLooper());
+                    Message msg = new Message();
+                    msg.what = SENT_COMMENT;
+                    Bundle commentInfo = new Bundle();
+                    commentInfo.putString("Score",commentScoreArray[which]);
+                    msg.setData(commentInfo);
+                    sentCmtHandler.sendMessage(msg);
+                }
+            });
+            AlertDialog dialog = askForCommentScore.create();
+            dialog.show();
+        }
+    }
 
+    private class CommentHandler extends Handler{
+        public CommentHandler(Looper looper){
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case SENT_COMMENT:
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                    Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
+                    String timeString = formatter.format(curDate);
+                    String text = "";
+                    text = CheckStoreInfo.this.commentEditText.getText().toString();
+                    Comment newComment = new Comment("0",userInfo.getMember().getEmail()/*"john8654john@gmail.com"*/,CheckStoreInfo.this.storeInfoBundle.getStore().getID(), msg.getData().getString("Score"),"123",timeString,"", text);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                    CheckStoreInfo.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CheckStoreInfo.this.commentEditText.setText("") ;
+                        }
+                    });
+                    databaseForComment = new Database();
+                    databaseForComment.addComment(newComment);
+                    sentCmtHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainHandler.sendEmptyMessage(NEW_COMMENT);
+                        }
+                    }, 500);
+                    break;
+            }
+            super.handleMessage(msg);
         }
     }
 
@@ -330,5 +381,8 @@ public class CheckStoreInfo extends AppCompatActivity {
             startActivityForResult(showDialog,ACTION_DIALOG);
         }
     }
+
+
+
 
 }
