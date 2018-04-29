@@ -63,7 +63,6 @@ public class StoreLoginActivity extends AppCompatActivity {
             StoreLoginThreadHandler = new Handler(StoreLoginLoginThread.getLooper());
             StoreLoginThreadHandler.post(databaseLogin);
 
-
         }
     }
 
@@ -81,7 +80,6 @@ public class StoreLoginActivity extends AppCompatActivity {
                 admin = database.AdminLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
             }
             StoreLoginUiHandler.post(storeLoginConfirm);
-
         }
     }
 
@@ -140,15 +138,8 @@ public class StoreLoginActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
         }
     }
-
-
 
 
     public void onBackPressed() {
@@ -159,11 +150,7 @@ public class StoreLoginActivity extends AppCompatActivity {
     }
 
 
-
-
     //身分別
-
-
 
 
 
