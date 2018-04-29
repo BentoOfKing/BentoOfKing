@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/myToolbar</item>
+
     </style>
 
     <style name="AppStartTheme" parent="Theme.AppCompat.Light.NoActionBar">

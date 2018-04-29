@@ -43,7 +43,8 @@
             android:name=".EditDataBaseCommentDialog"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/Theme.ActivityDialogStyle" />
-        <activity android:name=".EditMenuActivity"></activity>
+        <activity android:name=".EditMenuActivity" />
+        <activity android:name=".EditPhotoActivity"></activity>
     </application>
 
 </manifest>

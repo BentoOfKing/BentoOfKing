@@ -24,6 +24,45 @@
         <!-- The main content view -->
 
         <!-- The navigation drawer -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/mealListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/nextButton"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentTop="false">
+
+            </ListView>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="65dp"
+                android:layout_marginEnd="20dp"
+                android:clickable="true"
+                app:srcCompat="@drawable/ic_floating_add" />
+
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="false"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/next" />
+
+        </RelativeLayout>
+
         <ListView
             android:id="@+id/drawerListView"
             android:layout_width="240dp"
