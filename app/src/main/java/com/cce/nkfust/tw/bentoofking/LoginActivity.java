@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -28,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     private Database database;
     private Member member;
 
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog = null;
     private Handler LoginThreadHandler;
     private HandlerThread LoginThread;
 
@@ -60,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             LoginThread.start();
             LoginThreadHandler = new Handler(LoginThread.getLooper());
             LoginThreadHandler.post(databaseLogin);
+            progressDialog = ProgressDialog.show(LoginActivity.this, "請稍等...", "獲取資料中...", true);
 
 
         }
