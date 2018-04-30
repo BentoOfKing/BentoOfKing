@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -30,6 +31,8 @@ public class StoreLoginActivity extends AppCompatActivity {
     private Admin admin;
     private Handler StoreLoginThreadHandler;
     private HandlerThread StoreLoginLoginThread;
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class StoreLoginActivity extends AppCompatActivity {
         storeLoginButton = findViewById(R.id.storeLoginButton);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         storeLoginButton.setOnClickListener(loginButtonHandler);
-
+        progressDialog = ProgressDialog.show(StoreLoginActivity.this, "請稍等...", "店家登入中...", true);
     }
     public class LoginButtonHandler implements View.OnClickListener{
         @Override
@@ -92,18 +95,22 @@ public class StoreLoginActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
                         getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
             }else if(store.getEmail().equals("Email error.")&&(admin==null||admin.getEmail().equals("Email error."))){
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
                         getResources().getString(R.string.emailError), Toast.LENGTH_LONG);  //全空白
                 toast.show();
+                progressDialog.dismiss();
             }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Email error.")){
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
                         getResources().getString(R.string.emailError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
             }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Password error.")){
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
                         getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
             }
 
 
@@ -111,6 +118,7 @@ public class StoreLoginActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(StoreLoginActivity.this,
                         getResources().getString(R.string.loginSuccessful), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 if(admin==null||admin.getEmail().equals("Email error.")){
                     userInfo = new UserInfo();
                     userInfo.setIdentity(2);
