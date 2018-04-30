@@ -52,7 +52,6 @@ public class StoreLoginActivity extends AppCompatActivity {
         storeLoginButton = findViewById(R.id.storeLoginButton);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         storeLoginButton.setOnClickListener(loginButtonHandler);
-        progressDialog = ProgressDialog.show(StoreLoginActivity.this, "請稍等...", "店家登入中...", true);
     }
     public class LoginButtonHandler implements View.OnClickListener{
         @Override
@@ -65,6 +64,7 @@ public class StoreLoginActivity extends AppCompatActivity {
             StoreLoginLoginThread.start();
             StoreLoginThreadHandler = new Handler(StoreLoginLoginThread.getLooper());
             StoreLoginThreadHandler.post(databaseLogin);
+            progressDialog = ProgressDialog.show(StoreLoginActivity.this, "請稍等...", "店家登入中...", true);
 
         }
     }
