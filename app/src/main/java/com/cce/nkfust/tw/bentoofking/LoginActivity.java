@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             LoginThread.start();
             LoginThreadHandler = new Handler(LoginThread.getLooper());
             LoginThreadHandler.post(databaseLogin);
-            progressDialog = ProgressDialog.show(LoginActivity.this, "請稍等...", "獲取資料中...", true);
+            progressDialog = ProgressDialog.show(LoginActivity.this, "請稍等...", "會員登入中...", true);
 
 
         }
@@ -90,10 +90,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                     toast.show();
+                    progressDialog.dismiss();
                 }else if(member.getEmail().equals("Email error.")){
                     Toast toast = Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.emailError), Toast.LENGTH_LONG);
                     toast.show();
+                    progressDialog.dismiss();
                 }else {
                     Toast toast = Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.loginSuccessful), Toast.LENGTH_LONG);
@@ -106,8 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo, userInfo);
                     startActivity(intent);
+                    progressDialog.dismiss();
                 }
-
             }
 
         }
