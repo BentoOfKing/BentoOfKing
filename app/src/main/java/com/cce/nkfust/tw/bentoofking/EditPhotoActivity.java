@@ -1,23 +1,40 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.*;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class EditPhotoActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
@@ -30,11 +47,15 @@ public class EditPhotoActivity extends AppCompatActivity {
     private Store store;
     private ArrayList<Meal> meal;
     private Context context;
-    private ImageView mainImageView;
+    private ImageView mainImageView,requestImageView;
     private ImageView[] otherImageView;
-    private Button quickChooseButton,nextButton;
+    private Button nextButton;
+    private ImageViewClickHandler imageViewClickHandler;
     public static final int REQUEST_EXTERNAL_STORAGE = 9;
     public static final int GALLERY_INTENT = 8;
+    public static final int REQUEST_PHOTO = 7;
+    private OkHttpClient client;
+    int index;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +72,6 @@ public class EditPhotoActivity extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.editPhoto));
-        quickChooseButton = findViewById(R.id.quickChooseButton);
         nextButton = findViewById(R.id.nextButton);
         mainImageView = findViewById(R.id.mainImageView);
         otherImageView = new ImageView[8];
@@ -63,24 +83,117 @@ public class EditPhotoActivity extends AppCompatActivity {
         otherImageView[5] = findViewById(R.id.otherImageView6);
         otherImageView[6] = findViewById(R.id.otherImageView7);
         otherImageView[7] = findViewById(R.id.otherImageView8);
-        ImageViewClickHandler imageViewClickHandler = new ImageViewClickHandler();
+        imageViewClickHandler = new ImageViewClickHandler();
         mainImageView.setOnClickListener(imageViewClickHandler);
-        for(int i=0;i<8;i++){
-            otherImageView[i].setOnClickListener(imageViewClickHandler);
-        }
+        otherImageView[0].setOnClickListener(imageViewClickHandler);
+        NextHandler nextHandler = new NextHandler();
+        nextButton.setOnClickListener(nextHandler);
     }
-    public class ImageViewClickHandler implements View.OnClickListener{
-        ImageView imageView;
+    public class NextHandler implements View.OnClickListener{
+
         @Override
         public void onClick(View view) {
-            imageView = findViewById(view.getId());
-            if(imageView.getDrawable().getCurrent().getConstantState()==getResources().getDrawable(R.drawable.ic_image_add).getConstantState()){
+            if (mainImageView.getDrawable().getCurrent().getConstantState() == getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
+                Toast.makeText(context,getResources().getString(R.string.pleaseInputPhoto), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int count = 0;
+            for(int i=0;i<7;i++){
+                if (otherImageView[i].getDrawable().getCurrent().getConstantState() == getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
+                    break;
+                }
+                count++;
+            }
+            postImage(count);
+
+
+
+        }
+    }
+
+    public void postImage(int count){
+        String storeId = "";
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        for(int i=0;i<count;i++){
+            Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            builder.addFormDataPart("img_"+Integer.toString(i),storeId+"_"+Integer.toString(i)+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
+        }
+        Bitmap bm = ((BitmapDrawable)mainImageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        builder.addFormDataPart("img_main",storeId+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
+        MultipartBody build = builder.build();
+
+        okhttp3.Request bi = new okhttp3.Request.Builder()
+                .url("后台地址")
+                .post(build)
+                .build();
+
+        client.newCall(bi).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("TAG", "onFailure");
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Log.i("TAG", "onResponse: " + response.body().string());
+                //提交成功处理结果....
+            }
+        });
+    }
+
+    public class ImageViewClickHandler implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            requestImageView = findViewById(view.getId());
+            index = -1;
+            for(int i=0;i<8;i++){
+                if(requestImageView == otherImageView[i]) index = i;
+            }
+            if(requestImageView.getDrawable().getCurrent().getConstantState()==getResources().getDrawable(R.drawable.ic_image_add).getConstantState()){
                 getFilePermission();
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, REQUEST_PHOTO);
+
             }else{
                 new AlertDialog.Builder(context)
                         .setItems(getResources().getStringArray(R.array.editPhoto),new DialogInterface.OnClickListener() {
+                            boolean findEmpty;
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        switch (which){
+                                            case 0:
+                                                Intent intent = new Intent();
+                                                intent.setType("image/*");
+                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                startActivityForResult(intent, REQUEST_PHOTO);
+                                                break;
+                                            case 1:
+                                                if(index == -1 || index == 7) {
+                                                    requestImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                                                }else{
+                                                    findEmpty = false;
+                                                    for(int i=index ; i < 7 ; i++) {
+                                                        if (otherImageView[i+1].getDrawable().getCurrent().getConstantState() != getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
+                                                            otherImageView[i].setImageBitmap(((BitmapDrawable)otherImageView[i+1].getDrawable()).getBitmap());
+                                                            if(i==6) otherImageView[i+1].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                                                        }else{
+                                                            otherImageView[i].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                                                            if(i!=7){
+                                                                otherImageView[i+1].setImageDrawable(new ColorDrawable(0x00000000));
+                                                                otherImageView[i+1].setOnClickListener(null);
+                                                            }
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                break;
+                                        }
 
                                     }
                                 })
@@ -106,9 +219,20 @@ public class EditPhotoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-
-        }else if(requestCode == GALLERY_INTENT&& resultCode != RESULT_OK){
+        if(requestCode == REQUEST_PHOTO && resultCode == RESULT_OK){
+            Uri uri = data.getData();
+            ContentResolver cr = this.getContentResolver();
+            try {
+                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                requestImageView.setImageBitmap(bitmap);
+                if(index != -1 && index != 7){
+                    otherImageView[index+1].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                    otherImageView[index+1].setOnClickListener(imageViewClickHandler);
+                }
+            } catch (FileNotFoundException e) {
+                Log.e("Exception", e.getMessage(),e);
+            }
+        }else if(requestCode == REQUEST_PHOTO&& resultCode != RESULT_OK){
 
         }
 

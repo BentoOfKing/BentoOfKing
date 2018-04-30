@@ -39,6 +39,7 @@ public class Database {
     private static String updateCommentURL = "http://163.18.104.169/databaseConnect/updateComment.php";
     private static String updateMemberURL = "http://163.18.104.169/databaseConnect/updateMember.php";
     private static String updateStoreURL = "http://163.18.104.169/databaseConnect/updateStore.php";
+    private static String addStoreURL = "http://163.18.104.169/databaseConnect/addStore.php";
 
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
@@ -457,8 +458,7 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        try {
-        params.add(new BasicNameValuePair("ID", store.getID()));
+        try {params.add(new BasicNameValuePair("ID", store.getID()));
         params.add(new BasicNameValuePair("Password", store.getPassword()));
         params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(),"8859_1")));
         params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(),"8859_1")));
@@ -476,8 +476,42 @@ public class Database {
         Log.d("Update Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
-            if (success == 1) {
+            if (success == 1) {;
                 return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+    public String addStore(Store store){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        try {
+            params.add(new BasicNameValuePair("Email", store.getEmail()));
+            params.add(new BasicNameValuePair("Password", store.getPassword()));
+            params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(),"8859_1")));
+            params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(),"8859_1")));
+            params.add(new BasicNameValuePair("Information", store.getInformation()));
+            params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
+            params.add(new BasicNameValuePair("Phone", store.getPhone()));
+            params.add(new BasicNameValuePair("Photo", store.getPhoto()));
+            params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
+            params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        json = null;
+        json = jParser.makeHttpRequest(addStoreURL,"POST", params);
+        Log.d("Update Comment.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                String ID = json.getString(TAG_ID);
+                return ID;
             } else {
                 return "An error occurred.";
             }

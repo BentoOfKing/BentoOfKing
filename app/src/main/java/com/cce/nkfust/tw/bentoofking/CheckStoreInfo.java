@@ -41,6 +41,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private static final int SENT_COMMENT = 64;
     private static final int DELETE_COMMENT = 65;
     private static final int EDIT_COMMENT = 66;
+    private static final int EDIT_REPLY = 67;
     private String[] commentScoreArray = {"☆☆☆☆☆","☆☆☆☆","☆☆☆","☆☆","☆"};
     private int commentMode;
     private Comment editComment;
@@ -328,6 +329,17 @@ public class CheckStoreInfo extends AppCompatActivity {
                 commentInfo.putSerializable("CommentEdit",editComment);
                 msg.setData(commentInfo);
                 CmtHandler.sendMessage(msg);
+            }else if(commentMode == EDIT_REPLY){
+                CheckStoreInfo.this.commentThread = new HandlerThread("EditComment");
+                CheckStoreInfo.this.commentThread.start();
+                CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
+                editComment.putReply(commentEditText.getText().toString());
+                Message msg = new Message();
+                msg.what = EDIT_REPLY;
+                Bundle commentInfo = new Bundle();
+                commentInfo.putSerializable("CommentEdit",editComment);
+                msg.setData(commentInfo);
+                CmtHandler.sendMessage(msg);
             }
             commentMode = SENT_COMMENT;
             commentEditText.setText("");
@@ -357,6 +369,10 @@ public class CheckStoreInfo extends AppCompatActivity {
                     databaseForComment.deleteComment(msg.getData().getString("CommentID"));
                     break;
                 case EDIT_COMMENT:
+                    databaseForComment = new Database();
+                    databaseForComment.updateComment((Comment)msg.getData().getSerializable("CommentEdit"));
+                    break;
+                case EDIT_REPLY:
                     databaseForComment = new Database();
                     databaseForComment.updateComment((Comment)msg.getData().getSerializable("CommentEdit"));
                     break;
@@ -446,6 +462,14 @@ public class CheckStoreInfo extends AppCompatActivity {
                         editComment.putID(selectComment.getID());
                         editComment.putReply(selectComment.getReply());
                         commentEditText.setText(selectComment.getNote());
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
+                    }else if(selections.get(which).equals("回覆")){
+                        commentMode = EDIT_REPLY;
+                        editComment = new Comment();
+                        editComment.putID(selectComment.getID());
+                        editComment.putNote(selectComment.getNote());
+                        commentEditText.setText(selectComment.getReply());
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
                     }

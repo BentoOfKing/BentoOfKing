@@ -180,4 +180,6 @@
         <item>變更</item>
         <item>刪除</item>
     </array>
+    <string name="pleaseInputPhoto">請至少上傳店家主要照片</string>
+
 </resources>
