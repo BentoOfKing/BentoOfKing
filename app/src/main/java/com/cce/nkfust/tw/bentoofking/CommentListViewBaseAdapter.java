@@ -75,10 +75,14 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
         viewHolder.commentMember.setText(getItem(position).getMemberNickName());
         viewHolder.commentDate.setText(getItem(position).getContentTime());
         viewHolder.commentText.setText(getItem(position).getNote());
-        if (getItem(position).getReply().equals(""))
+        if (getItem(position).getReply().equals("")) {
             viewHolder.replyTitle.setVisibility(View.INVISIBLE);
-        else
+            viewHolder.storeReply.setText("");
+        }
+        else {
+            viewHolder.replyTitle.setVisibility(View.VISIBLE);
             viewHolder.storeReply.setText(getItem(position).getReply());
+        }
         String star = "(";
         int score = Integer.valueOf(getItem(position).getScore());
         for(int i=0;i<score;i++)
