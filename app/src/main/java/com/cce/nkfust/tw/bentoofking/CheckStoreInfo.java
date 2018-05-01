@@ -314,6 +314,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                         commentInfo.putString("Note",CheckStoreInfo.this.commentEditText.getText().toString());
                         msg.setData(commentInfo);
                         CmtHandler.sendMessage(msg);
+                        commentEditText.setText("");
                     }
                 });
                 AlertDialog dialog = askForCommentScore.create();
@@ -323,6 +324,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                 CheckStoreInfo.this.commentThread.start();
                 CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
                 editComment.putNote(commentEditText.getText().toString());
+                commentEditText.setText("");
                 Message msg = new Message();
                 msg.what = EDIT_COMMENT;
                 Bundle commentInfo = new Bundle();
@@ -340,9 +342,9 @@ public class CheckStoreInfo extends AppCompatActivity {
                 commentInfo.putSerializable("CommentEdit",editComment);
                 msg.setData(commentInfo);
                 CmtHandler.sendMessage(msg);
+                commentEditText.setText("");
             }
             commentMode = SENT_COMMENT;
-            commentEditText.setText("");
             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
