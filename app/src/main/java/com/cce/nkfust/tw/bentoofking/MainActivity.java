@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,8 +50,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static final int DATABASE_CONNECTED = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2, CONNECT_DATABASE = 5279;
-    private Handler mainHandler;
+    private static final int REFRESH_ACTIVITY = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2, MORE_STORE = 5279, REFRESH_STORELIST = 5273;
+    private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
     private UserInfo userInfo;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private Database database;
     private Store store[];
     private ListView storelist;
-    private ArrayList<store_list> storeLists = new ArrayList<store_list>();
+    private ArrayList<store_list> storeLists;
     private StoreListViewBaseAdapter adapter;
     private Button locationButton;
     private Button sortButton;
@@ -78,37 +79,65 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        creatHandler();
+        InfoReceive();
+        varialbleSetup();
+        UIconnect();
+        UIsetup();
+        UIhandle();
+        UIupdate();
+    }
+    private void varialbleSetup(){
+        countryList = getResources().getStringArray(R.array.country);
+        database = new Database();
+        mainHandler = new MainThreadHandler(Looper.getMainLooper());
+        CDBThread = new HandlerThread("1stThread");
+        CDBThread.start();
+        CDBTHandler = new Handler_A(CDBThread.getLooper());
+        storeLists = new ArrayList<store_list>();
+        adapter = new StoreListViewBaseAdapter(MainActivity.this,storeLists,(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+    }
+    private void InfoReceive(){
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         if(userInfo == null) userInfo = new UserInfo();
+    }
+    private void UIconnect(){
         toolbar = findViewById(R.id.toolbar);
-        countryList = getResources().getStringArray(R.array.country);
         locationButton = findViewById(R.id.locationButton);
         sortButton = findViewById(R.id.sortButton);
         filterButton = findViewById(R.id.filterButton);
-        ConditionButtonHandler conditionButtonHandler = new ConditionButtonHandler();
-        locationButton.setOnClickListener(conditionButtonHandler);
-        sortButton.setOnClickListener(conditionButtonHandler);
-        filterButton.setOnClickListener(conditionButtonHandler);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         storelist=(ListView)findViewById(R.id.storeListView);
         swipeLayout = findViewById(R.id.swipeLayout);
+    }
+    private void UIhandle(){
+        ConditionButtonHandler conditionButtonHandler = new ConditionButtonHandler();
+        locationButton.setOnClickListener(conditionButtonHandler);
+        sortButton.setOnClickListener(conditionButtonHandler);
+        filterButton.setOnClickListener(conditionButtonHandler);
         swipeLayout.setOnRefreshListener(new StoreRefreshListener());
+        storelist.setOnItemClickListener(new StoreListClickHandler());
+        storelist.setOnScrollListener(new StoreListScrollHandler());
+    }
+    private void UIsetup(){
         swipeLayout.setColorSchemeResources(
                 android.R.color.holo_red_light,
                 android.R.color.holo_blue_light,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light);
+        toolbar.inflateMenu(R.menu.toolbar_menu);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        toolbar.inflateMenu(R.menu.toolbar_menu);
-        ConnectDatabase connectDatabase = new ConnectDatabase();
-        CDBTHandler.post(connectDatabase);
-
-
+        storelist.setAdapter(adapter);
     }
+    private void UIupdate(){
+        CDBTHandler.sendEmptyMessage(REFRESH_STORELIST);
+    }
+
+
+
+
     public class ConditionButtonHandler implements View.OnClickListener{
         Spinner distanceSpinner;
         Spinner rankSpinner;
@@ -267,21 +296,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public class ConnectDatabase implements Runnable{
-        @Override
-        public void run() {
-            if(requestUserLocationPermission()) requestUserLocation();
-            database = new Database();
-            //array index need fix
 
-            if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
-            //store = database.GetStoreByPosition(Longitude,Latitude,distanceState,rankState,priceState,distanceKm);
-            for(int i=0;i<store.length;i++){
-                storeLists.add(new store_list(store[i].getStoreName(),store[i].getRank(),store[i].getPrice(),"10KM",store[i].getState(),store[i].getPhoto()));
-            }
-            mainHandler.sendEmptyMessage(DATABASE_CONNECTED);
-        }
-    }
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
@@ -293,27 +308,7 @@ public class MainActivity extends AppCompatActivity {
             System.exit(0);
         }
     }
-    private void creatHandler(){
-        mainHandler = new Handler(Looper.getMainLooper()){
-            @Override
-            public void handleMessage(Message msg){
-                super.handleMessage(msg);
-                switch(msg.what){
-                    case DATABASE_CONNECTED:
-                        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        adapter = new StoreListViewBaseAdapter(MainActivity.this,storeLists,inflater);
-                        storelist.setAdapter(adapter);
-                        StoreListClickHandler storeListClickHandler = new StoreListClickHandler();
-                        storelist.setOnItemClickListener(storeListClickHandler);
-                        swipeLayout.setRefreshing(false);
-                        break;
-                }
-            }
-        };
-        CDBThread = new HandlerThread("ConnectDataBase");
-        CDBThread.start();
-        CDBTHandler = new Handler_A(CDBThread.getLooper());
-    }
+
 
 
     private class Handler_A extends Handler{
@@ -324,18 +319,44 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg){
             super.handleMessage(msg);
             switch (msg.what){
-                case CONNECT_DATABASE:
+                case MORE_STORE:
                     if(requestUserLocationPermission()) requestUserLocation();
-                    database = new Database();
                     if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
-                    for(int i=0;i<store.length;i++){
-                        storeLists.add(new store_list(store[i].getStoreName(),store[i].getRank(),store[i].getPrice(),"10KM",store[i].getState(),store[i].getPhoto()));
-                    }
-                    mainHandler.sendEmptyMessage(DATABASE_CONNECTED);
+                    for(int i=0;i<store.length;i++)
+                        storeLists.add(new store_list(store[i]));
+                    mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
+                    break;
+                case REFRESH_STORELIST:
+                    if(requestUserLocationPermission()) requestUserLocation();
+                    database.refreshStoreIndex();
+                    if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
+                    storeLists.clear();
+                    for(int i=0;i<store.length;i++)
+                        storeLists.add(new store_list(store[i]));
+                    mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
             }
         }
+    }
 
+    private class MainThreadHandler extends Handler{
+        public MainThreadHandler(){
+            super();
+        }
+        public MainThreadHandler(Looper looper){
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case REFRESH_ACTIVITY:
+                    adapter.notifyDataSetChanged();
+                    swipeLayout.setRefreshing(false);
+                    storelist.setEnabled(true);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
     }
 
 
@@ -347,13 +368,29 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,CheckStoreInfo.class);
             UserInfo storeInfoBundle = new UserInfo();
             storeInfoBundle.setIdentity(2);
-            storeInfoBundle.putStore(MainActivity.this.store[position]);
+            storeInfoBundle.putStore(MainActivity.this.storeLists.get(position).getStoreInfo());
             intent.putExtra("storeInfo",storeInfoBundle);
             intent.putExtra( MainActivity.passUserInfo, MainActivity.this.userInfo);
             startActivity(intent);
         }
     }
 
+
+    private class StoreListScrollHandler implements AbsListView.OnScrollListener{
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                    CDBTHandler.sendEmptyMessage(MORE_STORE);
+                }
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+        }
+    }
 
     //---以下為定位程式---
     public boolean requestUserLocationPermission() {
@@ -438,7 +475,8 @@ public class MainActivity extends AppCompatActivity {
     private class StoreRefreshListener implements SwipeRefreshLayout.OnRefreshListener{
         @Override
         public void onRefresh() {
-            CDBTHandler.sendEmptyMessage(CONNECT_DATABASE);
+            storelist.setEnabled(false);
+            CDBTHandler.sendEmptyMessage(REFRESH_STORELIST);
         }
     }
 

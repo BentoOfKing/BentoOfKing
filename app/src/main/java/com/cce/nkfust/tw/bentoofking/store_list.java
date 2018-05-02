@@ -16,13 +16,15 @@ public class store_list {
     private String price;
     private String distance;
     private String status;
-    public store_list(String storename ,String evaluation ,String price ,String distance,String status,String imageURL){
-        this.imageURL = imageURL;
-        this.storename=storename;
-        this.evaluation=evaluation;
-        this.price=price;
-        this.distance=distance;
-        this.status = status;
+    private Store store;
+    public store_list(Store inputStore){
+        store = inputStore;
+        this.imageURL = store.getPhoto();
+        this.storename=store.getStoreName();
+        this.evaluation=store.getRank();
+        this.price=store.getPrice();
+        this.distance=store.getDistance();
+        this.status = store.getState();
     }
     public String getStorename(){
         return this.storename;
@@ -33,9 +35,7 @@ public class store_list {
     public String getEvaluation(){
         return this.evaluation;
     }
-    public void setEvaluation(String evaluation){
-        this.evaluation=evaluation;
-    }
+    public void setEvaluation(String evaluation){ this.evaluation=evaluation; }
     public String getPrice(){
         return this.price;
     }
@@ -54,4 +54,5 @@ public class store_list {
     }
     public String getImageURL(){ return this.imageURL; }
     public void setImageURL(String imageURL){ this.imageURL = imageURL; }
+    public Store getStoreInfo(){ return this.store; }
 }

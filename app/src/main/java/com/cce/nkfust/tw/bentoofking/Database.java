@@ -78,7 +78,7 @@ public class Database {
     JSONParser jParser;
     JSONObject json;
 
-    int range,index=0;
+    private int range,index=0;
     ArrayList<HashMap<String, String>> storesList;
 
     String result = "";
@@ -395,6 +395,10 @@ public class Database {
             return nullStore;
         }
     }
+    public void refreshStoreIndex(){ index =0; }
+
+
+
     public Store[] GetStoreByPosition(String Longitude,String Latitude,int distanceState,int rankState,int priceState,int distance) {
         JSONObject json;
         JSONArray stores = null;
