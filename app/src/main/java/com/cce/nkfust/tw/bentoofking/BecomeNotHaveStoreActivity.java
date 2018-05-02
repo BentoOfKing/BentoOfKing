@@ -46,6 +46,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
     private String storeInfoString = "0000000";
     private int hour=0, minute=0;
     private char[] bussinessTimeChar;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_become_not_have_store);
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
+        store = (Store) intent.getSerializableExtra(passStoreInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -262,7 +264,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            /*
+
             if(nameEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
@@ -281,7 +283,6 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 toast.show();
                 return;
             }
-            Store store = new Store();
             store.putStoreName(nameEditText.getText().toString());
             store.putAddress(addressEditText.getText().toString());
             store.putPhone(phoneEditText.getText().toString());
@@ -298,11 +299,11 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 toast.show();
                 e.printStackTrace();
                 return;
-            }*/
+            }
             Intent intent = new Intent();
             intent.setClass(context,EditMenuActivity.class);
             intent.putExtra(passUserInfo,userInfo);
-            //intent.putExtra(passStoreInfo,store);
+            intent.putExtra(passStoreInfo,store);
             context.startActivity(intent);
         }
     }

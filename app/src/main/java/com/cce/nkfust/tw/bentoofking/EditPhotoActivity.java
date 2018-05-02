@@ -55,12 +55,13 @@ public class EditPhotoActivity extends AppCompatActivity {
     public static final int GALLERY_INTENT = 8;
     public static final int REQUEST_PHOTO = 7;
     private OkHttpClient client;
-    int index;
+    int index,photoCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_photo);
         context = this;
+        client = new OkHttpClient();
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         store =(Store) intent.getSerializableExtra(passStoreInfo);
@@ -97,22 +98,64 @@ public class EditPhotoActivity extends AppCompatActivity {
                 Toast.makeText(context,getResources().getString(R.string.pleaseInputPhoto), Toast.LENGTH_SHORT).show();
                 return;
             }
-            int count = 0;
+            photoCount = 0;
             for(int i=0;i<7;i++){
                 if (otherImageView[i].getDrawable().getCurrent().getConstantState() == getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
                     break;
                 }
-                count++;
+                photoCount++;
             }
-            postImage(count);
+            AddStore addStore = new AddStore();
+            Thread thread = new Thread(addStore);
+            thread.start();
+
+
 
 
 
         }
     }
+    public class AddStore implements Runnable{
+
+        @Override
+        public void run() {
+            Database database = new Database();
+            try {
+                store.putRank("3");
+                store.putState("0");
+                store.putPoint("0");
+                int price = 0;
+                for(int i=0;i<meal.size();i++){
+                    price += Integer.parseInt(meal.get(i).getPrice());
+                }
+                price /= meal.size();
+                store.putPrice(Integer.toString(price));
+                store.putID(database.addStore(store));
+                postImage(photoCount);
+                String photoString = store.getID() + ".jpg";
+                for (int i = 0; i < photoCount; i++) {
+                    photoString += "," + store.getID() + "_" + Integer.toString(i) + ".jpg";
+                }
+                store.putPhoto(photoString);
+                database.UpdateStore(store);
+                for(int i=0;i<meal.size();i++){
+                    meal.get(i).putStore(store.getID());
+                }
+                database.addMeal(meal);
+                Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setClass(context,MainActivity.class);
+                intent.putExtra(passUserInfo,userInfo);
+                startActivity(intent);
+            }catch (Exception e){
+                Toast.makeText(context,getResources().getString(R.string.addStoreFail), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     public void postImage(int count){
-        String storeId = "";
+        String storeId = store.getID();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for(int i=0;i<count;i++){
             Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
@@ -127,7 +170,7 @@ public class EditPhotoActivity extends AppCompatActivity {
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("后台地址")
+                .url("http://163.18.104.169/storeImage/upload.php")
                 .post(build)
                 .build();
 

@@ -72,15 +72,15 @@ public class EditMenuActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent();
-            intent.setClass(context,EditPhotoActivity.class);
-            intent.putExtra(passUserInfo,userInfo);
-            //intent.putExtra(passStoreInfo,store);
-            //intent.putExtra(passmenuInfo,meal);
             if(meal.size()==0){
                 Toast.makeText(context,getResources().getString(R.string.pleaseInputOneMeal), Toast.LENGTH_SHORT).show();
                 return;
             }
+            Intent intent = new Intent();
+            intent.setClass(context,EditPhotoActivity.class);
+            intent.putExtra(passUserInfo,userInfo);
+            intent.putExtra(passStoreInfo,store);
+            intent.putExtra(passmenuInfo,meal);
             context.startActivity(intent);
         }
     }

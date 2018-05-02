@@ -40,7 +40,7 @@ public class Database {
     private static String updateMemberURL = "http://163.18.104.169/databaseConnect/updateMember.php";
     private static String updateStoreURL = "http://163.18.104.169/databaseConnect/updateStore.php";
     private static String addStoreURL = "http://163.18.104.169/databaseConnect/addStore.php";
-
+    private static String addMealURL = "http://163.18.104.169/databaseConnect/addMeal.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -499,8 +499,12 @@ public class Database {
             params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
             params.add(new BasicNameValuePair("Phone", store.getPhone()));
             params.add(new BasicNameValuePair("Photo", store.getPhoto()));
+            params.add(new BasicNameValuePair("Point", store.getPoint()));
+            params.add(new BasicNameValuePair("State", store.getState()));
             params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
             params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
+            params.add(new BasicNameValuePair("Rank", store.getRank()));
+            params.add(new BasicNameValuePair("Price", store.getPrice()));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -544,5 +548,32 @@ public class Database {
             return null;
         }
     }
-
+    public String addMeal(ArrayList<Meal> meal){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        for(int i=0;i<meal.size();i++) {
+            try {
+                params.add(new BasicNameValuePair("Store", meal.get(i).getStore()));
+                params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
+                params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
+                params.add(new BasicNameValuePair("Sequence", meal.get(i).getSequence()));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            json = null;
+            json = jParser.makeHttpRequest(addMealURL, "POST", params);
+            Log.d("Update Comment.", json.toString());
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                if (success != 1) {
+                    return "An error occurred.";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "Fail.";
+            }
+        }
+        return "Successful.";
+    }
 }
