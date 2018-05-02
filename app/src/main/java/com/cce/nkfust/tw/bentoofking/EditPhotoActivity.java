@@ -41,6 +41,7 @@ import okhttp3.RequestBody;
 
 public class EditPhotoActivity extends AppCompatActivity{
     private static final int SUCCESS = 66;
+    private static final int FAIL = 38;
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static String passmenuInfo = "MENU_INFO";
@@ -149,14 +150,10 @@ public class EditPhotoActivity extends AppCompatActivity{
                 }
                 database.addMeal(meal);
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
-                //Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setClass(context,MainActivity.class);
-                intent.putExtra(passUserInfo,userInfo);
-                startActivity(intent);
+
             }catch (Exception e){
-                Toast.makeText(context,getResources().getString(R.string.addStoreFail), Toast.LENGTH_SHORT).show();
+                mainThreadHandler.sendEmptyMessage(FAIL);
+
             }
         }
     }
@@ -313,6 +310,14 @@ public class EditPhotoActivity extends AppCompatActivity{
             switch (msg.what){
                 case SUCCESS:
                     Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setClass(context,MainActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    startActivity(intent);
+                    break;
+                case FAIL:
+                    Toast.makeText(context,getResources().getString(R.string.addStoreFail), Toast.LENGTH_SHORT).show();
                     break;
             }
             super.handleMessage(msg);
