@@ -11,6 +11,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -36,7 +39,8 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
-public class EditPhotoActivity extends AppCompatActivity {
+public class EditPhotoActivity extends AppCompatActivity{
+    private static final int SUCCESS = 66;
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static String passmenuInfo = "MENU_INFO";
@@ -51,6 +55,7 @@ public class EditPhotoActivity extends AppCompatActivity {
     private ImageView[] otherImageView;
     private Button nextButton;
     private ImageViewClickHandler imageViewClickHandler;
+    private MainThreadHandler mainThreadHandler;
     public static final int REQUEST_EXTERNAL_STORAGE = 9;
     public static final int GALLERY_INTENT = 8;
     public static final int REQUEST_PHOTO = 7;
@@ -88,6 +93,7 @@ public class EditPhotoActivity extends AppCompatActivity {
         mainImageView.setOnClickListener(imageViewClickHandler);
         otherImageView[0].setOnClickListener(imageViewClickHandler);
         NextHandler nextHandler = new NextHandler();
+        mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
         nextButton.setOnClickListener(nextHandler);
     }
     public class NextHandler implements View.OnClickListener{
@@ -142,7 +148,8 @@ public class EditPhotoActivity extends AppCompatActivity {
                     meal.get(i).putStore(store.getID());
                 }
                 database.addMeal(meal);
-                Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
+                mainThreadHandler.sendEmptyMessage(SUCCESS);
+                //Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setClass(context,MainActivity.class);
@@ -291,6 +298,24 @@ public class EditPhotoActivity extends AppCompatActivity {
                 }
                 break;
             default: super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private class MainThreadHandler extends Handler {
+        public MainThreadHandler(){
+            super();
+        }
+        public MainThreadHandler(Looper looper){
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case SUCCESS:
+                    Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            super.handleMessage(msg);
         }
     }
 
