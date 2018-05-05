@@ -1,11 +1,13 @@
 package com.cce.nkfust.tw.bentoofking;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +50,9 @@ public class EditStoreActivity extends AppCompatActivity {
     private String storeInfoString = "0000000";
     private int hour=0, minute=0;
     private char[] bussinessTimeChar;
+    private Store store;
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class EditStoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_store);
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
+        store =  userInfo.getStore();
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -67,10 +73,10 @@ public class EditStoreActivity extends AppCompatActivity {
         drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.editStore));
         nextButton = findViewById(R.id.nextButton);
-  /**/      EditStoreActivity.NextHandler nextHandler = new NextHandler();
+        NextHandler nextHandler = new NextHandler();
         nextButton.setOnClickListener(nextHandler);
         infoContentTextView = findViewById(R.id.infoContentTextView);
-  /**/      EditStoreActivity.InfoClickHandler infoClickHandler = new InfoClickHandler();
+        InfoClickHandler infoClickHandler = new InfoClickHandler();
         infoContentTextView.setOnClickListener(infoClickHandler);
         nameEditText = findViewById(R.id.nameEditText);
         addressEditText = findViewById(R.id.addressEditText);
@@ -83,27 +89,71 @@ public class EditStoreActivity extends AppCompatActivity {
         time2EditText.setInputType(InputType.TYPE_NULL);
         time3EditText.setInputType(InputType.TYPE_NULL);
         time4EditText.setInputType(InputType.TYPE_NULL);
- /**/       EditStoreActivity.TimeTextFieldOnFocusHandler timeTextFieldOnFocusHandler = new TimeTextFieldOnFocusHandler();
+        TimeTextFieldOnFocusHandler timeTextFieldOnFocusHandler = new TimeTextFieldOnFocusHandler();
         time1EditText.setOnFocusChangeListener(timeTextFieldOnFocusHandler);
         time2EditText.setOnFocusChangeListener(timeTextFieldOnFocusHandler);
         time3EditText.setOnFocusChangeListener(timeTextFieldOnFocusHandler);
         time4EditText.setOnFocusChangeListener(timeTextFieldOnFocusHandler);
- /**/       EditStoreActivity.TimeTextFieldOnClickHandler timeTextFieldOnClickHandler = new TimeTextFieldOnClickHandler();
+        TimeTextFieldOnClickHandler timeTextFieldOnClickHandler = new TimeTextFieldOnClickHandler();
         time1EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time2EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time3EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time4EditText.setOnClickListener(timeTextFieldOnClickHandler);
 
+        nameEditText.setText(store.getStoreName().toString());
+        addressEditText.setText(store.getAddress().toString());
+        phoneEditText.setText(store.getPhone().toString());
 
+        String timetemp = store.BusinessHours.toString();
+        char chartime ;
+        String intime1="";
+        String intime2="";
+        String intime3="";
+        String intime4="";
+        int i;
+            for (i = 0; i <= 15; i++) {
+                if (i >= 0 && i <= 3) {
+                    chartime = timetemp.charAt(i);
+                    intime1 = intime1 + chartime;
+                    }
+                if (i >= 4 && i <= 7) {
+                    chartime = timetemp.charAt(i);
+                    intime2 = intime2 + chartime;
+                }
+                if (i >= 8 && i <= 11) {
+                    chartime = timetemp.charAt(i);
+                    intime3 = intime3 + chartime;
+                }
+                if (i >= 12 && i <= 15) {
+                    chartime = timetemp.charAt(i);
+                    intime4 = intime4 + chartime;
+                }
+            }
+            if(intime1.equals("0000")) intime1="";
+                else time1EditText.setText(intime1);
+            if(intime2.equals("0000")) intime2="";
+                else time2EditText.setText(intime2);
+            if(intime3.equals("0000")) intime3="";
+                else time3EditText.setText(intime3);
+            if(intime4.equals("0000")) intime4="";
+                else time4EditText.setText(intime4);
     }
 
 
+
+
+
+
     public class InfoClickHandler implements View.OnClickListener{
+
         CharSequence[] storeInfo;
         AlertDialog alertDialog;
         char[] storeInfoStringTmp = storeInfoString.toCharArray();
         boolean[] storeInfoStringBool = new boolean[storeInfoStringTmp.length];
         String infoContentTextViewString;
+
+
+
 
         @Override
         public void onClick(View view) {
@@ -202,7 +252,7 @@ public class EditStoreActivity extends AppCompatActivity {
         View v = View.inflate(context, R.layout.time_picker, null);
         TimePicker timePicker = (TimePicker) v.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
-        EditStoreActivity.TimePickerHandler timePickerHandler = new TimePickerHandler();
+        TimePickerHandler timePickerHandler = new TimePickerHandler();
         timePicker.setOnTimeChangedListener(timePickerHandler);
         builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
             @Override
@@ -265,28 +315,32 @@ public class EditStoreActivity extends AppCompatActivity {
 
     public class NextHandler implements View.OnClickListener{
 
+
         @Override
         public void onClick(View view) {
+            progressDialog = ProgressDialog.show(EditStoreActivity.this, "請稍等...", "資料上傳中...", true);
 
             if(nameEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 return;
             }
             if(phoneEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.phoneError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 return;
             }
             if(time1EditText.getText().toString().equals("") || time2EditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.businessHoursError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 return;
             }
-            Store store = new Store();
             store.putStoreName(nameEditText.getText().toString());
             store.putAddress(addressEditText.getText().toString());
             store.putPhone(phoneEditText.getText().toString());
@@ -297,11 +351,13 @@ public class EditStoreActivity extends AppCompatActivity {
                 List<Address> addressLocation = geoCoder.getFromLocationName(addressEditText.getText().toString(), 1);
                 store.putLatitude(Double.toString(addressLocation.get(0).getLatitude()));
                 store.putLongitude(Double.toString(addressLocation.get(0).getLongitude()));
+                progressDialog.dismiss();
             } catch (Exception e) {
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
                 toast.show();
                 e.printStackTrace();
+                progressDialog.dismiss();
                 return;
             }
             Intent intent = new Intent();
@@ -309,6 +365,7 @@ public class EditStoreActivity extends AppCompatActivity {
             intent.putExtra(passUserInfo,userInfo);
             intent.putExtra(passStoreInfo,store);
             context.startActivity(intent);
+
         }
     }
 
@@ -319,6 +376,5 @@ public class EditStoreActivity extends AppCompatActivity {
         else
             super.onBackPressed();
     }
-
 
 }

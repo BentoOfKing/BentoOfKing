@@ -59,7 +59,6 @@ public class CommentAddStore extends AppCompatActivity {
         setContentView(R.layout.activity_comment_add_store);
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        //new store
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
