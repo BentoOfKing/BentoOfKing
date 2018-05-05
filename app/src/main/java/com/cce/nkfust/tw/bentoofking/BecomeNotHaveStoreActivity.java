@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -47,6 +49,8 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
     private int hour=0, minute=0;
     private char[] bussinessTimeChar;
     private Store store;
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,18 +273,21 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 return;
             }
             if(phoneEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.phoneError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 return;
             }
             if(time1EditText.getText().toString().equals("") || time2EditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.businessHoursError), Toast.LENGTH_LONG);
                 toast.show();
+                progressDialog.dismiss();
                 return;
             }
             store.putStoreName(nameEditText.getText().toString());
@@ -298,6 +305,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                         getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
                 toast.show();
                 e.printStackTrace();
+                progressDialog.dismiss();
                 return;
             }
             Intent intent = new Intent();
@@ -310,6 +318,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
 
 
     public void onBackPressed() {
+        progressDialog.dismiss();
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
         else

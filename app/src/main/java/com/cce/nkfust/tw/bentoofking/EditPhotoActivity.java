@@ -1,6 +1,7 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.*;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -62,6 +63,9 @@ public class EditPhotoActivity extends AppCompatActivity{
     public static final int REQUEST_PHOTO = 7;
     private OkHttpClient client;
     int index,photoCount;
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +108,9 @@ public class EditPhotoActivity extends AppCompatActivity{
             if (mainImageView.getDrawable().getCurrent().getConstantState() == getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
                 Toast.makeText(context,getResources().getString(R.string.pleaseInputPhoto), Toast.LENGTH_SHORT).show();
                 return;
+            }
+            else {
+                progressDialog = ProgressDialog.show(EditPhotoActivity.this, "請稍等...", "照片上傳中...", true);
             }
             photoCount = 0;
             for(int i=0;i<7;i++){
@@ -315,9 +322,11 @@ public class EditPhotoActivity extends AppCompatActivity{
                     intent.setClass(context,MainActivity.class);
                     intent.putExtra(passUserInfo,userInfo);
                     startActivity(intent);
+                    progressDialog.dismiss();
                     break;
                 case FAIL:
                     Toast.makeText(context,getResources().getString(R.string.addStoreFail), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     break;
             }
             super.handleMessage(msg);
