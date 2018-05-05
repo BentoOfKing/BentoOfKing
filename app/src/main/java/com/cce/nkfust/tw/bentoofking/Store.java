@@ -32,6 +32,7 @@ public class Store implements Serializable {
         this.Latitude = Latitude;
         this.Rank = Rank;
         this.Price = Price;
+        this.Distance = "null";
     }
     void putID(String ID){
         this.ID = ID;
