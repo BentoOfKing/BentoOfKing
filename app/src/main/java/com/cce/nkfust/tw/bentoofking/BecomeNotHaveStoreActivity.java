@@ -266,8 +266,10 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
 
     public class NextHandler implements View.OnClickListener{
 
+
         @Override
         public void onClick(View view) {
+            progressDialog = ProgressDialog.show(BecomeNotHaveStoreActivity.this, "請稍等...", "照片上傳中...", true);
 
             if(nameEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
