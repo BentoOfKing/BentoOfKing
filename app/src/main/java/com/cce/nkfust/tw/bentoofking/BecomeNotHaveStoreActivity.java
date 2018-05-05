@@ -269,7 +269,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            progressDialog = ProgressDialog.show(BecomeNotHaveStoreActivity.this, "請稍等...", "照片上傳中...", true);
+            progressDialog = ProgressDialog.show(BecomeNotHaveStoreActivity.this, "請稍等...", "資料上傳中...", true);
 
             if(nameEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,
@@ -302,6 +302,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 List<Address> addressLocation = geoCoder.getFromLocationName(addressEditText.getText().toString(), 1);
                 store.putLatitude(Double.toString(addressLocation.get(0).getLatitude()));
                 store.putLongitude(Double.toString(addressLocation.get(0).getLongitude()));
+                progressDialog.dismiss();
             } catch (Exception e) {
                 Toast toast = Toast.makeText(context,
                         getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
@@ -315,12 +316,12 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
             intent.putExtra(passUserInfo,userInfo);
             intent.putExtra(passStoreInfo,store);
             context.startActivity(intent);
+
         }
     }
 
 
     public void onBackPressed() {
-        progressDialog.dismiss();
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
         else
