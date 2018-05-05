@@ -36,6 +36,7 @@ import java.util.Date;
 
 public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private static String passStoreInfo = "STORE_INFO";
     private static final int UPDATE_COMMENT = 63;
     private static final int ACTION_DIALOG = 71;
     private static final int SENT_COMMENT = 64;
@@ -87,6 +88,15 @@ public class CheckStoreInfo extends AppCompatActivity {
         UIconnect();
         if(storeInfoBundle.getIdentity()==2)
             UpdateUI();
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent.setClass(CheckStoreInfo.this,OrderActivity.class);
+                intent.putExtra(passStoreInfo,storeInfoBundle.getStore());
+                intent.putExtra(passUserInfo,userInfo);
+                startActivity(intent);
+            }
+        });
 
     }
 

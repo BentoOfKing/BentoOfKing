@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/nameTextVirw"
+            android:id="@+id/nameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
@@ -24,7 +24,7 @@
             android:id="@+id/priceTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="小計"
+            android:text="小計 0 元"
             android:textColor="@android:color/black" />
 
     </LinearLayout>
@@ -37,13 +37,14 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editText11"
+            android:id="@+id/countEditText"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:gravity="center_horizontal"
-            android:inputType="number" />
+            android:inputType="number"
+            android:text="0" />
 
         <TextView
             android:id="@+id/textView"
@@ -58,14 +59,14 @@
         <ImageView
             android:id="@+id/reduceImageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_meal_reduce_count" />
 
         <ImageView
             android:id="@+id/addImageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_meal_add_count" />
 

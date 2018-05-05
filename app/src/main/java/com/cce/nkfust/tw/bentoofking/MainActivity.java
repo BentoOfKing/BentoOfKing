@@ -50,7 +50,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static final int REFRESH_ACTIVITY = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2, MORE_STORE = 5279, REFRESH_STORELIST = 5273;
+    private static final int REFRESH_ACTIVITY = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2, MORE_STORE = 5279, REFRESH_STORELIST = 5273 ,SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER=5275,GET_LOCATION = 5276;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         CDBTHandler = new Handler_A(CDBThread.getLooper());
         storeLists = new ArrayList<store_list>();
         adapter = new StoreListViewBaseAdapter(MainActivity.this,storeLists,(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+        MainActivity.this.Longitude = "22.736802";
+        MainActivity.this.Latitude = "120.331109";
     }
     private void InfoReceive(){
         Intent intent = getIntent();
@@ -132,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
         storelist.setAdapter(adapter);
     }
     private void UIupdate(){
-        CDBTHandler.sendEmptyMessage(REFRESH_STORELIST);
+        mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+
     }
 
 
@@ -175,11 +178,8 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //缺更新資料
-                                    if(locationStateTmp == 0){
-                                        requestUserLocationPermission();
-                                    }else {
-                                        locationState = locationStateTmp;
-                                    }
+                                    locationState = locationStateTmp;
+                                    mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                                     dialog.dismiss();
                                 }
                             })
@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                             distanceState = (int)distanceSpinner.getSelectedItemId();
                             rankState = (int)rankSpinner.getSelectedItemId();
                             priceState = (int)priceSpinner.getSelectedItemId();
+                            mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                             dialog.dismiss();
                         }
                     });
@@ -287,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
                             }else{
                                 bussinessState = false;
                             }
+                            mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                             dialog.dismiss();
                         }
                     });
@@ -320,19 +322,25 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case MORE_STORE:
-                    if(requestUserLocationPermission()) requestUserLocation();
-                    if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
-                    for(int i=0;i<store.length;i++)
-                        storeLists.add(new store_list(store[i]));
+                    if(msg.getData().getInt("locationStateNow") != 0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")],msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"));
+                    else store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"),msg.getData().getString("LatitudeNow"),msg.getData().getInt("distanceStateNow"),msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"),msg.getData().getInt("distanceNow"));
+                    for(int i=0;i<store.length;i++) {
+                        store_list additem = new store_list(store[i]);
+                        if((!msg.getData().getBoolean("businessStateNow"))||additem.getStatus().equals("營業中"))
+                            storeLists.add(new store_list(store[i]));
+                    }
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
                 case REFRESH_STORELIST:
-                    if(requestUserLocationPermission()) requestUserLocation();
                     database.refreshStoreIndex();
-                    if(locationState !=0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[15],rankState,priceState);
+                    if(msg.getData().getInt("locationStateNow") != 0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")],msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"));
+                    else store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"),msg.getData().getString("LatitudeNow"),msg.getData().getInt("distanceStateNow"),msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"),msg.getData().getInt("distanceNow"));
                     storeLists.clear();
-                    for(int i=0;i<store.length;i++)
-                        storeLists.add(new store_list(store[i]));
+                    for(int i=0;i<store.length;i++) {
+                        store_list additem = new store_list(store[i]);
+                        if((!msg.getData().getBoolean("businessStateNow"))||additem.getStatus().equals("營業中"))
+                            storeLists.add(new store_list(store[i]));
+                    }
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
             }
@@ -353,6 +361,40 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     swipeLayout.setRefreshing(false);
                     storelist.setEnabled(true);
+                    break;
+                case SEND_FILTER_REFRESH:
+                    Message filter = new Message();
+                    filter.what = REFRESH_STORELIST;
+                    Bundle bag = new Bundle();
+                    if(MainActivity.this.locationState==0){
+                        if(requestUserLocationPermission()) requestUserLocation();
+                        bag.putString("LongitudeNow",MainActivity.this.Longitude);
+                        bag.putString("LatitudeNow",MainActivity.this.Latitude);
+                        bag.putInt("distanceStateNow",MainActivity.this.distanceState);
+                        bag.putInt("distanceNow",MainActivity.this.distanceKm);
+                    }
+                    bag.putBoolean("businessStateNow",MainActivity.this.bussinessState);
+                    bag.putInt("locationStateNow",MainActivity.this.locationState);
+                    bag.putInt("rankStateNow",MainActivity.this.rankState);
+                    bag.putInt("priceStateNow",MainActivity.this.priceState);
+                    filter.setData(bag);
+                    CDBTHandler.sendMessage(filter);
+                    break;
+                case SEND_LAST_FILTER:
+                    Message lastFilter = new Message();
+                    lastFilter.what = MORE_STORE;
+                    Bundle lastBag = new Bundle();
+                    if(MainActivity.this.locationState==0){
+                        lastBag.putString("LongitudeNow",MainActivity.this.Longitude);
+                        lastBag.putString("LatitudeNow",MainActivity.this.Latitude);
+                        lastBag.putInt("distanceStateNow",MainActivity.this.distanceState);
+                        lastBag.putInt("distanceNow",MainActivity.this.distanceKm);
+                    }
+                    lastBag.putInt("locationStateNow",MainActivity.this.locationState);
+                    lastBag.putInt("rankStateNow",MainActivity.this.rankState);
+                    lastBag.putInt("priceStateNow",MainActivity.this.priceState);
+                    lastFilter.setData(lastBag);
+                    CDBTHandler.sendMessage(lastFilter);
                     break;
             }
             super.handleMessage(msg);
@@ -381,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                    CDBTHandler.sendEmptyMessage(MORE_STORE);
+                    mainHandler.sendEmptyMessage(SEND_LAST_FILTER);
                 }
             }
         }
@@ -476,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onRefresh() {
             storelist.setEnabled(false);
-            CDBTHandler.sendEmptyMessage(REFRESH_STORELIST);
+            mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
         }
     }
 
@@ -511,7 +553,6 @@ public class MainActivity extends AppCompatActivity {
     public class UpdateUserLocation implements Runnable{
         @Override
         public void run() {
-            database = new Database();
             database.UpdateMember(userInfo.getMember());
         }
     }
