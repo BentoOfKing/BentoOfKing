@@ -28,6 +28,7 @@ public class OrderActivity extends AppCompatActivity {
     private ArrayList<Meal> meal;
     private MainThreadHandler mainThreadHandler;
     private Context context;
+    OrderMealAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +75,7 @@ public class OrderActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    OrderMealAdapter adapter = new OrderMealAdapter(context, meal);
+                    adapter = new OrderMealAdapter(context, meal);
                     mealListView.setAdapter(adapter);
                     break;
                 case FAIL:

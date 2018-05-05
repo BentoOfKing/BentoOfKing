@@ -82,9 +82,9 @@ public class OrderMealAdapter extends BaseAdapter {
             }
         };
         countEditText.addTextChangedListener(countTextHandler);*/
-        return null;
+        return view;
     }
-    class addHandler implements View.OnClickListener {
+    /*class addHandler implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             try {
@@ -105,5 +105,5 @@ public class OrderMealAdapter extends BaseAdapter {
                 countEditText.setText("0");
             }
         }
-    }
+    }*/
 }
