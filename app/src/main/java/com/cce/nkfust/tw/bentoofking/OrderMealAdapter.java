@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,16 +22,24 @@ import java.util.ArrayList;
 public class OrderMealAdapter extends BaseAdapter {
     private ArrayList<Meal> meal;
     private Context context;
-    TextView nameTextView ;
-    TextView priceTextView;
-    EditText countEditText;
-    ImageView reduceImageView;
-    ImageView addImageView;
-    Meal nowMeal;
+    private LayoutInflater inflater;
 
-    public OrderMealAdapter(Context context, ArrayList<Meal> meal){
+
+
+    public static class ViewHolder{
+        RelativeLayout mealListViewLayout;
+        TextView nameTextView ;
+        TextView priceTextView;
+        EditText countEditText;
+        ImageView reduceImageView;
+        ImageView addImageView;
+        Meal nowMeal;
+    }
+
+    public OrderMealAdapter(LayoutInflater inflater, ArrayList<Meal> meal){
         this.meal = meal;
-        this.context = context;
+        //this.context = context;
+        this.inflater = inflater;
     }
 
 
@@ -39,7 +49,7 @@ public class OrderMealAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Meal getItem(int i) {
         return meal.get(i);
     }
 
@@ -50,14 +60,25 @@ public class OrderMealAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View viewMeal =  LayoutInflater.from(context).inflate(R.layout.order_meal_item,null);
-        nowMeal = this.meal.get(i);
-        nameTextView = viewMeal.findViewById(R.id.nameTextView);
-        nameTextView.setText(nowMeal.getName()+"，售價 "+nowMeal.getPrice()+" 元");
-        priceTextView = viewMeal.findViewById(R.id.priceTextView);
-        countEditText = viewMeal.findViewById(R.id.countEditText);
-        reduceImageView = viewMeal.findViewById(R.id.reduceImageView);
-        addImageView = viewMeal.findViewById(R.id.addImageView);
+        final ViewHolder viewHolder;
+        if(view==null){
+            viewHolder = new ViewHolder();
+            view = this.inflater.inflate(R.layout.order_meal_item,null);
+            viewHolder.nowMeal = getItem(i);
+            viewHolder.nameTextView = view.findViewById(R.id.nameTextView);
+            viewHolder.priceTextView = view.findViewById(R.id.priceTextView);
+            viewHolder.countEditText = view.findViewById(R.id.countEditText);
+            viewHolder.reduceImageView = view.findViewById(R.id.reduceImageView);
+            viewHolder.addImageView = view.findViewById(R.id.addImageView);
+            viewHolder.mealListViewLayout = view.findViewById(R.id.border);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder)view.getTag();
+        }
+        viewHolder.nameTextView.setText(getItem(i).getName()+"，售價 "+getItem(i).getPrice()+" 元");
+
+
+
         //reduceImageView.setOnClickListener(new reduceHandler());
         //addImageView.setOnClickListener(new addHandler());
         /*TextWatcher countTextHandler = new TextWatcher(){

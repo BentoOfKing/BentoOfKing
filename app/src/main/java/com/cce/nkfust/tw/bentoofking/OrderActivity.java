@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,11 +72,13 @@ public class OrderActivity extends AppCompatActivity {
         }
         public MainThreadHandler(Looper looper){
             super(looper);
+
         }
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    adapter = new OrderMealAdapter(context, meal);
+                    LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    adapter = new OrderMealAdapter(inflater, meal);
                     mealListView.setAdapter(adapter);
                     break;
                 case FAIL:
