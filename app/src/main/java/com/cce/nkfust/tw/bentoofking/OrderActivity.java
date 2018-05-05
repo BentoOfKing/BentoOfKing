@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -29,7 +30,7 @@ public class OrderActivity extends AppCompatActivity {
     private ListView drawerListView,mealListView;
     private DrawerLayout drawerLayout;
     private Store store;
-    private ArrayList<Meal> meal;
+    private ArrayList<Meal> meal,mealForAdapter;
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private Button orderButton;
@@ -81,7 +82,16 @@ public class OrderActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    adapter = new OrderMealAdapter(context, meal);
+                    LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    mealForAdapter = new ArrayList<Meal>();
+                    for(int i=0;i<meal.size();i++) {
+                        for (int j = 0; j < meal.size(); j++) {
+                            if (meal.get(j).getSequence().equals(Integer.toString(i))) {
+                                mealForAdapter.add(meal.get(j));
+                            }
+                        }
+                    }
+                    adapter = new OrderMealAdapter(inflater, mealForAdapter);
                     mealListView.setAdapter(adapter);
                     break;
                 case FAIL:
@@ -104,7 +114,6 @@ public class OrderActivity extends AppCompatActivity {
             memberOrder.putMember(userInfo.getMember().getEmail());
             memberOrder.putTime(str);
             for(int i=0;i<meal.size();i++){
-
 
             }
 

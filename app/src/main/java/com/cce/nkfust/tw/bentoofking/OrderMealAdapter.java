@@ -23,6 +23,7 @@ public class OrderMealAdapter extends BaseAdapter {
     private ArrayList<Meal> meal;
     private Context context;
     private LayoutInflater inflater;
+    private ViewHolder viewHolder;
 
 
 
@@ -60,7 +61,6 @@ public class OrderMealAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        final ViewHolder viewHolder;
         if(view==null){
             viewHolder = new ViewHolder();
             view = this.inflater.inflate(R.layout.order_meal_item,null);
@@ -79,9 +79,9 @@ public class OrderMealAdapter extends BaseAdapter {
 
 
 
-        //reduceImageView.setOnClickListener(new reduceHandler());
-        //addImageView.setOnClickListener(new addHandler());
-        /*TextWatcher countTextHandler = new TextWatcher(){
+        viewHolder.reduceImageView.setOnClickListener(new reduceHandler());
+        viewHolder.addImageView.setOnClickListener(new addHandler());
+        TextWatcher countTextHandler = new TextWatcher(){
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -90,28 +90,30 @@ public class OrderMealAdapter extends BaseAdapter {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                if(!viewHolder.countEditText.getText().toString().equals("")) {
+                    try {
+                        viewHolder.priceTextView.setText("小計 " + Integer.toString(Integer.parseInt(viewHolder.countEditText.getText().toString()) * Integer.parseInt(viewHolder.nowMeal.getPrice())) + " 元");
+                    } catch (Exception e) {
+                        viewHolder.countEditText.setText("小計 0 元");
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                try {
-                    priceTextView.setText("小計 "+Integer.toString(Integer.parseInt(countEditText.getText().toString()) * Integer.parseInt(nowMeal.getPrice()))+" 元");
-                }catch (Exception e){
-                    countEditText.setText("小計 0 元");
-                }
+
             }
         };
-        countEditText.addTextChangedListener(countTextHandler);*/
+        viewHolder.countEditText.addTextChangedListener(countTextHandler);
         return view;
     }
-    /*class addHandler implements View.OnClickListener {
+    class addHandler implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             try {
-                countEditText.setText(Integer.toString(Integer.parseInt(countEditText.getText().toString()) + 1));
+                viewHolder.countEditText.setText(Integer.toString(Integer.parseInt(viewHolder.countEditText.getText().toString()) + 1));
             }catch (Exception e){
-                countEditText.setText("1");
+                viewHolder.countEditText.setText("1");
             }
         }
     }
@@ -119,12 +121,12 @@ public class OrderMealAdapter extends BaseAdapter {
         @Override
         public void onClick(View view) {
             try {
-                if(Integer.parseInt(countEditText.getText().toString()) > 0 ) {
-                    countEditText.setText(Integer.toString(Integer.parseInt(countEditText.getText().toString()) - 1));
+                if(Integer.parseInt(viewHolder.countEditText.getText().toString()) > 0 ) {
+                    viewHolder.countEditText.setText(Integer.toString(Integer.parseInt(viewHolder.countEditText.getText().toString()) - 1));
                 }
             }catch (Exception e){
-                countEditText.setText("0");
+                viewHolder.countEditText.setText("0");
             }
         }
-    }*/
+    }
 }
