@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,11 +22,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class BecomeNotHaveStoreActivity extends AppCompatActivity {
+public class CommentAddStore extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private Context context;
@@ -59,10 +56,10 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
         context = this;
         bussinessTimeChar = new char[16];
         for(int i=0;i<bussinessTimeChar.length;i++)bussinessTimeChar[i]='0';
-        setContentView(R.layout.activity_become_not_have_store);
+        setContentView(R.layout.activity_comment_add_store);
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        store = (Store) intent.getSerializableExtra(passStoreInfo);
+        //new store
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -97,8 +94,9 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
         time2EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time3EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time4EditText.setOnClickListener(timeTextFieldOnClickHandler);
-
     }
+
+
     public class InfoClickHandler implements View.OnClickListener{
         CharSequence[] storeInfo;
         AlertDialog alertDialog;
@@ -123,7 +121,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                     }else{
                         storeInfoStringTmp[which] = '0';
                     }
-                    }});
+                }});
             builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -269,7 +267,9 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            progressDialog = ProgressDialog.show(BecomeNotHaveStoreActivity.this, "請稍等...", "資料上傳中...", true);
+
+            progressDialog = ProgressDialog.show(CommentAddStore.this, "請稍等...", "資料上傳中...", true);
+            Store store = new Store();
 
             if(nameEditText.getText().toString().equals("")){
                 Toast toast = Toast.makeText(context,

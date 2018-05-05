@@ -13,7 +13,6 @@
         android:value="AIzaSyBmNbTXiSzHg8MJesMSAve76QnlQzLfHQo" />
 
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -46,7 +45,9 @@
             android:theme="@style/Theme.ActivityDialogStyle" />
         <activity android:name=".EditMenuActivity" />
         <activity android:name=".EditPhotoActivity" />
-        <activity android:name=".EditStoreActivity"></activity>
+        <activity android:name=".EditStoreActivity" />
+        <activity android:name=".OrderActivity" />
+        <activity android:name=".CommentAddStore"></activity>
     </application>
 
 </manifest>
