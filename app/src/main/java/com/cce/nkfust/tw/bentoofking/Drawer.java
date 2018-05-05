@@ -137,7 +137,7 @@ public class Drawer extends AppCompatActivity{
 
                     break;
                 case 3://新增店家
-                    intent.setClass(context,BecomeNotHaveStoreActivity.class);
+                    intent.setClass(context,CommentAddStore.class);
                     intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     break;
