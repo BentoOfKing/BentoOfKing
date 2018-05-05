@@ -41,6 +41,9 @@ public class Database {
     private static String updateStoreURL = "http://163.18.104.169/databaseConnect/updateStore.php";
     private static String addStoreURL = "http://163.18.104.169/databaseConnect/addStore.php";
     private static String addMealURL = "http://163.18.104.169/databaseConnect/addMeal.php";
+    private static String getMealURL = "http://163.18.104.169/databaseConnect/getMeal.php";
+    private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
+    private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -73,19 +76,21 @@ public class Database {
     private static final String TAG_Rank = "Rank";
     private static final String TAG_Price = "Price";
     private static final String TAG_Distance = "Distance";
+    private static final String TAG_Meal = "Meal";
+    private static final String TAG_Sequence = "Sequence";
 
 
     JSONParser jParser;
     JSONObject json;
 
-    private int range,index=0;
+    private int range, index = 0;
     ArrayList<HashMap<String, String>> storesList;
 
     String result = "";
     HttpURLConnection urlConnection = null;
     InputStream is = null;
 
-    public Comment[] getComment(String item,String content){
+    public Comment[] getComment(String item, String content) {
         JSONArray comments = null;
         Store returnStore[];
         jParser = null;
@@ -97,21 +102,21 @@ public class Database {
         json = null;
         json = jParser.makeHttpRequest(getCommentURL, "GET", params);
         Log.d("Comments: ", json.toString());
-        try{
+        try {
             comments = json.getJSONArray(TAG_COMMENTS);
             Comment retrunComment[] = new Comment[comments.length()];
-            index +=comments.length();
-            for(int i=0;i<comments.length();i++){
+            index += comments.length();
+            for (int i = 0; i < comments.length(); i++) {
                 JSONObject c = comments.getJSONObject(i);
-                retrunComment[i] = new Comment(c.getString(TAG_ID),c.getString(TAG_Member),c.getString(TAG_Store),c.getString(TAG_Score),c.getString(TAG_StoreContent),c.getString(TAG_Time),c.getString(TAG_Reply),c.getString(TAG_Note));
+                retrunComment[i] = new Comment(c.getString(TAG_ID), c.getString(TAG_Member), c.getString(TAG_Store), c.getString(TAG_Score), c.getString(TAG_StoreContent), c.getString(TAG_Time), c.getString(TAG_Reply), c.getString(TAG_Note));
             }
             return retrunComment;
-        }catch (Exception e){
+        } catch (Exception e) {
             return new Comment[0];
         }
     }
 
-    public String addComment(Comment comment){
+    public String addComment(Comment comment) {
         String member = comment.getMember();
         String store = comment.getStore();
         String score = comment.getScore();
@@ -123,18 +128,18 @@ public class Database {
         jParser = null;
         jParser = new JSONParser();
         try {
-        params.add(new BasicNameValuePair("Member", member));
-        params.add(new BasicNameValuePair("Store", store));
-        params.add(new BasicNameValuePair("Score", score));
-        params.add(new BasicNameValuePair("StoreContent", new String(storeContent.getBytes(),"8859_1")));
-        params.add(new BasicNameValuePair("Time", time));
-        params.add(new BasicNameValuePair("Reply", new String(reply.getBytes(),"8859_1")));
-        params.add(new BasicNameValuePair("Note", new String(note.getBytes(),"8859_1")));
+            params.add(new BasicNameValuePair("Member", member));
+            params.add(new BasicNameValuePair("Store", store));
+            params.add(new BasicNameValuePair("Score", score));
+            params.add(new BasicNameValuePair("StoreContent", new String(storeContent.getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Time", time));
+            params.add(new BasicNameValuePair("Reply", new String(reply.getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Note", new String(note.getBytes(), "8859_1")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         json = null;
-        json = jParser.makeHttpRequest(addCommentURL,"POST", params);
+        json = jParser.makeHttpRequest(addCommentURL, "POST", params);
         Log.d("Add Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
@@ -149,13 +154,13 @@ public class Database {
         }
     }
 
-    public String deleteComment(String id){
+    public String deleteComment(String id) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         params.add(new BasicNameValuePair("ID", id));
         json = null;
-        json = jParser.makeHttpRequest(deleteCommentURL,"POST", params);
+        json = jParser.makeHttpRequest(deleteCommentURL, "POST", params);
         Log.d("Delete Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
@@ -170,19 +175,19 @@ public class Database {
         }
     }
 
-    public String updateComment(Comment comment){
+    public String updateComment(Comment comment) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         try {
-        params.add(new BasicNameValuePair("ID", comment.getID()));
-        params.add(new BasicNameValuePair("Note", new String(comment.getNote().getBytes(),"8859_1")));
-        params.add(new BasicNameValuePair("Reply", new String(comment.getReply().getBytes(),"8859_1")));
+            params.add(new BasicNameValuePair("ID", comment.getID()));
+            params.add(new BasicNameValuePair("Note", new String(comment.getNote().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Reply", new String(comment.getReply().getBytes(), "8859_1")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         json = null;
-        json = jParser.makeHttpRequest(updateCommentURL,"POST", params);
+        json = jParser.makeHttpRequest(updateCommentURL, "POST", params);
         Log.d("Update Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
@@ -197,25 +202,25 @@ public class Database {
         }
     }
 
-    public String MemberRegister(Member member){
+    public String MemberRegister(Member member) {
         String email = member.getEmail();
         String password = member.getPassword();
-        String sex= member.getSex();
+        String sex = member.getSex();
         String nickname = member.getNickname();
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         try {
-        params.add(new BasicNameValuePair("Email", email));
-        params.add(new BasicNameValuePair("Password", password));
-        params.add(new BasicNameValuePair("Sex", sex));
-        params.add(new BasicNameValuePair("Nickname", new String(nickname.getBytes(),"8859_1")));
+            params.add(new BasicNameValuePair("Email", email));
+            params.add(new BasicNameValuePair("Password", password));
+            params.add(new BasicNameValuePair("Sex", sex));
+            params.add(new BasicNameValuePair("Nickname", new String(nickname.getBytes(), "8859_1")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         json = null;
-        json = jParser.makeHttpRequest(memberRegisterURL,"POST", params);
+        json = jParser.makeHttpRequest(memberRegisterURL, "POST", params);
         Log.d("Register Response", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
@@ -229,22 +234,23 @@ public class Database {
             return "Fail.";
         }
     }
-    public String UpdateMember(Member member){
+
+    public String UpdateMember(Member member) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         try {
-        params.add(new BasicNameValuePair("Email", member.getEmail()));
-        params.add(new BasicNameValuePair("Password", member.getPassword()));
-        params.add(new BasicNameValuePair("Nickname", new String(member.getNickname().getBytes(),"8859_1")));
-        params.add(new BasicNameValuePair("Longitude", member.getLongitude()));
-        params.add(new BasicNameValuePair("Latitude", member.getLatitude()));
+            params.add(new BasicNameValuePair("Email", member.getEmail()));
+            params.add(new BasicNameValuePair("Password", member.getPassword()));
+            params.add(new BasicNameValuePair("Nickname", new String(member.getNickname().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Longitude", member.getLongitude()));
+            params.add(new BasicNameValuePair("Latitude", member.getLatitude()));
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         json = null;
-        json = jParser.makeHttpRequest(updateMemberURL,"POST", params);
+        json = jParser.makeHttpRequest(updateMemberURL, "POST", params);
         Log.d("Update Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
@@ -258,7 +264,8 @@ public class Database {
             return "Fail.";
         }
     }
-    public Member MemberLogin(String Email,String Password){
+
+    public Member MemberLogin(String Email, String Password) {
         int success;
         try {
             jParser = null;
@@ -273,20 +280,20 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email),m.getString(TAG_Password),m.getString(TAG_Nickname),m.getString(TAG_Sex),m.getString(TAG_Favorite),m.getString(TAG_State),m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
-            }else{
+            } else {
                 Member member = new Member();
                 member.putEmail(json.getString(TAG_Message));
                 return member;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
 
-    public Store StoreLogin(String Email,String Password){
+    public Store StoreLogin(String Email, String Password) {
         int success;
         try {
             jParser = null;
@@ -301,19 +308,19 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
                 JSONObject s = productObj.getJSONObject(0);
-                Store store = new Store(s.getString(TAG_ID),s.getString(TAG_Email),s.getString(TAG_Password),s.getString(TAG_Name),s.getString(TAG_Address),s.getString(TAG_Information),s.getString(TAG_BusinessHours),s.getString(TAG_Phone),s.getString(TAG_Photo),s.getString(TAG_Point),s.getString(TAG_State),s.getString(TAG_Note),s.getString(TAG_Longitude),s.getString(TAG_Latitude),s.getString(TAG_Rank),s.getString(TAG_Price));
+                Store store = new Store(s.getString(TAG_ID), s.getString(TAG_Email), s.getString(TAG_Password), s.getString(TAG_Name), s.getString(TAG_Address), s.getString(TAG_Information), s.getString(TAG_BusinessHours), s.getString(TAG_Phone), s.getString(TAG_Photo), s.getString(TAG_Point), s.getString(TAG_State), s.getString(TAG_Note), s.getString(TAG_Longitude), s.getString(TAG_Latitude), s.getString(TAG_Rank), s.getString(TAG_Price));
                 return store;
-            }else{
+            } else {
                 Store store = new Store();
                 store.putEmail(json.getString(TAG_Message));
                 return store;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public Admin AdminLogin(String Email,String Password){
+    public Admin AdminLogin(String Email, String Password) {
         int success;
         try {
             jParser = null;
@@ -328,65 +335,65 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_ADMINS); // JSON Array
                 JSONObject a = productObj.getJSONObject(0);
-                Admin admin = new Admin(a.getString(TAG_Email),a.getString(TAG_Password));
+                Admin admin = new Admin(a.getString(TAG_Email), a.getString(TAG_Password));
                 return admin;
-            }else{
+            } else {
                 Admin admin = new Admin();
                 admin.putEmail(json.getString(TAG_Message));
                 return admin; //台安修改   原本: return null;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
 
-    public Store[] GetStore(String country,int rankState,int priceState) {
+    public Store[] GetStore(String country, int rankState, int priceState) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
         jParser = new JSONParser();
         List<NameValuePair> params;
-        String rankString,priceString;
-        if(rankState == 0 )rankString="ASC";
+        String rankString, priceString;
+        if (rankState == 0) rankString = "ASC";
         else rankString = "DESC";
-        if(priceState == 0 )priceString="ASC";
+        if (priceState == 0) priceString = "ASC";
         else priceString = "DESC";
         Store returnStore[];
-        country +="%";
+        country += "%";
         try {
             storesList = new ArrayList<HashMap<String, String>>();
             params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Index", Integer.toString(index)));
             params.add(new BasicNameValuePair("Country", country));
             params.add(new BasicNameValuePair("RankString", rankString));
-            params.add(new BasicNameValuePair("PriceString",priceString));
+            params.add(new BasicNameValuePair("PriceString", priceString));
             json = jParser.makeHttpRequest(getStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
             stores = json.getJSONArray(TAG_STORES);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Store[] nullStore = new Store[0];
             return nullStore;
         }
         try {
             System.out.println("OK");
-                // looping through All Products
+            // looping through All Products
 
-                if(stores.length()>=10) {
-                    range = 10;
-                }else{
-                    range = stores.length();
-                }
-                returnStore = new Store[range];
-                for (int i = 0; i < range; i++) {
-                    JSONObject c = stores.getJSONObject(i);
+            if (stores.length() >= 10) {
+                range = 10;
+            } else {
+                range = stores.length();
+            }
+            returnStore = new Store[range];
+            for (int i = 0; i < range; i++) {
+                JSONObject c = stores.getJSONObject(i);
 
-                    // Storing each json item in variable
-                    returnStore[i] = new Store(c.getString(TAG_ID),c.getString(TAG_Email),c.getString(TAG_Password),c.getString(TAG_Name),c.getString(TAG_Address),c.getString(TAG_Information),c.getString(TAG_BusinessHours),c.getString(TAG_Phone),c.getString(TAG_Photo),c.getString(TAG_Point),c.getString(TAG_State),c.getString(TAG_Note),c.getString(TAG_Longitude),c.getString(TAG_Latitude),c.getString(TAG_Rank),c.getString(TAG_Price));
-                }
-                index+=range;
+                // Storing each json item in variable
+                returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+            }
+            index += range;
             return returnStore;
         } catch (Exception e) {
             System.out.println("error");
@@ -395,22 +402,24 @@ public class Database {
             return nullStore;
         }
     }
-    public void refreshStoreIndex(){ index =0; }
+
+    public void refreshStoreIndex() {
+        index = 0;
+    }
 
 
-
-    public Store[] GetStoreByPosition(String Longitude,String Latitude,int distanceState,int rankState,int priceState,int distance) {
+    public Store[] GetStoreByPosition(String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
         jParser = new JSONParser();
         List<NameValuePair> params;
-        String rankString,priceString,distanceString;
-        if(rankState == 0 )rankString="ASC";
+        String rankString, priceString, distanceString;
+        if (rankState == 0) rankString = "ASC";
         else rankString = "DESC";
-        if(priceState == 0 )priceString="ASC";
+        if (priceState == 0) priceString = "ASC";
         else priceString = "DESC";
-        if(distanceState == 0 )distanceString="ASC";
+        if (distanceState == 0) distanceString = "ASC";
         else distanceString = "DESC";
         Store returnStore[];
         try {
@@ -421,24 +430,23 @@ public class Database {
             params.add(new BasicNameValuePair("Latitude", Latitude));
             params.add(new BasicNameValuePair("DistanceString", distanceString));
             params.add(new BasicNameValuePair("RankString", rankString));
-            params.add(new BasicNameValuePair("PriceString",priceString));
-            params.add(new BasicNameValuePair("Distance",Integer.toString(distance)));
+            params.add(new BasicNameValuePair("PriceString", priceString));
+            params.add(new BasicNameValuePair("Distance", Integer.toString(distance)));
             json = jParser.makeHttpRequest(getStoreByPositionURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
             stores = json.getJSONArray(TAG_STORES);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Store[] nullStore = new Store[0];
             return nullStore;
         }
         try {
-            System.out.println("OK");
             // looping through All Products
 
-            if(stores.length()>=10) {
+            if (stores.length() >= 10) {
                 range = 10;
-            }else{
+            } else {
                 range = stores.length();
             }
             returnStore = new Store[range];
@@ -446,10 +454,10 @@ public class Database {
                 JSONObject c = stores.getJSONObject(i);
 
                 // Storing each json item in variable
-                returnStore[i] = new Store(c.getString(TAG_ID),c.getString(TAG_Email),c.getString(TAG_Password),c.getString(TAG_Name),c.getString(TAG_Address),c.getString(TAG_Information),c.getString(TAG_BusinessHours),c.getString(TAG_Phone),c.getString(TAG_Photo),c.getString(TAG_Point),c.getString(TAG_State),c.getString(TAG_Note),c.getString(TAG_Longitude),c.getString(TAG_Latitude),c.getString(TAG_Rank),c.getString(TAG_Price));
+                returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putDistance(c.getString(TAG_Distance));
             }
-            index+=range;
+            index += range;
             return returnStore;
         } catch (Exception e) {
             System.out.println("error");
@@ -458,29 +466,32 @@ public class Database {
             return nullStore;
         }
     }
-    public String UpdateStore(Store store){
+
+    public String UpdateStore(Store store) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        try {params.add(new BasicNameValuePair("ID", store.getID()));
-        params.add(new BasicNameValuePair("Password", store.getPassword()));
-        params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(),"8859_1")));
-        params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(),"8859_1")));
-        params.add(new BasicNameValuePair("Information", store.getInformation()));
-        params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
-        params.add(new BasicNameValuePair("Phone", store.getPhone()));
-        params.add(new BasicNameValuePair("Photo", store.getPhoto()));
-        params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
-        params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
+        try {
+            params.add(new BasicNameValuePair("ID", store.getID()));
+            params.add(new BasicNameValuePair("Password", store.getPassword()));
+            params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Information", store.getInformation()));
+            params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
+            params.add(new BasicNameValuePair("Phone", store.getPhone()));
+            params.add(new BasicNameValuePair("Photo", store.getPhoto()));
+            params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
+            params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         json = null;
-        json = jParser.makeHttpRequest(updateStoreURL,"POST", params);
+        json = jParser.makeHttpRequest(updateStoreURL, "POST", params);
         Log.d("Update Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
-            if (success == 1) {;
+            if (success == 1) {
+                ;
                 return "Successful.";
             } else {
                 return "An error occurred.";
@@ -490,15 +501,16 @@ public class Database {
             return "Fail.";
         }
     }
-    public String addStore(Store store){
+
+    public String addStore(Store store) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         try {
             params.add(new BasicNameValuePair("Email", store.getEmail()));
             params.add(new BasicNameValuePair("Password", store.getPassword()));
-            params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(),"8859_1")));
-            params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(),"8859_1")));
+            params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(), "8859_1")));
             params.add(new BasicNameValuePair("Information", store.getInformation()));
             params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
             params.add(new BasicNameValuePair("Phone", store.getPhone()));
@@ -513,7 +525,7 @@ public class Database {
             e.printStackTrace();
         }
         json = null;
-        json = jParser.makeHttpRequest(addStoreURL,"POST", params);
+        json = jParser.makeHttpRequest(addStoreURL, "POST", params);
         Log.d("Update Comment.", json.toString());
         try {
             int success = json.getInt(TAG_SUCCESS);
@@ -529,7 +541,7 @@ public class Database {
         }
     }
 
-    public Member GetSingleMember(String Email){
+    public Member GetSingleMember(String Email) {
         int success;
         try {
             jParser = null;
@@ -543,20 +555,21 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email),"",m.getString(TAG_Nickname),m.getString(TAG_Sex),m.getString(TAG_Favorite),m.getString(TAG_State),m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), "", m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
-            }else{
+            } else {
                 return null;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
-    public String addMeal(ArrayList<Meal> meal){
+
+    public String addMeal(ArrayList<Meal> meal) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        for(int i=0;i<meal.size();i++) {
+        for (int i = 0; i < meal.size(); i++) {
             try {
                 params.add(new BasicNameValuePair("Store", meal.get(i).getStore()));
                 params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
@@ -567,7 +580,81 @@ public class Database {
             }
             json = null;
             json = jParser.makeHttpRequest(addMealURL, "POST", params);
-            Log.d("Update Comment.", json.toString());
+            Log.d("Add meal.", json.toString());
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                if (success != 1) {
+                    return "An error occurred.";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "Fail.";
+            }
+        }
+        return "Successful.";
+    }
+
+    public ArrayList<Meal> getMeal(String storeID) {
+        JSONArray meals = null;
+        ArrayList<Meal> meal = new ArrayList<Meal>();
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", storeID));
+        json = null;
+        json = jParser.makeHttpRequest(getMealURL, "GET", params);
+        Log.d("Get meal.", json.toString());
+        try {
+            meals = json.getJSONArray(TAG_Meal);
+            for (int i = 0; i < meals.length(); i++) {
+                JSONObject m = meals.getJSONObject(i);
+                meal.add(new Meal(m.getString(TAG_ID), storeID, m.getString(TAG_Name), m.getString(TAG_Price), m.getString(TAG_Sequence)));
+            }
+            return meal;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String deleteMeal(String id) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", id));
+        json = null;
+        json = jParser.makeHttpRequest(deleteMealURL, "POST", params);
+        Log.d("Delete meal.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+
+        }
+    }
+
+    public String updateMeal(ArrayList<Meal> meal) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        for (int i = 0; i < meal.size(); i++) {
+            try {
+                params.add(new BasicNameValuePair("ID", meal.get(i).getID()));
+                params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
+                params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
+                params.add(new BasicNameValuePair("Sequence", meal.get(i).getSequence()));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            json = null;
+            json = jParser.makeHttpRequest(updateMealURL, "POST", params);
+            Log.d("Update meal.", json.toString());
             try {
                 int success = json.getInt(TAG_SUCCESS);
                 if (success != 1) {
