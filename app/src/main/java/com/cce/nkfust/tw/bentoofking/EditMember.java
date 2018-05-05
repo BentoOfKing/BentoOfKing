@@ -48,6 +48,7 @@ public class EditMember extends AppCompatActivity {
     private TextView emailTextView;
     private EditText passwordEditText;
     private EditText passwordCheckEditText;
+    private EditText OldpasswordCheckEditText;
     private EditText nicknameEditText;
     private Button registerButton;
     private TextView Sex;
@@ -70,6 +71,7 @@ public class EditMember extends AppCompatActivity {
         emailTextView = findViewById(R.id.emailTextView);
         passwordEditText = findViewById(R.id.passwordEditText);
         passwordCheckEditText = findViewById(R.id.passwordCheckEditText);
+        OldpasswordCheckEditText = findViewById(R.id.OldpasswordCheckEditText);
         nicknameEditText = findViewById(R.id.nicknameEditText);
         registerButton = findViewById(R.id.registerButton);
         Sex = findViewById(R.id.Sex1);
@@ -83,6 +85,7 @@ public class EditMember extends AppCompatActivity {
             Sex.setText("女");
         }
         nicknameEditText.setText(userInfo.getMember().getNickname());
+        Toast.makeText(EditMember.this,"若要該改密碼請填新舊密碼",Toast.LENGTH_SHORT).show();
     }
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
@@ -105,35 +108,73 @@ public class EditMember extends AppCompatActivity {
     public class RegisterConfirm implements Runnable{
         @Override
         public void run() {
-            //缺判斷是否全部填寫
-            if(TextUtils.isEmpty(passwordEditText.getText().toString())){
-                Toast.makeText(EditMember.this,"請填寫密碼",Toast.LENGTH_SHORT).show();
+            if(TextUtils.isEmpty(OldpasswordCheckEditText.getText().toString())){
+                Toast.makeText(EditMember.this,"請填寫舊密碼",Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
-                Toast.makeText(EditMember.this,"請輸入密碼確認",Toast.LENGTH_SHORT).show();
+            if(!userInfo.getMember().getPassword().equals(OldpasswordCheckEditText.getText().toString())){
+                Toast.makeText(EditMember.this,"舊密碼錯誤",Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(TextUtils.isEmpty(nicknameEditText.getText().toString())){
-                Toast.makeText(EditMember.this,"請輸入暱稱",Toast.LENGTH_SHORT).show();
-                return;
+            else {
+                if(TextUtils.isEmpty(nicknameEditText.getText().toString())){
+                    Toast.makeText(EditMember.this,"請輸入暱稱",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else{
+                    if(TextUtils.isEmpty(passwordEditText.getText().toString())&&TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
+                        userInfo.getMember().putNickname(nicknameEditText.getText().toString());
+                        database = new Database();
+                        database.UpdateMember(userInfo.getMember());
+                        Toast toast = Toast.makeText(EditMember.this,
+                                "修改成功", Toast.LENGTH_SHORT);
+                        toast.show();
+                        Intent intent = new Intent();
+                        intent.setClass(EditMember.this, MainActivity.class);//有修改
+                        startActivity(intent);
+                    }
+                    else{
+                        if(TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
+                            Toast.makeText(EditMember.this,"請輸入密碼確認",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(TextUtils.isEmpty(nicknameEditText.getText().toString())){
+                            Toast.makeText(EditMember.this,"請輸入暱稱",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(passwordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())){
+                        }
+                        else{
+                            Toast toast = Toast.makeText(EditMember.this,
+                                    "密碼與確認密碼必須一致", Toast.LENGTH_SHORT);
+                            toast.show();
+                            return;
+                        }
+                        Handler RegisterUiHandler = new Handler();  //修改
+                        DatabaseMemberRegister databaseMemberRegister = new DatabaseMemberRegister();
+                        RegisterUiHandler.post(databaseMemberRegister);
+                    }
+                }
             }
-            if(passwordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())){
-            }
-            else{
-                Toast toast = Toast.makeText(EditMember.this,
-                        "密碼與確認密碼必須一致", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            //缺判斷是否全部填寫
-            Handler RegisterUiHandler = new Handler();  //修改
-            DatabaseMemberRegister databaseMemberRegister = new DatabaseMemberRegister();
-            RegisterUiHandler.post(databaseMemberRegister);
         }
     }
     public class  DatabaseMemberRegister implements Runnable{
         @Override
         public void run() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             userInfo.getMember().putNickname(nicknameEditText.getText().toString());
             userInfo.getMember().putPassword(passwordEditText.getText().toString());
             database = new Database();

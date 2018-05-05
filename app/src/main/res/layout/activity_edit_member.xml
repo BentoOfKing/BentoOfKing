@@ -67,6 +67,29 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/PasswordcheckTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/passwordcheck"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <EditText
+                            android:id="@+id/OldpasswordCheckEditText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:inputType="textPassword" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
                             android:id="@+id/PasswordTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -109,6 +132,8 @@
                             android:inputType="textPassword"
                             />
                     </TableRow>
+
+
 
                     <TableRow
                         android:layout_width="match_parent"
