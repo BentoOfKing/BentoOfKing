@@ -337,10 +337,6 @@ public class MainActivity extends AppCompatActivity {
                         storeLists.add(new store_list(store[i]));
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
-                case GET_LOCATION:
-
-
-                    break;
             }
         }
     }
