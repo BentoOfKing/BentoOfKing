@@ -145,7 +145,9 @@ public class Drawer extends AppCompatActivity{
 
                     break;
                 case 5://修改資料
-
+                    intent.setClass(context,EditMember.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 6:
                     intent.setClass(context,AboutActivity.class);

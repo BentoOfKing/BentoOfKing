@@ -47,7 +47,8 @@
         <activity android:name=".EditPhotoActivity" />
         <activity android:name=".EditStoreActivity" />
         <activity android:name=".OrderActivity" />
-        <activity android:name=".CommentAddStore"></activity>
+        <activity android:name=".CommentAddStore" />
+        <activity android:name=".EditMember"></activity>
     </application>
 
 </manifest>
