@@ -9,12 +9,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OrderActivity extends AppCompatActivity {
     private static final int SUCCESS = 66;
@@ -29,6 +32,7 @@ public class OrderActivity extends AppCompatActivity {
     private ArrayList<Meal> meal;
     private MainThreadHandler mainThreadHandler;
     private Context context;
+    private Button orderButton;
     OrderMealAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class OrderActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
+        orderButton = findViewById(R.id.orderButton);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
@@ -72,13 +77,11 @@ public class OrderActivity extends AppCompatActivity {
         }
         public MainThreadHandler(Looper looper){
             super(looper);
-
         }
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    adapter = new OrderMealAdapter(inflater, meal);
+                    adapter = new OrderMealAdapter(context, meal);
                     mealListView.setAdapter(adapter);
                     break;
                 case FAIL:
@@ -90,4 +93,25 @@ public class OrderActivity extends AppCompatActivity {
 
     }
 
+    public class ButtonHandler implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+            Date curDate = new Date(System.currentTimeMillis()) ;
+            String str = formatter.format(curDate);
+            MemberOrder memberOrder = new MemberOrder();
+            memberOrder.putMember(userInfo.getMember().getEmail());
+            memberOrder.putTime(str);
+            for(int i=0;i<meal.size();i++){
+
+
+            }
+
+        }
+    }
+
+    public void addOrder(){
+
+    }
 }

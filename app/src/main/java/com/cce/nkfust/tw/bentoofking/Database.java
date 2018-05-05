@@ -44,6 +44,7 @@ public class Database {
     private static String getMealURL = "http://163.18.104.169/databaseConnect/getMeal.php";
     private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
+    private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -667,4 +668,28 @@ public class Database {
         }
         return "Successful.";
     }
+
+    public String addOrder(MemberOrder memberOrder) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Member", memberOrder.getMember()));
+        params.add(new BasicNameValuePair("Time", memberOrder.getTime()));
+        json = null;
+        json = jParser.makeHttpRequest(addOrderURL, "POST", params);
+        Log.d("Add order.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                String ID = json.getString(TAG_ID);
+                return ID;
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+
 }
