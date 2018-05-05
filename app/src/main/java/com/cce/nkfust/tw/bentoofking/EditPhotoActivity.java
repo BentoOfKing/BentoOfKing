@@ -110,7 +110,7 @@ public class EditPhotoActivity extends AppCompatActivity{
                 return;
             }
             else {
-                progressDialog = ProgressDialog.show(EditPhotoActivity.this, "請稍等...", "照片上傳中...", true);
+                progressDialog = ProgressDialog.show(EditPhotoActivity.this, "請稍等...", "店家新增中...", true);
             }
             photoCount = 0;
             for(int i=0;i<7;i++){
