@@ -73,7 +73,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
         }
         viewHolder.storeName.setText(getItem(position).getStorename());
         viewHolder.storePrice.setText("平均價位:"+getItem(position).getPrice());
-        viewHolder.storeStatus.setText("狀態:"+getItem(position).getStatus());
+        viewHolder.storeStatus.setText(getItem(position).getStatus());
         viewHolder.storeEvaluation.setText("評價:"+getItem(position).getEvaluation());
         if(!getItem(position).getDistance().equals("null"))
             viewHolder.storeDistance.setText("距離:" + String.format("%.1f", Double.valueOf(getItem(position).getDistance())) + "公里");

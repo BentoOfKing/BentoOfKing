@@ -324,8 +324,11 @@ public class MainActivity extends AppCompatActivity {
                 case MORE_STORE:
                     if(msg.getData().getInt("locationStateNow") != 0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")],msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"));
                     else store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"),msg.getData().getString("LatitudeNow"),msg.getData().getInt("distanceStateNow"),msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"),msg.getData().getInt("distanceNow"));
-                    for(int i=0;i<store.length;i++)
-                        storeLists.add(new store_list(store[i]));
+                    for(int i=0;i<store.length;i++) {
+                        store_list additem = new store_list(store[i]);
+                        if((!msg.getData().getBoolean("businessStateNow"))||additem.getStatus().equals("營業中"))
+                            storeLists.add(new store_list(store[i]));
+                    }
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
                 case REFRESH_STORELIST:
@@ -333,8 +336,11 @@ public class MainActivity extends AppCompatActivity {
                     if(msg.getData().getInt("locationStateNow") != 0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")],msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"));
                     else store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"),msg.getData().getString("LatitudeNow"),msg.getData().getInt("distanceStateNow"),msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"),msg.getData().getInt("distanceNow"));
                     storeLists.clear();
-                    for(int i=0;i<store.length;i++)
-                        storeLists.add(new store_list(store[i]));
+                    for(int i=0;i<store.length;i++) {
+                        store_list additem = new store_list(store[i]);
+                        if((!msg.getData().getBoolean("businessStateNow"))||additem.getStatus().equals("營業中"))
+                            storeLists.add(new store_list(store[i]));
+                    }
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
             }
@@ -367,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
                         bag.putInt("distanceStateNow",MainActivity.this.distanceState);
                         bag.putInt("distanceNow",MainActivity.this.distanceKm);
                     }
+                    bag.putBoolean("businessStateNow",MainActivity.this.bussinessState);
                     bag.putInt("locationStateNow",MainActivity.this.locationState);
                     bag.putInt("rankStateNow",MainActivity.this.rankState);
                     bag.putInt("priceStateNow",MainActivity.this.priceState);
