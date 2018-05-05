@@ -183,4 +183,6 @@
     <string name="pleaseInputPhoto">請至少上傳店家主要照片</string>
     <string name="addStoreSuccessful">新增店家成功，審核時間約2~3天，\n請耐心等待</string>
     <string name="addStoreFail">新增店家失敗，請再試一次</string>
+    <string name="order">訂購餐點</string>
+    <string name="reviewStore">審核店家</string>
 </resources>
