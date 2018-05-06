@@ -364,7 +364,7 @@ public class Database {
         Store returnStore[];
         country += "%";
         try {
-            storesList = new ArrayList<HashMap<String, String>>();
+            //storesList = new ArrayList<HashMap<String, String>>();
             params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Index", Integer.toString(index)));
             params.add(new BasicNameValuePair("Country", country));
@@ -384,6 +384,51 @@ public class Database {
             // looping through All Products
 
             if (stores.length() >= 10) {
+                range = 10;
+            } else {
+                range = stores.length();
+            }
+            returnStore = new Store[range];
+            for (int i = 0; i < range; i++) {
+                JSONObject c = stores.getJSONObject(i);
+
+                // Storing each json item in variable
+                returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+            }
+            index += range;
+            return returnStore;
+        } catch (Exception e) {
+            System.out.println("error");
+            System.out.print(e);
+            Store[] nullStore = new Store[0];
+            return nullStore;
+        }
+    }
+
+    public Store[] GetReviewStore() {
+        JSONObject json;
+        JSONArray stores = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Store returnStore[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+            json = jParser.makeHttpRequest(getStoreURL, "GET", params);
+            Log.d("All Stores: ", json.toString());
+            //int success = json.getInt(TAG_SUCCESS);
+            stores = json.getJSONArray(TAG_STORES);
+
+        } catch (Exception e) {
+            Store[] nullStore = new Store[0];
+            return nullStore;
+        }
+        try {
+            System.out.println("OK");
+            // looping through All Products
+
+            if (stores.length() == 10) {
                 range = 10;
             } else {
                 range = stores.length();
@@ -446,7 +491,7 @@ public class Database {
         try {
             // looping through All Products
 
-            if (stores.length() >= 10) {
+            if (stores.length() == 10) {
                 range = 10;
             } else {
                 range = stores.length();
