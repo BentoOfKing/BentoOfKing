@@ -45,6 +45,7 @@ public class Database {
     private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
+    private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -572,6 +573,8 @@ public class Database {
         jParser = new JSONParser();
         for (int i = 0; i < meal.size(); i++) {
             try {
+                params = null;
+                params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("Store", meal.get(i).getStore()));
                 params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
                 params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
@@ -646,6 +649,8 @@ public class Database {
         jParser = new JSONParser();
         for (int i = 0; i < meal.size(); i++) {
             try {
+                params = null;
+                params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("ID", meal.get(i).getID()));
                 params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
                 params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
@@ -669,7 +674,7 @@ public class Database {
         return "Successful.";
     }
 
-    public String addOrder(MemberOrder memberOrder) {
+    public String AddOrder(MemberOrder memberOrder) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
@@ -690,6 +695,31 @@ public class Database {
             e.printStackTrace();
             return "Fail.";
         }
+    }
+
+    public String AddOrderMeal(ArrayList<OrderIncludeMeal> order) {
+        List<NameValuePair> params;
+        jParser = null;
+        jParser = new JSONParser();
+        for (int i = 0; i < order.size(); i++) {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("OrderID", order.get(i).getOrderID()));
+            params.add(new BasicNameValuePair("MealID", order.get(i).getMeal().getID()));
+            params.add(new BasicNameValuePair("Count", order.get(i).getCount()));
+            json = null;
+            json = jParser.makeHttpRequest(addOrderMealURL, "POST", params);
+            Log.d("Add order meal.", json.toString());
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                if (success != 1) {
+                    return "An error occurred.";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "Fail.";
+            }
+        }
+        return "Successful.";
     }
 
 }

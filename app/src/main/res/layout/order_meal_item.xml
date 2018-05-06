@@ -9,7 +9,8 @@
     <LinearLayout
         android:id="@+id/left"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
@@ -33,43 +34,19 @@
     <LinearLayout
         android:id="@+id/right"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:gravity="fill_vertical"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/countEditText"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:gravity="center_horizontal"
-            android:inputType="number"
-            android:text="0" />
-
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/countTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|fill_vertical"
             android:text="個"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/reduceImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_meal_reduce_count" />
-
-        <ImageView
-            android:id="@+id/addImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_meal_add_count" />
 
     </LinearLayout>
 

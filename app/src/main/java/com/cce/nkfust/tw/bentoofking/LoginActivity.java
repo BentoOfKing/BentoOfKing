@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Member member;
 
     private Handler handler = new Handler();
-    private ProgressDialog progressDialog = null;
+    private ProgressDialog progressDialog;
     private Handler LoginThreadHandler;
     private HandlerThread LoginThread;
 

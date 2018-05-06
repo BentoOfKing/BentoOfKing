@@ -5,17 +5,18 @@ package com.cce.nkfust.tw.bentoofking;
  */
 
 public class OrderIncludeMeal {
-    private String OrderID,MealID,Count;
+    private String OrderID,Count;
+    private Meal meal;
     public OrderIncludeMeal(){}
-    public OrderIncludeMeal(String OrderID,String MealID,String Count){
+    public OrderIncludeMeal(String OrderID,Meal meal,String Count){
         this.OrderID = OrderID;
-        this.MealID = MealID;
+        this.meal = meal;
         this.Count = Count;
     }
     public String getOrderID(){return this.OrderID;}
-    public String getMealID(){return this.MealID;}
+    public Meal getMeal(){return this.meal;}
     public String getCount(){return this.Count;}
     public void putOrderID(String OrderID){this.OrderID = OrderID;}
-    public void putMealID(String MealID){this.MealID = MealID;}
+    public void putMeal(Meal meal){this.meal = meal;}
     public void putCount(String Count){this.Count = Count;}
 }

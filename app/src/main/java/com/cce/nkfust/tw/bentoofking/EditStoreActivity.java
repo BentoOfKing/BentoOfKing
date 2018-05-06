@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +55,8 @@ public class EditStoreActivity extends AppCompatActivity {
     private Store store;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog = null;
+    private Handler EditStoreThreadHandler;
+    private HandlerThread EditStoreThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,40 +108,76 @@ public class EditStoreActivity extends AppCompatActivity {
         addressEditText.setText(store.getAddress().toString());
         phoneEditText.setText(store.getPhone().toString());
 
+
         String timetemp = store.BusinessHours.toString();
         char chartime ;
         String intime1="";
+        String test1="";
         String intime2="";
+        String test2="";
         String intime3="";
+        String test3="";
         String intime4="";
+        String test4="";
         int i;
             for (i = 0; i <= 15; i++) {
                 if (i >= 0 && i <= 3) {
                     chartime = timetemp.charAt(i);
                     intime1 = intime1 + chartime;
+                    test1 = test1 + chartime;
+                    if(i==1){intime1=intime1+':';}
                     }
                 if (i >= 4 && i <= 7) {
                     chartime = timetemp.charAt(i);
                     intime2 = intime2 + chartime;
+                    test2 = test2 + chartime;
+                    if(i==5){intime2=intime2+':';}
                 }
                 if (i >= 8 && i <= 11) {
                     chartime = timetemp.charAt(i);
                     intime3 = intime3 + chartime;
+                    test3 = test3 + chartime;
+                    if(i==9){intime3=intime3+':';}
                 }
                 if (i >= 12 && i <= 15) {
                     chartime = timetemp.charAt(i);
                     intime4 = intime4 + chartime;
+                    test4 = test4 + chartime;
+                    if(i==13){intime4=intime4+':';}
                 }
             }
-            if(intime1.equals("0000")) intime1="";
+            if(test1.equals("0000")) intime1="";
                 else time1EditText.setText(intime1);
-            if(intime2.equals("0000")) intime2="";
+            if(test2.equals("0000")) intime2="";
                 else time2EditText.setText(intime2);
-            if(intime3.equals("0000")) intime3="";
+            if(test3.equals("0000")) intime3="";
                 else time3EditText.setText(intime3);
-            if(intime4.equals("0000")) intime4="";
+            if(test4.equals("0000")) intime4="";
                 else time4EditText.setText(intime4);
+
+
+        char charinfo;
+        String infotemp =store.Information.toString() ;
+        String infoContentTextViewString="";
+        int length = 0;
+        for(int j=0;j<7;j++) {
+            charinfo = infotemp.charAt(j);
+            if(charinfo=='1') {
+                if (length != 0) infoContentTextViewString += "、";
+                if (length == 3) infoContentTextViewString += "\n";
+                infoContentTextViewString += getResources().getStringArray(R.array.storeInfo)[j];
+                length++;
+            }
+        }
+        if(infoContentTextViewString.equals("")) infoContentTextViewString = getResources().getString(R.string.touchToEdit);
+        infoContentTextView.setText(infoContentTextViewString);
+
+
+
+
+
     }
+
 
 
 
@@ -184,6 +224,7 @@ public class EditStoreActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     infoContentTextViewString = "";
                     storeInfoString = new String(storeInfoStringTmp);
+                    store.putInformation(storeInfoString);//
                     int length=0;
                     for(int i=0;i<7;i++) {
                         if (storeInfoStringTmp[i] == '1') {
@@ -314,59 +355,165 @@ public class EditStoreActivity extends AppCompatActivity {
     }
 
     public class NextHandler implements View.OnClickListener{
-
-
         @Override
         public void onClick(View view) {
+
+
+
+
+
+            EditStoreThread = new HandlerThread("Login2");
+            EditConfirm editConfirm = new EditConfirm();
+            EditStoreThread.start();
+            EditStoreThreadHandler = new Handler(EditStoreThread.getLooper());
+            EditStoreThreadHandler.post(editConfirm);
             progressDialog = ProgressDialog.show(EditStoreActivity.this, "請稍等...", "資料上傳中...", true);
 
-            if(nameEditText.getText().toString().equals("")){
-                Toast toast = Toast.makeText(context,
-                        getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-                return;
-            }
-            if(phoneEditText.getText().toString().equals("")){
-                Toast toast = Toast.makeText(context,
-                        getResources().getString(R.string.phoneError), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-                return;
-            }
-            if(time1EditText.getText().toString().equals("") || time2EditText.getText().toString().equals("")){
-                Toast toast = Toast.makeText(context,
-                        getResources().getString(R.string.businessHoursError), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-                return;
-            }
-            store.putStoreName(nameEditText.getText().toString());
-            store.putAddress(addressEditText.getText().toString());
-            store.putPhone(phoneEditText.getText().toString());
-            store.putBusinessHours(new String(bussinessTimeChar));
-            store.putInformation(storeInfoString);
-            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-            try {
-                List<Address> addressLocation = geoCoder.getFromLocationName(addressEditText.getText().toString(), 1);
-                store.putLatitude(Double.toString(addressLocation.get(0).getLatitude()));
-                store.putLongitude(Double.toString(addressLocation.get(0).getLongitude()));
-                progressDialog.dismiss();
-            } catch (Exception e) {
-                Toast toast = Toast.makeText(context,
-                        getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
-                toast.show();
-                e.printStackTrace();
-                progressDialog.dismiss();
-                return;
-            }
-            Intent intent = new Intent();
-            intent.setClass(context,EditMenuActivity.class);
-            intent.putExtra(passUserInfo,userInfo);
-            intent.putExtra(passStoreInfo,store);
-            context.startActivity(intent);
-
         }
+
+        public class EditConfirm implements Runnable{
+            @Override
+            public void run() {
+/////////////////////////////////////////////////////////
+            String time1=time1EditText.getText().toString();
+            String time2=time2EditText.getText().toString();
+            String time3=time3EditText.getText().toString();
+            String time4=time4EditText.getText().toString();
+            String worktime="";
+            char chartime;
+            int i,j;
+            for (i=0;i<=3;i++){
+                if (i==0) {
+                    if(time1.equals("")) {worktime= worktime+"0000";}
+                    else {
+                        for (j = 0; j < 5; j++) {
+                            chartime = time1.charAt(j);
+                            if (chartime != ':') {
+                                worktime = worktime + chartime;
+                            }
+                        }
+                    }
+                }
+
+                if (i==1) {
+                    if (time2.equals("")) { worktime = worktime + "0000";
+                    } else{
+                        for (j = 0; j < 5; j++) {
+                            chartime = time2.charAt(j);
+                            if (chartime != ':') {
+                                worktime = worktime + chartime;
+                            }
+                        }
+                    }
+                }
+
+                if (i==2) {
+                    if(time1.equals("")) {worktime= worktime+"0000";}
+                else {
+                        for (j = 0; j < 5; j++) {
+                            chartime = time3.charAt(j);
+                            if (chartime != ':') {
+                                worktime = worktime + chartime;
+                            }
+                        }
+                    }
+                }
+
+                if (i==3) {
+                    if(time4.equals("")) {worktime= worktime+"0000";}
+                    else {
+                        for (j = 0; j < 5; j++) {
+                            chartime = time4.charAt(j);
+                            if (chartime != ':') {
+                                worktime = worktime + chartime;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            storeInfoString=store.getInformation();
+
+
+
+////////////////////////////////////////////////////////
+
+
+
+                if(nameEditText.getText().toString().equals("")){
+                    Toast toast = Toast.makeText(context,
+                            getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
+                    toast.show();
+                    progressDialog.dismiss();
+                    return;
+                }
+                if(phoneEditText.getText().toString().equals("")){
+                    Toast toast = Toast.makeText(context,
+                            getResources().getString(R.string.phoneError), Toast.LENGTH_LONG);
+                    toast.show();
+                    progressDialog.dismiss();
+                    return;
+                }
+                if(time1EditText.getText().toString().equals("") || time2EditText.getText().toString().equals("")){
+                    Toast toast = Toast.makeText(context,
+                            getResources().getString(R.string.businessHoursError), Toast.LENGTH_LONG);
+                    toast.show();
+                    progressDialog.dismiss();
+                    return;
+                }
+                store.putStoreName(nameEditText.getText().toString());
+                store.putAddress(addressEditText.getText().toString());
+                store.putPhone(phoneEditText.getText().toString());
+                store.putBusinessHours(worktime);
+                store.putInformation(storeInfoString);
+                Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+                try {
+                    List<Address> addressLocation = geoCoder.getFromLocationName(addressEditText.getText().toString(), 1);
+                    store.putLatitude(Double.toString(addressLocation.get(0).getLatitude()));
+                    store.putLongitude(Double.toString(addressLocation.get(0).getLongitude()));
+                    progressDialog.dismiss();
+                } catch (Exception e) {
+                    Toast toast = Toast.makeText(context,
+                            getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
+                    toast.show();
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+                    return;
+                }
+                Handler EditUiHandler = new Handler();  //修改
+                DatabaseLogin databaseLogin  = new DatabaseLogin();
+                EditUiHandler.post(databaseLogin);
+            }
+        }
+
+
+        public class DatabaseLogin implements Runnable{
+            @Override
+            public void run() {
+                Database database = new Database();
+                Intent intent = new Intent();
+                intent.setClass(context,MainActivity.class);
+                intent.putExtra(passUserInfo,userInfo);
+                intent.putExtra(passStoreInfo,store);
+                context.startActivity(intent);
+                database.UpdateStore(store);
+
+                Toast toast = Toast.makeText(EditStoreActivity.this,
+                        getResources().getString(R.string.EditSuccessful), Toast.LENGTH_LONG);
+                toast.show();
+
+            }
+        }
+
+
+
+
+
+
+
+
+
     }
 
 

@@ -67,12 +67,12 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/PasswordcheckTextView"
+                            android:id="@+id/OldPassword"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/passwordcheck"
+                            android:text="@string/OldPassword"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size" />
 
