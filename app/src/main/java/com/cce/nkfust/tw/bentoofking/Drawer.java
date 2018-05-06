@@ -236,7 +236,9 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 1:
                     //審核店家
-
+                    intent.setClass(context,ReviewStoreActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 default:
                     intent.setClass(context,MainActivity.class);
