@@ -60,6 +60,76 @@
                             android:ems="10"
                             android:inputType="textPersonName" />
                     </TableRow>
+                    ////////////////////////////////////////////////////
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/passwordcheckTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/OldPassword"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <EditText
+                            android:id="@+id/nameEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="3"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
+//////////////////////////////////////////////////////////////
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/storeNameTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/storeName"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <EditText
+                            android:id="@+id/nameEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="3"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
+                    //////////////////////////////////////////
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/storeNameTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/storeName"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <EditText
+                            android:id="@+id/nameEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="3"
+                            android:ems="10"
+                            android:inputType="textPersonName" />
+                    </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
