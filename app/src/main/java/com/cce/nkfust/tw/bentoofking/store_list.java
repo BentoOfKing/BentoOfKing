@@ -22,7 +22,7 @@ public class store_list {
     private Store store;
     public store_list(Store inputStore){
         store = inputStore;
-        this.imageURL = store.getPhoto();
+        this.imageURL = store.getFirstPhoto();
         this.storename=store.getStoreName();
         this.evaluation=store.getRank();
         this.price=store.getPrice();
