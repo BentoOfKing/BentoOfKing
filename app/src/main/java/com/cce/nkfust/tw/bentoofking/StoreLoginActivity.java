@@ -32,7 +32,7 @@ public class StoreLoginActivity extends AppCompatActivity {
     private Handler StoreLoginThreadHandler;
     private HandlerThread StoreLoginLoginThread;
     private Handler handler = new Handler();
-    private ProgressDialog progressDialog = null;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

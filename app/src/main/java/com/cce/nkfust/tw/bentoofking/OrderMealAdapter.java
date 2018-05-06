@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 public class OrderMealAdapter extends BaseAdapter {
     private ArrayList<OrderIncludeMeal> meal;
-    private Context context;
     private LayoutInflater inflater;
     private ViewHolder viewHolder;
 
