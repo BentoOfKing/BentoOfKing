@@ -32,9 +32,6 @@ public class OrderMealAdapter extends BaseAdapter {
         TextView nameTextView ;
         TextView priceTextView;
         TextView countTextView;
-        ImageView reduceImageView;
-        ImageView addImageView;
-        Meal nowMeal;
     }
 
     public OrderMealAdapter(LayoutInflater inflater, ArrayList<OrderIncludeMeal> meal){

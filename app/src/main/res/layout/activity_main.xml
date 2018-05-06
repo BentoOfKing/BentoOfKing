@@ -13,10 +13,9 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="便當王"
         app:logo="@drawable/toolbar_logo"
-        />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="便當王" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
@@ -68,7 +67,8 @@
                 android:id="@+id/swipeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="#f9eed8">
 
                 <ListView
                     android:id="@+id/storeListView"

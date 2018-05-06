@@ -43,22 +43,23 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/storeNameTextView"
+                            android:id="@+id/passwordTextView"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/storeName"
+                            android:text="@string/password"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size" />
 
                         <EditText
-                            android:id="@+id/nameEditText"
+                            android:id="@+id/passwordEditText"
                             android:layout_width="0dp"
                             android:layout_height="45dp"
                             android:layout_weight="3"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:hint="欲修改資料請填寫密碼"
+                            android:inputType="textPassword" />
                     </TableRow>
                     ////////////////////////////////////////////////////
                     <TableRow
@@ -66,22 +67,23 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/passwordcheckTextView"
+                            android:id="@+id/NewPasswordTextView"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/OldPassword"
+                            android:text="@string/NewPassword"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size" />
 
                         <EditText
-                            android:id="@+id/nameEditText"
+                            android:id="@+id/NewPasswordEditText"
                             android:layout_width="0dp"
                             android:layout_height="45dp"
                             android:layout_weight="3"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:hint="若無需修改密碼請留白"
+                            android:inputType="textPassword" />
                     </TableRow>
 //////////////////////////////////////////////////////////////
                     <TableRow
@@ -89,22 +91,23 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/storeNameTextView"
+                            android:id="@+id/passwordCheckTextView"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/storeName"
+                            android:text="@string/passwordCheck"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size" />
 
                         <EditText
-                            android:id="@+id/nameEditText"
+                            android:id="@+id/passwordCheckEditText"
                             android:layout_width="0dp"
                             android:layout_height="45dp"
                             android:layout_weight="3"
                             android:ems="10"
-                            android:inputType="textPersonName" />
+                            android:hint="若無需修改密碼請留白"
+                            android:inputType="textPassword" />
                     </TableRow>
                     //////////////////////////////////////////
 
