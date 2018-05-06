@@ -188,4 +188,5 @@
     <string name="order">訂購餐點</string>
     <string name="reviewStore">審核店家</string>
     <string name="loadFail">載入失敗，請檢查網路狀態</string>
+    <string name="pickNumber">請選擇數量</string>
 </resources>
