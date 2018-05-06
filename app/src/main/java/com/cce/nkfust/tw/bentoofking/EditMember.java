@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,6 +53,8 @@ public class EditMember extends AppCompatActivity {
     private EditText nicknameEditText;
     private Button registerButton;
     private TextView Sex;
+    private Handler handler = new Handler();
+    private ProgressDialog progressDialog = null;
 
     private HandlerThread RegisterThread;
     private Handler RegisterThreadHandler;
@@ -96,6 +99,7 @@ public class EditMember extends AppCompatActivity {
     public class RegisterButtonHandler implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            progressDialog = ProgressDialog.show(EditMember.this, "請稍等...", "資料更新中...", true);
             RegisterConfirm registerConfirm = new RegisterConfirm();
             RegisterThread = new HandlerThread("Register1");
             RegisterThread.start();
@@ -110,15 +114,18 @@ public class EditMember extends AppCompatActivity {
         public void run() {
             if(TextUtils.isEmpty(OldpasswordCheckEditText.getText().toString())){
                 Toast.makeText(EditMember.this,"請填寫舊密碼",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
                 return;
             }
             if(!userInfo.getMember().getPassword().equals(OldpasswordCheckEditText.getText().toString())){
                 Toast.makeText(EditMember.this,"舊密碼錯誤",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
                 return;
             }
             else {
                 if(TextUtils.isEmpty(nicknameEditText.getText().toString())){
                     Toast.makeText(EditMember.this,"請輸入暱稱",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     return;
                 }
                 else{
@@ -136,14 +143,17 @@ public class EditMember extends AppCompatActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra(passUserInfo, userInfo);
                         startActivity(intent);
+                        progressDialog.dismiss();
                     }
                     else{
                         if(TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
                             Toast.makeText(EditMember.this,"請輸入密碼確認",Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                             return;
                         }
                         if(TextUtils.isEmpty(nicknameEditText.getText().toString())){
                             Toast.makeText(EditMember.this,"請輸入暱稱",Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                             return;
                         }
                         if(passwordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())){
@@ -152,6 +162,7 @@ public class EditMember extends AppCompatActivity {
                             Toast toast = Toast.makeText(EditMember.this,
                                     "密碼與確認密碼必須一致", Toast.LENGTH_SHORT);
                             toast.show();
+                            progressDialog.dismiss();
                             return;
                         }
                         Handler RegisterUiHandler = new Handler();  //修改
@@ -195,6 +206,7 @@ public class EditMember extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(passUserInfo, userInfo);
             startActivity(intent);
+            progressDialog.dismiss();
 
 
 
