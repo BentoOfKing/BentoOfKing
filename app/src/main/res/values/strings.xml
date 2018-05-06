@@ -144,6 +144,7 @@
     <string name="canNotGetLocation">無法取得定位資訊</string>
     <string name="gettingLocation">正在取得定位資訊</string>
     <string name="loginSuccessful">登入成功</string>
+    <string name="EditSuccessful">修改成功</string>
     <string name="emailError">Email錯誤</string>
     <string name="passwordError">密碼錯誤</string>
     <string name="canNotUse">不適用</string>
