@@ -98,7 +98,7 @@
     <string name="chooseCountry">請選擇縣市</string>
     <string name="chooseSort">請選擇排序方式</string>
     <string name="chooseFilter">請選擇過濾方式</string>
-    <string name="passwordcheck">舊密碼</string>
+    <string name="OldPassword">舊密碼</string>
     <array name="country">
         <item>我的位置</item>
         <item>基隆市</item>
