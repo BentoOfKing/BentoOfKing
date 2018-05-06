@@ -129,8 +129,12 @@ public class EditMember extends AppCompatActivity {
                         Toast toast = Toast.makeText(EditMember.this,
                                 "修改成功", Toast.LENGTH_SHORT);
                         toast.show();
+                        userInfo.putMember(userInfo.getMember());
+                        userInfo.setIdentity(1);
                         Intent intent = new Intent();
                         intent.setClass(EditMember.this, MainActivity.class);//有修改
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(passUserInfo, userInfo);
                         startActivity(intent);
                     }
                     else{
@@ -180,11 +184,19 @@ public class EditMember extends AppCompatActivity {
             database = new Database();
             database.UpdateMember(userInfo.getMember());
             Toast toast = Toast.makeText(EditMember.this,
-                    "修改成功", Toast.LENGTH_SHORT);
+                    getResources().getString(R.string.EditSuccessful), Toast.LENGTH_SHORT);
             toast.show();
+
+
+            userInfo.putMember(userInfo.getMember());
+            userInfo.setIdentity(1);
             Intent intent = new Intent();
             intent.setClass(EditMember.this, MainActivity.class);//有修改
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(passUserInfo, userInfo);
             startActivity(intent);
+
+
 
         }
     }
