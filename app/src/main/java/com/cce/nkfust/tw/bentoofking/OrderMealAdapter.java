@@ -69,7 +69,9 @@ public class OrderMealAdapter extends BaseAdapter {
             viewHolder.priceTextView = view.findViewById(R.id.priceTextView);
             viewHolder.countTextView = view.findViewById(R.id.countTextView);
             viewHolder.mealListViewLayout = view.findViewById(R.id.border);
+            if(!meal.get(position).getCount().equals("0")){
 
+            }
             view.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)view.getTag();

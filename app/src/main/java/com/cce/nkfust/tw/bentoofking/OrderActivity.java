@@ -37,11 +37,13 @@ public class OrderActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Store store;
     private ArrayList<Meal> meal;
-    private ArrayList<OrderIncludeMeal> order;
+    private ArrayList<OrderIncludeMeal> order,passOrder;
     private MainThreadHandler mainThreadHandler;
     private Context context;
-    private Button orderButton;
-    OrderMealAdapter adapter;
+    private Button orderButton,clearButton;
+    private TextView orderStatisticsTextView;
+    private OrderMealAdapter adapter;
+    private MemberOrder memberOrder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,10 @@ public class OrderActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         orderButton = findViewById(R.id.orderButton);
+        clearButton = findViewById(R.id.clearButton);
+        orderStatisticsTextView = findViewById(R.id.orderStatisticsTextView);
+        orderButton.setOnClickListener(new OrderButtonHandler());
+        clearButton.setOnClickListener(new ClearButtonHandler());
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
@@ -126,6 +132,12 @@ public class OrderActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     order.get((int)arg3).putCount(Integer.toString(numberPicker.getValue()));
                                     adapter.notifyDataSetChanged();
+                                    int totalCount = 0,totalPrice = 0;
+                                    for(int i=0;i<order.size();i++){
+                                        totalCount += Integer.parseInt(order.get(i).getCount());
+                                        totalPrice += Integer.parseInt(order.get(i).getCount())*Integer.parseInt(order.get(i).getMeal().getPrice());
+                                    }
+                                    orderStatisticsTextView.setText("共 "+totalCount+" 個便當，"+totalPrice+" 元");
                                     dialog.dismiss();
 
                                 }
@@ -146,20 +158,51 @@ public class OrderActivity extends AppCompatActivity {
 
     }
 
-    public class ButtonHandler implements View.OnClickListener{
+    public class OrderButtonHandler implements View.OnClickListener{
 
         @Override
         public void onClick(View view) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
             Date curDate = new Date(System.currentTimeMillis()) ;
             String str = formatter.format(curDate);
-            MemberOrder memberOrder = new MemberOrder();
+            memberOrder = new MemberOrder();
             memberOrder.putMember(userInfo.getMember().getEmail());
             memberOrder.putTime(str);
-            for(int i=0;i<meal.size();i++){
+            passOrder = new ArrayList<OrderIncludeMeal>();
+            for(int i=0;i<order.size();i++){
+                if(!order.get(i).getCount().equals("0")){
+                    passOrder.add(order.get(i));
+                }
+            }
+            Thread thread = new Thread(new Order());
+            thread.start();
+        }
+    }
+
+    class Order implements Runnable{
+        @Override
+        public void run() {
+            try {
+                Database database = new Database();
+                String ID = database.AddOrder(memberOrder);
+                for(int i=0;i<passOrder.size();i++){
+                    passOrder.get(i).putOrderID(ID);
+                }
+                database.AddOrderMeal(passOrder);
+            }catch (Exception e){
 
             }
+        }
+    }
+    public class ClearButtonHandler implements View.OnClickListener {
 
+        @Override
+        public void onClick(View view) {
+            for(int i=0;i<order.size();i++){
+                order.get(i).putCount("0");
+            }
+            orderStatisticsTextView.setText("共 0 個便當，0 元");
+            adapter.notifyDataSetChanged();
         }
     }
 }
