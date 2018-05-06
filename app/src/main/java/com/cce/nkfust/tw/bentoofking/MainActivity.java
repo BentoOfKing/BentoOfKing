@@ -50,7 +50,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static final int REFRESH_ACTIVITY = 5278,requestCodeFineLoaction=1,requestCodeCoarseLocation=2, MORE_STORE = 5279, REFRESH_STORELIST = 5273 ,SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER=5275,GET_LOCATION = 5276;
+    private static final int REFRESH_ACTIVITY = 5278, requestCodeFineLoaction = 1, requestCodeCoarseLocation = 2, MORE_STORE = 5279, REFRESH_STORELIST = 5273, SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER = 5275, SEND_GPS_FILTER = 5276, REFRESHING = 5277;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -69,12 +69,16 @@ public class MainActivity extends AppCompatActivity {
     private Button filterButton;
     private SwipeRefreshLayout swipeLayout;
     private CharSequence[] countryList;
-    private int locationState = 15,distanceState = 0 ,rankState = 1,priceState = 0,distanceKm = 25;
+    private int locationState = 15, distanceState = 0, rankState = 1, priceState = 0, distanceKm = 25;
     private boolean bussinessState = false;
-    private String Longitude,Latitude;
+    private String Longitude, Latitude;
     private LocationManager status;
     private GoogleApiClient mGoogleApiClient;
-
+    private LocationManager mLocation;
+    private Boolean userLocationNotChanged = true;
+    private Boolean isGPSenabled = false;
+    private Boolean isNetworkEnabled = false;
+    private Boolean returnBool = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         UIhandle();
         UIupdate();
     }
-    private void varialbleSetup(){
+
+    private void varialbleSetup() {
         countryList = getResources().getStringArray(R.array.country);
         database = new Database();
         mainHandler = new MainThreadHandler(Looper.getMainLooper());
@@ -94,26 +99,30 @@ public class MainActivity extends AppCompatActivity {
         CDBThread.start();
         CDBTHandler = new Handler_A(CDBThread.getLooper());
         storeLists = new ArrayList<store_list>();
-        adapter = new StoreListViewBaseAdapter(MainActivity.this,storeLists,(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+        adapter = new StoreListViewBaseAdapter(MainActivity.this, storeLists, (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+        mLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         MainActivity.this.Longitude = "22.736802";
         MainActivity.this.Latitude = "120.331109";
     }
-    private void InfoReceive(){
+
+    private void InfoReceive() {
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        if(userInfo == null) userInfo = new UserInfo();
+        if (userInfo == null) userInfo = new UserInfo();
     }
-    private void UIconnect(){
+
+    private void UIconnect() {
         toolbar = findViewById(R.id.toolbar);
         locationButton = findViewById(R.id.locationButton);
         sortButton = findViewById(R.id.sortButton);
         filterButton = findViewById(R.id.filterButton);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
-        storelist=(ListView)findViewById(R.id.storeListView);
+        storelist = (ListView) findViewById(R.id.storeListView);
         swipeLayout = findViewById(R.id.swipeLayout);
     }
-    private void UIhandle(){
+
+    private void UIhandle() {
         ConditionButtonHandler conditionButtonHandler = new ConditionButtonHandler();
         locationButton.setOnClickListener(conditionButtonHandler);
         sortButton.setOnClickListener(conditionButtonHandler);
@@ -122,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
         storelist.setOnItemClickListener(new StoreListClickHandler());
         storelist.setOnScrollListener(new StoreListScrollHandler());
     }
-    private void UIsetup(){
+
+    private void UIsetup() {
         swipeLayout.setColorSchemeResources(
                 android.R.color.holo_red_light,
                 android.R.color.holo_blue_light,
@@ -130,18 +140,17 @@ public class MainActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light);
         toolbar.inflateMenu(R.menu.toolbar_menu);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
+        drawer.init(this, toolbar, drawerListView, drawerLayout, userInfo);
         storelist.setAdapter(adapter);
     }
-    private void UIupdate(){
-        mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+
+    private void UIupdate() {
+        CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
 
     }
 
 
-
-
-    public class ConditionButtonHandler implements View.OnClickListener{
+    public class ConditionButtonHandler implements View.OnClickListener {
         Spinner distanceSpinner;
         Spinner rankSpinner;
         Spinner priceSpinner;
@@ -153,11 +162,12 @@ public class MainActivity extends AppCompatActivity {
         int distanceKmTmp = distanceKm;
         CheckBox bussinessCheckBox;
 
-        String[] sortState={getResources().getStringArray(R.array.distanceSetting)[distanceState],getResources().getStringArray(R.array.rankSetting)[rankState],getResources().getStringArray(R.array.priceSetting)[priceState]};
+        String[] sortState = {getResources().getStringArray(R.array.distanceSetting)[distanceState], getResources().getStringArray(R.array.rankSetting)[rankState], getResources().getStringArray(R.array.priceSetting)[priceState]};
         int locationStateTmp = locationState;
+
         @Override
         public void onClick(View v) {
-            switch(v.getId()){
+            switch (v.getId()) {
                 case R.id.locationButton:
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle(getResources().getString(R.string.chooseCountry))
@@ -168,18 +178,18 @@ public class MainActivity extends AppCompatActivity {
                                             locationStateTmp = which;
                                         }
                                     })
-                            .setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             })
-                            .setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //缺更新資料
                                     locationState = locationStateTmp;
-                                    mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+                                    CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                                     dialog.dismiss();
                                 }
                             })
@@ -187,17 +197,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.sortButton:
                     inflater = LayoutInflater.from(MainActivity.this);
-                    View view = inflater.inflate(R.layout.alertdialog_sort,null);
+                    View view = inflater.inflate(R.layout.alertdialog_sort, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(getResources().getString(R.string.chooseSort));
                     builder.setView(view);
                     distanceSpinner = view.findViewById(R.id.distanceSpinner);
                     rankSpinner = view.findViewById(R.id.rankSpinner);
                     priceSpinner = view.findViewById(R.id.priceSpinner);
-                    ArrayAdapter<CharSequence> distanceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.distanceSetting,android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<CharSequence> distanceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.distanceSetting, android.R.layout.simple_spinner_dropdown_item);
                     distanceSpinner.setAdapter(distanceList);
                     distanceSpinner.setSelection(distanceState);
-                    if(locationState!=0) {
+                    if (locationState != 0) {
                         distanceSpinner.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
@@ -205,27 +215,27 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    ArrayAdapter<CharSequence> rankList = ArrayAdapter.createFromResource(MainActivity.this, R.array.rankSetting,android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<CharSequence> rankList = ArrayAdapter.createFromResource(MainActivity.this, R.array.rankSetting, android.R.layout.simple_spinner_dropdown_item);
                     rankSpinner.setAdapter(rankList);
                     rankSpinner.setSelection(rankState);
-                    ArrayAdapter<CharSequence> priceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.priceSetting,android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<CharSequence> priceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.priceSetting, android.R.layout.simple_spinner_dropdown_item);
                     priceSpinner.setAdapter(priceList);
                     priceSpinner.setSelection(priceState);
 
-                    builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+                    builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
                     });
-                    builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //缺更新資料
-                            distanceState = (int)distanceSpinner.getSelectedItemId();
-                            rankState = (int)rankSpinner.getSelectedItemId();
-                            priceState = (int)priceSpinner.getSelectedItemId();
-                            mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+                            distanceState = (int) distanceSpinner.getSelectedItemId();
+                            rankState = (int) rankSpinner.getSelectedItemId();
+                            priceState = (int) priceSpinner.getSelectedItemId();
+                            CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                             dialog.dismiss();
                         }
                     });
@@ -235,13 +245,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.filterButton:
                     inflater = LayoutInflater.from(MainActivity.this);
-                    view = inflater.inflate(R.layout.alertdialog_filter,null);
+                    view = inflater.inflate(R.layout.alertdialog_filter, null);
                     builder = new AlertDialog.Builder(MainActivity.this);
                     SeekBar distanceSeekBar = view.findViewById(R.id.distanceSeekBar);
                     distanceTextView = view.findViewById(R.id.distanceTextView);
                     bussinessCheckBox = view.findViewById(R.id.bussinessCheckBox);
                     bussinessCheckBox.setChecked(bussinessState);
-                    if(locationState ==0) {
+                    if (locationState == 0) {
                         distanceTextView.setText(getResources().getString(R.string.distance) + "：" + distanceKm + getResources().getString(R.string.km));
                         distanceSeekBar.setProgress(distanceKm);
                         SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange
@@ -261,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         };
                         distanceSeekBar.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
-                    }else{
+                    } else {
                         distanceTextView.setText(getResources().getString(R.string.distance) + "：" + getResources().getString(R.string.canNotUse));
                         distanceSeekBar.setOnTouchListener(new View.OnTouchListener() {
                             @Override
@@ -272,23 +282,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                     builder.setTitle(getResources().getString(R.string.chooseFilter));
                     builder.setView(view);
-                    builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-                    builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //缺更新資料
                             distanceKm = distanceKmTmp;
-                            if(bussinessCheckBox.isChecked()){
+                            if (bussinessCheckBox.isChecked()) {
                                 bussinessState = true;
-                            }else{
+                            } else {
                                 bussinessState = false;
                             }
-                            mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+                            CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                             dialog.dismiss();
                         }
                     });
@@ -302,9 +312,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
-        else
-        if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(this,"再按一次離開程式", Toast.LENGTH_SHORT).show();
+        else if ((System.currentTimeMillis() - mExitTime) > 2000) {
+            Toast.makeText(this, "再按一次離開程式", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             System.exit(0);
@@ -312,89 +321,113 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private class Handler_A extends Handler{
-        public Handler_A(Looper looper){
+    private class Handler_A extends Handler {
+        public Handler_A(Looper looper) {
             super(looper);
         }
+
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case MORE_STORE:
-                    if(msg.getData().getInt("locationStateNow") != 0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")],msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"));
-                    else store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"),msg.getData().getString("LatitudeNow"),msg.getData().getInt("distanceStateNow"),msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"),msg.getData().getInt("distanceNow"));
-                    for(int i=0;i<store.length;i++) {
+                    if (msg.getData().getInt("locationStateNow") != 0)
+                        store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"));
+                    else
+                        store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
+                    for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
-                        if((!msg.getData().getBoolean("businessStateNow"))||additem.getStatus().equals("營業中"))
+                        if ((!msg.getData().getBoolean("businessStateNow")) || additem.getStatus().equals("營業中"))
                             storeLists.add(new store_list(store[i]));
                     }
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
                 case REFRESH_STORELIST:
                     database.refreshStoreIndex();
-                    if(msg.getData().getInt("locationStateNow") != 0 ) store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")],msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"));
-                    else store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"),msg.getData().getString("LatitudeNow"),msg.getData().getInt("distanceStateNow"),msg.getData().getInt("rankStateNow"),msg.getData().getInt("priceStateNow"),msg.getData().getInt("distanceNow"));
+                    if (msg.getData().getInt("locationStateNow") != 0)
+                        store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"));
+                    else
+                        store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
                     storeLists.clear();
-                    for(int i=0;i<store.length;i++) {
+                    for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
-                        if((!msg.getData().getBoolean("businessStateNow"))||additem.getStatus().equals("營業中"))
+                        if ((!msg.getData().getBoolean("businessStateNow")) || additem.getStatus().equals("營業中"))
                             storeLists.add(new store_list(store[i]));
                     }
                     mainHandler.sendEmptyMessage(REFRESH_ACTIVITY);
+                    break;
+                case SEND_FILTER_REFRESH:
+                    if (!swipeLayout.isRefreshing()) mainHandler.sendEmptyMessage(REFRESHING);
+                    Message filter = new Message();
+                    filter.what = REFRESH_STORELIST;
+                    Bundle bag = new Bundle();
+                    if (MainActivity.this.locationState == 0) {
+                        requestUserLocation();
+                        break;
+                    }
+                    bag.putBoolean("businessStateNow", MainActivity.this.bussinessState);
+                    bag.putInt("locationStateNow", MainActivity.this.locationState);
+                    bag.putInt("rankStateNow", MainActivity.this.rankState);
+                    bag.putInt("priceStateNow", MainActivity.this.priceState);
+                    filter.setData(bag);
+                    CDBTHandler.sendMessage(filter);
+                    break;
+                case SEND_LAST_FILTER:
+                    if (!swipeLayout.isRefreshing()) mainHandler.sendEmptyMessage(REFRESHING);
+                    Message lastFilter = new Message();
+                    lastFilter.what = MORE_STORE;
+                    Bundle lastBag = new Bundle();
+                    if (MainActivity.this.locationState == 0) {
+                        lastBag.putString("LongitudeNow", MainActivity.this.Longitude);
+                        lastBag.putString("LatitudeNow", MainActivity.this.Latitude);
+                        lastBag.putInt("distanceStateNow", MainActivity.this.distanceState);
+                        lastBag.putInt("distanceNow", MainActivity.this.distanceKm);
+                    }
+                    lastBag.putInt("locationStateNow", MainActivity.this.locationState);
+                    lastBag.putInt("rankStateNow", MainActivity.this.rankState);
+                    lastBag.putInt("priceStateNow", MainActivity.this.priceState);
+                    lastFilter.setData(lastBag);
+                    CDBTHandler.sendMessage(lastFilter);
+                    break;
+                case SEND_GPS_FILTER:
+                    if (!swipeLayout.isRefreshing()) mainHandler.sendEmptyMessage(REFRESHING);
+                    Message GPSfilter = new Message();
+                    GPSfilter.what = REFRESH_STORELIST;
+                    Bundle GPSbag = new Bundle();
+                    GPSbag.putString("LongitudeNow", MainActivity.this.Longitude);
+                    GPSbag.putString("LatitudeNow", MainActivity.this.Latitude);
+                    GPSbag.putInt("distanceStateNow", MainActivity.this.distanceState);
+                    GPSbag.putInt("distanceNow", MainActivity.this.distanceKm);
+                    GPSbag.putBoolean("businessStateNow", MainActivity.this.bussinessState);
+                    GPSbag.putInt("locationStateNow", MainActivity.this.locationState);
+                    GPSbag.putInt("rankStateNow", MainActivity.this.rankState);
+                    GPSbag.putInt("priceStateNow", MainActivity.this.priceState);
+                    GPSfilter.setData(GPSbag);
+                    CDBTHandler.sendMessage(GPSfilter);
                     break;
             }
         }
     }
 
-    private class MainThreadHandler extends Handler{
-        public MainThreadHandler(){
+    private class MainThreadHandler extends Handler {
+        public MainThreadHandler() {
             super();
         }
-        public MainThreadHandler(Looper looper){
+
+        public MainThreadHandler(Looper looper) {
             super(looper);
         }
+
         @Override
-        public void handleMessage(Message msg){
-            switch (msg.what){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
                 case REFRESH_ACTIVITY:
                     adapter.notifyDataSetChanged();
                     swipeLayout.setRefreshing(false);
                     storelist.setEnabled(true);
                     break;
-                case SEND_FILTER_REFRESH:
-                    Message filter = new Message();
-                    filter.what = REFRESH_STORELIST;
-                    Bundle bag = new Bundle();
-                    if(MainActivity.this.locationState==0){
-                        if(requestUserLocationPermission()) requestUserLocation();
-                        bag.putString("LongitudeNow",MainActivity.this.Longitude);
-                        bag.putString("LatitudeNow",MainActivity.this.Latitude);
-                        bag.putInt("distanceStateNow",MainActivity.this.distanceState);
-                        bag.putInt("distanceNow",MainActivity.this.distanceKm);
-                    }
-                    bag.putBoolean("businessStateNow",MainActivity.this.bussinessState);
-                    bag.putInt("locationStateNow",MainActivity.this.locationState);
-                    bag.putInt("rankStateNow",MainActivity.this.rankState);
-                    bag.putInt("priceStateNow",MainActivity.this.priceState);
-                    filter.setData(bag);
-                    CDBTHandler.sendMessage(filter);
-                    break;
-                case SEND_LAST_FILTER:
-                    Message lastFilter = new Message();
-                    lastFilter.what = MORE_STORE;
-                    Bundle lastBag = new Bundle();
-                    if(MainActivity.this.locationState==0){
-                        lastBag.putString("LongitudeNow",MainActivity.this.Longitude);
-                        lastBag.putString("LatitudeNow",MainActivity.this.Latitude);
-                        lastBag.putInt("distanceStateNow",MainActivity.this.distanceState);
-                        lastBag.putInt("distanceNow",MainActivity.this.distanceKm);
-                    }
-                    lastBag.putInt("locationStateNow",MainActivity.this.locationState);
-                    lastBag.putInt("rankStateNow",MainActivity.this.rankState);
-                    lastBag.putInt("priceStateNow",MainActivity.this.priceState);
-                    lastFilter.setData(lastBag);
-                    CDBTHandler.sendMessage(lastFilter);
+                case REFRESHING:
+                    swipeLayout.setRefreshing(true);
                     break;
             }
             super.handleMessage(msg);
@@ -402,28 +435,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    private class StoreListClickHandler implements AdapterView.OnItemClickListener{
+    private class StoreListClickHandler implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(MainActivity.this,CheckStoreInfo.class);
+            Intent intent = new Intent(MainActivity.this, CheckStoreInfo.class);
             UserInfo storeInfoBundle = new UserInfo();
             storeInfoBundle.setIdentity(2);
             storeInfoBundle.putStore(MainActivity.this.storeLists.get(position).getStoreInfo());
-            intent.putExtra("storeInfo",storeInfoBundle);
-            intent.putExtra( MainActivity.passUserInfo, MainActivity.this.userInfo);
+            intent.putExtra("storeInfo", storeInfoBundle);
+            intent.putExtra(MainActivity.passUserInfo, MainActivity.this.userInfo);
             startActivity(intent);
         }
     }
 
 
-    private class StoreListScrollHandler implements AbsListView.OnScrollListener{
+    private class StoreListScrollHandler implements AbsListView.OnScrollListener {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                 if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                    mainHandler.sendEmptyMessage(SEND_LAST_FILTER);
+                    CDBTHandler.sendEmptyMessage(SEND_LAST_FILTER);
                 }
             }
         }
@@ -439,18 +470,13 @@ public class MainActivity extends AppCompatActivity {
         int permissionFineLoaction = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionCoarseLocation = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (permissionFineLoaction != PackageManager.PERMISSION_GRANTED || permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, requestCodeFineLoaction );
-            ActivityCompat.requestPermissions( this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestCodeCoarseLocation );
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, requestCodeFineLoaction);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestCodeCoarseLocation);
             return false;
-        }else{
-            requestUserLocation();
-            return true;
-        }
-
+        } else return true;
     }
-    LocationManager mLocation;
+
     public void requestUserLocation() {
-        mLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //判斷當前是否已經獲得了定位權限
         int permissionFineLoaction = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionCoarseLocation = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -458,23 +484,22 @@ public class MainActivity extends AppCompatActivity {
             return;
         } else {
             boolean isGPSEnabled = mLocation.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (!isGPSEnabled) {
+                setupGPS();
+                isGPSEnabled = mLocation.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
             boolean isNetworkEnabled = mLocation.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            int LOCATION_UPDATE_MIN_DISTANCE = 1000;
-            int LOCATION_UPDATE_MIN_TIME = 50;
-            if(isNetworkEnabled || isGPSEnabled) {
+            int LOCATION_UPDATE_MIN_DISTANCE = 50;
+            int LOCATION_UPDATE_MIN_TIME = 1000;
+            if (isNetworkEnabled || isGPSEnabled) {
                 Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.gettingLocation), Toast.LENGTH_SHORT);
                 toast.show();
-                if (isNetworkEnabled) {
-                    mLocation.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                            LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, mLocationListener);
-                }
-
-                if (isGPSEnabled) {
-                    mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                            LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DISTANCE, mLocationListener);
-                }
+                if(isGPSEnabled)
+                    mLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000, 50, mLocationListener);
+                if(isNetworkEnabled)
+                    mLocation.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0, 100, mLocationListener);
             }
-            if(!isNetworkEnabled && !isGPSEnabled){
+            if (!isNetworkEnabled && !isGPSEnabled) {
                 Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.canNotGetLocation), Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -488,16 +513,14 @@ public class MainActivity extends AppCompatActivity {
             if (location != null) {
                 Latitude = Double.toString(location.getLatitude());
                 Longitude = Double.toString(location.getLongitude());
-                if(userInfo.getIdentity()==1){
+                CDBTHandler.sendEmptyMessage(SEND_GPS_FILTER);
+                if (userInfo.getIdentity() == 1) {
                     userInfo.getMember().putLatitude(Latitude);
                     userInfo.getMember().putLongitude(Longitude);
                     UpdateUserLocation updateUserLocation = new UpdateUserLocation();
                     Thread thread = new Thread(updateUserLocation);
                     thread.start();
                 }
-                //更新資料
-                locationState = 0;
-                mLocation.removeUpdates(mLocationListener);
             }
         }
 
@@ -514,11 +537,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private class StoreRefreshListener implements SwipeRefreshLayout.OnRefreshListener{
+    private class StoreRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
             storelist.setEnabled(false);
-            mainHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+            CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
         }
     }
 
@@ -531,7 +554,7 @@ public class MainActivity extends AppCompatActivity {
                     if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {//同意授权
                         Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.canNotGetLocation), Toast.LENGTH_SHORT);
                         toast.show();
-                    }else{
+                    } else {
                         requestUserLocation();
                     }
                 }
@@ -541,20 +564,50 @@ public class MainActivity extends AppCompatActivity {
                     if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {//同意授权
                         Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.canNotGetLocation), Toast.LENGTH_SHORT);
                         toast.show();
-                    }else{
+                    } else {
 
                         requestUserLocation();
                     }
                 }
                 break;
-            default: super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-    public class UpdateUserLocation implements Runnable{
+
+    public class UpdateUserLocation implements Runnable {
         @Override
         public void run() {
             database.UpdateMember(userInfo.getMember());
         }
+    }
+
+    private Boolean setupGPS() {
+        new AlertDialog.Builder(MainActivity.this).setTitle("GPS服務").setMessage("您尚未開啟定位服務，要前往設定頁面啟動定位服務嗎？")
+                .setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                returnBool = true;
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Toast.makeText(MainActivity.this, "未開啟定位服務，定位將會不準確", Toast.LENGTH_SHORT).show();
+                returnBool = false;
+            }
+        }).show();
+        return  returnBool;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
     }
     //---以上為定位程式---
 }
