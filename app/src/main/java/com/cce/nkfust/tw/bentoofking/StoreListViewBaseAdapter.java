@@ -61,7 +61,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = this.inflater.inflate(R.layout.storelistview_item,null);
             viewHolder.storeIcon = convertView.findViewById(R.id.storeIcon);
-            viewHolder.storeName = convertView.findViewById(R.id.storeName);
+            viewHolder.storeName = convertView.findViewById(R.id.storeInfoLayout3);
             viewHolder.storeDistance = convertView.findViewById(R.id.storeDistance);
             viewHolder.storeEvaluation = convertView.findViewById(R.id.storeScore);
             viewHolder.storePrice = convertView.findViewById(R.id.storePrice);

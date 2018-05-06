@@ -26,7 +26,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/storeName"
+                android:id="@+id/storeInfoLayout3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="店家名稱"

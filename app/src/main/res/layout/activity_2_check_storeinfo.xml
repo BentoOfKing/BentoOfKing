@@ -79,7 +79,7 @@
                 app:layout_constraintStart_toStartOf="@+id/textView3" />
 
             <TextView
-                android:id="@+id/storeName"
+                android:id="@+id/storeInfoLayout3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -182,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" * * * * *"
-                app:layout_constraintStart_toStartOf="@+id/storeName"
+                app:layout_constraintStart_toStartOf="@+id/storeInfoLayout3"
                 app:layout_constraintTop_toTopOf="@+id/textView3" />
 
             <EditText

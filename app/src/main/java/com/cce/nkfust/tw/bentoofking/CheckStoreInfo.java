@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,14 +51,14 @@ public class CheckStoreInfo extends AppCompatActivity {
     private ImageView storeIcon;
     private TextView storeName;
     private TextView storeEvaluation;
-    private Button menuButton;
+    private ImageButton menuButton;
     private TextView storeAddress;
     private TextView storeEmail;
     private TextView storeParkInfo;
     private TextView storeFreeInfo;
     private EditText commentEditText;
     private ListView commentListView;
-    private Button sentCommentButton;
+    private ImageButton sentCommentButton;
     private UserInfo storeInfoBundle;
     private Toolbar toolbar;
     private ListView drawerListView;
@@ -74,13 +75,24 @@ public class CheckStoreInfo extends AppCompatActivity {
     private CommentHandler CmtHandler;
     private Handler mainHandler;
     private Snackbar snackbar;
+    private ImageView storeInfo1;
+    private ImageView storeInfo2;
+    private ImageView storeInfo3;
+    private ImageView storeInfo4;
+    private ImageView storeInfo5;
+    private ImageView storeInfo6;
+    private ImageView storeInfo7;
+    private ImageView[] starArray;
+    private TextView storeAveragePrice;
+    private TextView storeBusiness;
     @Override
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         createMainHandler();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        setContentView(R.layout.activity_2_check_storeinfo);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        setContentView(R.layout.activity_2_check_storeinfonew);
+        variableSetup();
         intent = getIntent();
         getUserInfo();
         this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
@@ -91,6 +103,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 intent.setClass(CheckStoreInfo.this,OrderActivity.class);
                 intent.putExtra(passStoreInfo,storeInfoBundle.getStore());
                 intent.putExtra(passUserInfo,userInfo);
@@ -98,6 +111,10 @@ public class CheckStoreInfo extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void variableSetup(){
+        starArray = new ImageView[5];
     }
 
     private void createMainHandler(){
@@ -117,12 +134,11 @@ public class CheckStoreInfo extends AppCompatActivity {
 
     private void UpdateUI(){
         this.storeName.setText(storeInfoBundle.getStore().getStoreName());
-        this.storeEvaluation.setText("*****");
         this.storeAddress.setText(storeInfoBundle.getStore().getAddress());
-        this.storeEmail.setText(storeInfoBundle.getStore().getEmail());
-        this.storeParkInfo.setText("後門有山豬戲水區");
-        final String storeInfoString = getStoreInfoString();
-        this.storeFreeInfo.setText(storeInfoString);
+        this.storeAveragePrice.setText(storeInfoBundle.getStore().getPrice());
+        this.storeBusiness.setText(getStoreBusiness());
+        updateStoreInfo();
+        updateStoreScore();/*
         Thread bitMapthread = new Thread (new Runnable() {
             @Override
             public void run() {
@@ -140,7 +156,7 @@ public class CheckStoreInfo extends AppCompatActivity {
             bitMapthread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         try {
             getArrayList.join();
@@ -176,64 +192,68 @@ public class CheckStoreInfo extends AppCompatActivity {
         }, 500);
     }
 
-    private String getStoreInfoString(){
+
+    private void updateStoreInfo(){
         String storeFreeinfoBool = storeInfoBundle.getStore().getInformation();
-        String storeInfoString = "";
-        if(storeFreeinfoBool.charAt(0)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="可以內用";
-        }
-        if(storeFreeinfoBool.charAt(1)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="冷氣開放";
-        }
-        if(storeFreeinfoBool.charAt(2)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="提供廁所";
-        }
-        if(storeFreeinfoBool.charAt(3)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="專屬停車位";
-        }
-        if(storeFreeinfoBool.charAt(4)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="飲料暢飲";
-        }
-        if(storeFreeinfoBool.charAt(5)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="免費湯品";
-        }
-        if(storeFreeinfoBool.charAt(6)=='1'){
-            if(!storeInfoString.isEmpty())
-                storeInfoString+="/";
-            storeInfoString+="提供素食";
-        }
-        return storeInfoString;
+        if(storeFreeinfoBool.charAt(0)=='1')
+            storeInfo1.setImageResource(R.drawable.store_info1_on);
+        if(storeFreeinfoBool.charAt(1)=='1')
+            storeInfo2.setImageResource(R.drawable.store_info2_on);
+        if(storeFreeinfoBool.charAt(2)=='1')
+            storeInfo3.setImageResource(R.drawable.store_info3_on);
+        if(storeFreeinfoBool.charAt(3)=='1')
+            storeInfo4.setImageResource(R.drawable.store_info4_on);
+        if(storeFreeinfoBool.charAt(4)=='1')
+            storeInfo5.setImageResource(R.drawable.store_info5_on);
+        if(storeFreeinfoBool.charAt(5)=='1')
+            storeInfo6.setImageResource(R.drawable.store_info6_on);
+        if(storeFreeinfoBool.charAt(6)=='1')
+            storeInfo7.setImageResource(R.drawable.store_info7_on);
+    }
+
+    private void updateStoreScore(){
+        double storeScoreDouble = Double.valueOf(storeInfoBundle.getStore().getRank());
+        int storeScoreInt = (int)storeScoreDouble;
+        for(int i=0;i<storeScoreInt;i++)
+            starArray[i].setImageResource(R.drawable.star_on);
+    }
+
+    private String getStoreBusiness(){
+        String storeBusinessTime = storeInfoBundle.getStore().getBusinessHours();
+        String returnString = "";
+        if(storeBusinessTime.length()>=8)
+            returnString+=String.format("%s:%s ~ %s:%s     ",storeBusinessTime.substring(0,2),storeBusinessTime.substring(2,4),storeBusinessTime.substring(4,6),storeBusinessTime.substring(6,8));
+        if(storeBusinessTime.length()>=16)
+            returnString+=String.format("%s:%s ~ %s:%s",storeBusinessTime.substring(8,10),storeBusinessTime.substring(10,12),storeBusinessTime.substring(12,14),storeBusinessTime.substring(14,16));
+        return returnString;
     }
 
 
     private void UIconnect(){
-        this.reportButton = findViewById(R.id.reportButton);
-        this.storeIcon = findViewById(R.id.storeIcon);
-        this.storeName = findViewById(R.id.storeName);
-        this.storeEvaluation = findViewById(R.id.storeEvaluation);
-        this.menuButton = findViewById(R.id.menuButton);
+        this.storeIcon = findViewById(R.id.storePicture);
+        this.storeName = findViewById(R.id.storeNameTextView);
+        this.menuButton = findViewById(R.id.storeMenuButton);
         this.storeAddress = findViewById(R.id.storeAddress);
-        this.storeEmail = findViewById(R.id.storeEmail);
-        this.storeParkInfo = findViewById(R.id.storeParkInfo);
-        this.storeFreeInfo = findViewById(R.id.storeFreeInfo);
         this.commentEditText = findViewById(R.id.commentEditText);
-        this.sentCommentButton = findViewById(R.id.sentCommentButton);
+        this.sentCommentButton = findViewById(R.id.sendComment);
         this.toolbar = findViewById(R.id.toolbar);
         this.drawerListView = findViewById(R.id.drawerListView);
         this.drawerLayout = findViewById(R.id.drawerLayout);
-        this.commentListView = findViewById(R.id.Dejavu);
+        this.commentListView = findViewById(R.id.commentListView);
+        this.storeInfo1 = findViewById(R.id.storeInfo1);
+        this.storeInfo2 = findViewById(R.id.storeInfo2);
+        this.storeInfo3 = findViewById(R.id.storeInfo3);
+        this.storeInfo4 = findViewById(R.id.storeInfo4);
+        this.storeInfo5 = findViewById(R.id.storeInfo5);
+        this.storeInfo6 = findViewById(R.id.storeInfo6);
+        this.storeInfo7 = findViewById(R.id.storeInfo7);
+        this.starArray[0] = findViewById(R.id.storeScore1);
+        this.starArray[1] = findViewById(R.id.storeScore2);
+        this.starArray[2] = findViewById(R.id.storeScore3);
+        this.starArray[3] = findViewById(R.id.storeScore4);
+        this.starArray[4] = findViewById(R.id.storeScore5);
+        this.storeAveragePrice = findViewById(R.id.storeAveragePrice);
+        this.storeBusiness = findViewById(R.id.storeBusiness);
         newDrawer();
     }
 
