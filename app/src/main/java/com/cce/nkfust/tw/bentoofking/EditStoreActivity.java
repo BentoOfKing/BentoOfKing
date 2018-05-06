@@ -44,6 +44,9 @@ public class EditStoreActivity extends AppCompatActivity {
     private EditText nameEditText;
     private EditText addressEditText;
     private EditText phoneEditText;
+    private EditText passwordEditText;
+    private EditText NewPasswordEditText;
+    private EditText passwordCheckEditText;
     private EditText time1EditText;
     private EditText time2EditText;
     private EditText time3EditText;
@@ -86,6 +89,9 @@ public class EditStoreActivity extends AppCompatActivity {
         addressEditText = findViewById(R.id.addressEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
         time1EditText = findViewById(R.id.time1EditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        NewPasswordEditText = findViewById(R.id.NewPasswordEditText);
+        passwordCheckEditText = findViewById(R.id.passwordCheckEditText);
         time2EditText = findViewById(R.id.time2EditText);
         time3EditText = findViewById(R.id.time3EditText);
         time4EditText = findViewById(R.id.time4EditText);
@@ -374,135 +380,183 @@ public class EditStoreActivity extends AppCompatActivity {
         public class EditConfirm implements Runnable{
             @Override
             public void run() {
-/////////////////////////////////////////////////////////
-            String time1=time1EditText.getText().toString();
-            String time2=time2EditText.getText().toString();
-            String time3=time3EditText.getText().toString();
-            String time4=time4EditText.getText().toString();
-            String worktime="";
-            char chartime;
-            int i,j;
-            for (i=0;i<=3;i++){
-                if (i==0) {
-                    if(time1.equals("")) {worktime= worktime+"0000";}
+
+////////////////////////////////////////////////////////////////////////////
+
+
+                if (passwordEditText.getText().toString().equals(store.Password)) {
+                    int passwordFlag=0;
+                    if(NewPasswordEditText.getText().toString().equals("")&&passwordCheckEditText.getText().toString().equals("")){}
+
                     else {
-                        for (j = 0; j < 5; j++) {
-                            chartime = time1.charAt(j);
-                            if (chartime != ':') {
-                                worktime = worktime + chartime;
+                        if (NewPasswordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())) {
+                            store.putPassword(NewPasswordEditText.getText().toString());
+                        } else {
+                            Toast toast = Toast.makeText(EditStoreActivity.this,
+                                    getResources().getString(R.string.NewPasswordAndCheckPassword), Toast.LENGTH_LONG);
+                            toast.show();
+                            passwordFlag=1;
+                        }
+                    }
+                if(passwordFlag==0) {
+                    String time1 = time1EditText.getText().toString();
+                    String time2 = time2EditText.getText().toString();
+                    String time3 = time3EditText.getText().toString();
+                    String time4 = time4EditText.getText().toString();
+                    String worktime = "";
+                    char chartime;
+                    int i, j;
+                    for (i = 0; i <= 3; i++) {
+                        if (i == 0) {
+                            if (time1.equals("")) {
+                                worktime = worktime + "0000";
+                            } else {
+                                for (j = 0; j < 5; j++) {
+                                    chartime = time1.charAt(j);
+                                    if (chartime != ':') {
+                                        worktime = worktime + chartime;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (i == 1) {
+                            if (time2.equals("")) {
+                                worktime = worktime + "0000";
+                            } else {
+                                for (j = 0; j < 5; j++) {
+                                    chartime = time2.charAt(j);
+                                    if (chartime != ':') {
+                                        worktime = worktime + chartime;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (i == 2) {
+                            if (time3.equals("")) {
+                                worktime = worktime + "0000";
+                            } else {
+                                for (j = 0; j < 5; j++) {
+                                    chartime = time3.charAt(j);
+                                    if (chartime != ':') {
+                                        worktime = worktime + chartime;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (i == 3) {
+                            if (time4.equals("")) {
+                                worktime = worktime + "0000";
+                            } else {
+                                for (j = 0; j < 5; j++) {
+                                    chartime = time4.charAt(j);
+                                    if (chartime != ':') {
+                                        worktime = worktime + chartime;
+                                    }
+                                }
                             }
                         }
                     }
-                }
-
-                if (i==1) {
-                    if (time2.equals("")) { worktime = worktime + "0000";
-                    } else{
-                        for (j = 0; j < 5; j++) {
-                            chartime = time2.charAt(j);
-                            if (chartime != ':') {
-                                worktime = worktime + chartime;
-                            }
-                        }
-                    }
-                }
-
-                if (i==2) {
-                    if(time1.equals("")) {worktime= worktime+"0000";}
-                else {
-                        for (j = 0; j < 5; j++) {
-                            chartime = time3.charAt(j);
-                            if (chartime != ':') {
-                                worktime = worktime + chartime;
-                            }
-                        }
-                    }
-                }
-
-                if (i==3) {
-                    if(time4.equals("")) {worktime= worktime+"0000";}
-                    else {
-                        for (j = 0; j < 5; j++) {
-                            chartime = time4.charAt(j);
-                            if (chartime != ':') {
-                                worktime = worktime + chartime;
-                            }
-                        }
-                    }
-                }
-            }
 
 
-            storeInfoString=store.getInformation();
-
+                    storeInfoString = store.getInformation();
 
 
 ////////////////////////////////////////////////////////
 
 
+                    if (nameEditText.getText().toString().equals("")) {
+                        Toast toast = Toast.makeText(context,
+                                getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
+                        toast.show();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    if (phoneEditText.getText().toString().equals("")) {
+                        Toast toast = Toast.makeText(context,
+                                getResources().getString(R.string.phoneError), Toast.LENGTH_LONG);
+                        toast.show();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    if (time1EditText.getText().toString().equals("") || time2EditText.getText().toString().equals("")) {
+                        Toast toast = Toast.makeText(context,
+                                getResources().getString(R.string.businessHoursError), Toast.LENGTH_LONG);
+                        toast.show();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    store.putStoreName(nameEditText.getText().toString());
+                    store.putAddress(addressEditText.getText().toString());
+                    store.putPhone(phoneEditText.getText().toString());
+                    store.putBusinessHours(worktime);
+                    store.putInformation(storeInfoString);
+                    Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+                    try {
+                        List<Address> addressLocation = geoCoder.getFromLocationName(addressEditText.getText().toString(), 1);
+                        store.putLatitude(Double.toString(addressLocation.get(0).getLatitude()));
+                        store.putLongitude(Double.toString(addressLocation.get(0).getLongitude()));
+                        progressDialog.dismiss();
+                    } catch (Exception e) {
+                        Toast toast = Toast.makeText(context,
+                                getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
+                        toast.show();
+                        e.printStackTrace();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                }//passwordFlag
+                    else{
+                    Database database = new Database();
+                    database.UpdateStore(store);
+                    progressDialog.dismiss();
 
-                if(nameEditText.getText().toString().equals("")){
-                    Toast toast = Toast.makeText(context,
-                            getResources().getString(R.string.nameError), Toast.LENGTH_LONG);
-                    toast.show();
-                    progressDialog.dismiss();
-                    return;
                 }
-                if(phoneEditText.getText().toString().equals("")){
-                    Toast toast = Toast.makeText(context,
-                            getResources().getString(R.string.phoneError), Toast.LENGTH_LONG);
+
+                    Handler EditUiHandler = new Handler();  //修改
+                    DatabaseLogin databaseLogin = new DatabaseLogin();
+                    EditUiHandler.post(databaseLogin);
+
+
+
+                }//if
+                else{
+                    Database database = new Database();
+                    database.UpdateStore(store);
+                    progressDialog.dismiss();
+                    Toast toast = Toast.makeText(EditStoreActivity.this,
+                            getResources().getString(R.string.PleaseCheckPassword), Toast.LENGTH_LONG);
                     toast.show();
-                    progressDialog.dismiss();
-                    return;
+
+
                 }
-                if(time1EditText.getText().toString().equals("") || time2EditText.getText().toString().equals("")){
-                    Toast toast = Toast.makeText(context,
-                            getResources().getString(R.string.businessHoursError), Toast.LENGTH_LONG);
-                    toast.show();
-                    progressDialog.dismiss();
-                    return;
-                }
-                store.putStoreName(nameEditText.getText().toString());
-                store.putAddress(addressEditText.getText().toString());
-                store.putPhone(phoneEditText.getText().toString());
-                store.putBusinessHours(worktime);
-                store.putInformation(storeInfoString);
-                Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-                try {
-                    List<Address> addressLocation = geoCoder.getFromLocationName(addressEditText.getText().toString(), 1);
-                    store.putLatitude(Double.toString(addressLocation.get(0).getLatitude()));
-                    store.putLongitude(Double.toString(addressLocation.get(0).getLongitude()));
-                    progressDialog.dismiss();
-                } catch (Exception e) {
-                    Toast toast = Toast.makeText(context,
-                            getResources().getString(R.string.addressError), Toast.LENGTH_LONG);
-                    toast.show();
-                    e.printStackTrace();
-                    progressDialog.dismiss();
-                    return;
-                }
-                Handler EditUiHandler = new Handler();  //修改
-                DatabaseLogin databaseLogin  = new DatabaseLogin();
-                EditUiHandler.post(databaseLogin);
-            }
+            }//run
         }
 
 
         public class DatabaseLogin implements Runnable{
             @Override
             public void run() {
-                Database database = new Database();
-                Intent intent = new Intent();
-                intent.setClass(context,MainActivity.class);
-                intent.putExtra(passUserInfo,userInfo);
-                intent.putExtra(passStoreInfo,store);
-                context.startActivity(intent);
-                database.UpdateStore(store);
+                if (NewPasswordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())) {
+                    Database database = new Database();
+                    Intent intent = new Intent();
+                    intent.setClass(context, MainActivity.class);
+                    intent.putExtra(passUserInfo, userInfo);
+                    intent.putExtra(passStoreInfo, store);
+                    context.startActivity(intent);
+                    database.UpdateStore(store);
 
-                Toast toast = Toast.makeText(EditStoreActivity.this,
-                        getResources().getString(R.string.EditSuccessful), Toast.LENGTH_LONG);
-                toast.show();
+                    Toast toast = Toast.makeText(EditStoreActivity.this,
+                            getResources().getString(R.string.EditSuccessful), Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                else{
+                    Database database = new Database();
+                    database.UpdateStore(store);
 
+                }
             }
         }
 
