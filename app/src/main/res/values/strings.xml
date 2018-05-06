@@ -189,4 +189,7 @@
     <string name="reviewStore">審核店家</string>
     <string name="loadFail">載入失敗，請檢查網路狀態</string>
     <string name="pickNumber">請選擇數量</string>
+    <string name="NewPassword">新密碼</string>
+    <string name="PleaseCheckPassword">請確認密碼</string>
+    <string name="NewPasswordAndCheckPassword">新密碼與確認密碼必須一致</string>
 </resources>
