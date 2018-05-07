@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,10 +62,10 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             DatabaseLogin databaseLogin = new DatabaseLogin();
             LoginThread = new HandlerThread("Login1");
+            progressDialog = ProgressDialog.show(LoginActivity.this, "請稍等...", "會員登入中...", true);
             LoginThread.start();
             LoginThreadHandler = new Handler(LoginThread.getLooper());
             LoginThreadHandler.post(databaseLogin);
-            progressDialog = ProgressDialog.show(LoginActivity.this, "請稍等...", "會員登入中...", true);
 
 
         }
@@ -90,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
                     toast.show();
+                    Handler handler = new Handler();
                     progressDialog.dismiss();
                 }else if(member.getEmail().equals("Email error.")){
                     Toast toast = Toast.makeText(LoginActivity.this,
@@ -107,14 +110,14 @@ public class LoginActivity extends AppCompatActivity {
                     intent.setClass(LoginActivity.this, MainActivity.class);//有修改
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo, userInfo);
-                    startActivity(intent);
                     progressDialog.dismiss();
+                    startActivity(intent);
+
                 }
             }
 
         }
     }
-
 
 
 

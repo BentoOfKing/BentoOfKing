@@ -538,7 +538,6 @@ public class Database {
         try {
             int success = json.getInt(TAG_SUCCESS);
             if (success == 1) {
-                ;
                 return "Successful.";
             } else {
                 return "An error occurred.";
@@ -634,6 +633,9 @@ public class Database {
                 int success = json.getInt(TAG_SUCCESS);
                 if (success != 1) {
                     return "An error occurred.";
+                }
+                if(meal.size()==1){
+                    return json.getString(TAG_ID);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -1,8 +1,13 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -22,85 +27,59 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class EditMenuActivity extends AppCompatActivity {
+public class EditExistedMenuActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static String passStoreInfo = "STORE_INFO";
-    private static String passmenuInfo = "MENU_INFO";
+    private static final int SUCCESS = 66;
+    private static final int FAIL = 38;
     private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView,mealListView;
     private DrawerLayout drawerLayout;
-    private Store store;
+    private Context context;
     private FloatingActionButton floatingActionButton;
     private ArrayList<Meal> meal;
-    private ArrayList<String> list = new ArrayList<String>();
+    private Button completeButton;
+    MainThreadHandler mainThreadHandler;
     ArrayAdapter<String> adapter;
-    private Context context;
-    private Button nextButton;
+    private ArrayList<String> list;
+    private Meal deleteMeal,addMeal;
+    int mealIndex,nowIndex;
+    String result;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_menu);
+        setContentView(R.layout.activity_edit_existed_menu);
         context = this;
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        store =(Store) intent.getSerializableExtra(passStoreInfo);
         toolbar = findViewById(R.id.toolbar);
-        mealListView = findViewById(R.id.mealListView);
-        meal = new ArrayList<Meal>();
-        getData();
-        adapter = new ArrayAdapter<String>(this,R.layout.edit_menu_item,list);
-        mealListView.setAdapter(adapter);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.editMenu));
-        OnItemClickHandler onItemClickHandler = new OnItemClickHandler();
-        mealListView.setOnItemClickListener(onItemClickHandler);
+        mealListView = findViewById(R.id.mealListView);
+        Thread thread = new Thread(new GetMeal());
+        thread.start();
+        progressDialog = ProgressDialog.show(context, "請稍等...", "資料載入中...", true);
+        mainThreadHandler = new MainThreadHandler();
+        meal = new ArrayList<Meal>();
+        list = new ArrayList<String>();
+        adapter = new ArrayAdapter<String>(context,R.layout.edit_menu_item,list);
+        mealListView.setAdapter(adapter);
+        mealListView.setOnItemClickListener(new OnItemClickHandler());
         floatingActionButton = findViewById(R.id.floatingActionButton);
-        FloatingActionButtonHanbler floatingActionButtonHanbler = new FloatingActionButtonHanbler();
-        floatingActionButton.setOnClickListener(floatingActionButtonHanbler);
-        nextButton = findViewById(R.id.completeButton);
-        NextButtonHandler nextButtonHandler = new NextButtonHandler();
-        nextButton.setOnClickListener(nextButtonHandler);
+        floatingActionButton.setOnClickListener(new FloatingActionButtonHanbler());
+        completeButton = findViewById(R.id.completeButton);
+        completeButton.setOnClickListener(new ButtonHandler());
 
-    }
-
-    public class NextButtonHandler implements View.OnClickListener{
-
-        @Override
-        public void onClick(View view) {
-            if(meal.size()==0){
-                Toast.makeText(context,getResources().getString(R.string.pleaseInputOneMeal), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Intent intent = new Intent();
-            intent.setClass(context,EditPhotoActivity.class);
-            intent.putExtra(passUserInfo,userInfo);
-            intent.putExtra(passStoreInfo,store);
-            intent.putExtra(passmenuInfo,meal);
-            context.startActivity(intent);
-        }
-    }
-    private void getData() {
-        list.clear();
-        for(int i=0;i<meal.size();i++){
-            for(int j=0;j<meal.size();j++){
-                if(Integer.toString(i).equals(meal.get(j).getSequence())){
-                    list.add(meal.get(j).getName()+"，"+getResources().getString(R.string.price)+" "+meal.get(j).getPrice()+" 元");
-                    break;
-                }
-            }
-        }
     }
     public class OnItemClickHandler implements AdapterView.OnItemClickListener{
         EditText mealNameEditText;
         EditText priceEditText;
         TextView sequenceTextView;
         Spinner sequenceSpinner;
-        int mealIndex,nowIndex;
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             for(int i=0;i<meal.size();i++){
@@ -140,16 +119,36 @@ public class EditMenuActivity extends AppCompatActivity {
             builder.setNeutralButton(getResources().getString(R.string.delete),new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    meal.remove(mealIndex);
-                    for(int i=0;i<meal.size();i++){
-                        int meals=Integer.parseInt(meal.get(i).getSequence());
-                        if(meals >= nowIndex){
-                            meal.get(i).putSequence(Integer.toString(meals-1));
+                    progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                    deleteMeal = meal.get(mealIndex);
+                    Thread t = new Thread(new DeleteMeal());
+                    t.start();
+                    try{
+                        t.join();
+                        if(result.equals("Successful.")) {
+                            meal.remove(mealIndex);
+                            for (int i = 0; i < meal.size(); i++) {
+                                int meals = Integer.parseInt(meal.get(i).getSequence());
+                                if (meals >= nowIndex) {
+                                    meal.get(i).putSequence(Integer.toString(meals - 1));
+                                }
+                            }
+                            Thread t1 = new Thread(new UpdateMeal());
+                            t1.start();
+                            t1.join();
+                            getData();
+                            adapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                            Toast.makeText(context,getResources().getString(R.string.deleteSuc), Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }else{
+                            progressDialog.dismiss();
+                            Toast.makeText(context,getResources().getString(R.string.deleteFail), Toast.LENGTH_SHORT).show();
                         }
+                    }catch (Exception e){
+
                     }
-                    getData();
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
+
                 }
             });
             builder.setPositiveButton(getResources().getString(R.string.check),null);
@@ -195,7 +194,72 @@ public class EditMenuActivity extends AppCompatActivity {
                     });
         }
     }
+    public class ButtonHandler implements View.OnClickListener{
 
+        @Override
+        public void onClick(View view) {
+            if(meal.size()==0){
+                Toast.makeText(context,getResources().getString(R.string.pleaseInputOneMeal), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+            Thread t1 = new Thread(new UpdateMeal());
+            t1.start();
+            try {
+                    t1.join();
+                    if(result.equals("Successful.")) {
+                    Intent intent = new Intent();
+                    intent.setClass(context, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo, userInfo);
+                    startActivity(intent);
+                        progressDialog.dismiss();
+                    Toast.makeText(context,getResources().getString(R.string.editSuc), Toast.LENGTH_SHORT).show();
+                    finish();
+                }else{
+                        progressDialog.dismiss();
+                        Toast.makeText(context,getResources().getString(R.string.editFail), Toast.LENGTH_SHORT).show();
+                }
+            }catch (Exception e){
+
+            }
+        }
+    }
+    class AddMeal implements Runnable {
+        @Override
+        public void run() {
+            Database database = new Database();
+            ArrayList<Meal> m = new ArrayList<Meal>();
+            m.add(addMeal);
+            result = database.addMeal(m);
+        }
+    }
+    class DeleteMeal implements Runnable {
+        @Override
+        public void run() {
+            Database database = new Database();
+            result = database.deleteMeal(deleteMeal.getID());
+        }
+    }
+    class GetMeal implements Runnable{
+        @Override
+        public void run() {
+            try {
+                Database database = new Database();
+                meal = database.getMeal(userInfo.getStore().getID());
+                mainThreadHandler.sendEmptyMessage(SUCCESS);
+            }catch (Exception e){
+                mainThreadHandler.sendEmptyMessage(FAIL);
+            }
+        }
+    }
+    class UpdateMeal implements Runnable{
+        @Override
+        public void run() {
+            Database database = new Database();
+            result = database.updateMeal(meal);
+        }
+    }
     public class FloatingActionButtonHanbler implements View.OnClickListener{
         EditText mealNameEditText;
         EditText priceEditText;
@@ -212,7 +276,7 @@ public class EditMenuActivity extends AppCompatActivity {
             for(int i=0;i<meal.size();i++){
                 for(int j=0;j<meal.size();j++){
                     if(Integer.toString(i).equals(meal.get(j).getSequence()))
-                    mealName.add(meal.get(j).getName()+" "+getResources().getString(R.string.someonePosition));
+                        mealName.add(meal.get(j).getName()+" "+getResources().getString(R.string.someonePosition));
                 }
             }
             if(meal.size() ==0 ){
@@ -243,20 +307,42 @@ public class EditMenuActivity extends AppCompatActivity {
                                 Toast.makeText(context,getResources().getString(R.string.pleaseInputMealPrice), Toast.LENGTH_SHORT).show();
                                 return;
                             }else {
-                                Meal addMeal = new Meal();
+                                progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                                addMeal = new Meal();
+                                addMeal.putStore(userInfo.getStore().getID());
                                 addMeal.putName(mealNameEditText.getText().toString());
                                 addMeal.putPrice(priceEditText.getText().toString());
                                 addMeal.putSequence(Integer.toString((int) sequenceSpinner.getSelectedItemId()));
-                                for(int i=0;i<meal.size();i++){
-                                    int meals=Integer.parseInt(meal.get(i).getSequence());
-                                    if(meals >= (int) sequenceSpinner.getSelectedItemId()){
-                                        meal.get(i).putSequence(Integer.toString(meals+1));
+                                Thread t = new Thread(new AddMeal());
+                                t.start();
+                                try {
+                                    t.join();
+                                    try {
+                                        int ID = Integer.parseInt(result);
+                                        for (int i = 0; i < meal.size(); i++) {
+                                            int meals = Integer.parseInt(meal.get(i).getSequence());
+                                            if (meals >= (int) sequenceSpinner.getSelectedItemId()) {
+                                                meal.get(i).putSequence(Integer.toString(meals + 1));
+                                            }
+                                        }
+                                        addMeal.putID(result);
+                                        meal.add(addMeal);
+                                        Thread t1 = new Thread(new UpdateMeal());
+                                        t1.start();
+                                        t1.join();
+                                        getData();
+                                        adapter.notifyDataSetChanged();
+                                        progressDialog.dismiss();
+                                        Toast.makeText(context,getResources().getString(R.string.addSuc), Toast.LENGTH_SHORT).show();
+                                        alertDialog.dismiss();
+                                    }catch (Exception e){
+                                        progressDialog.dismiss();
+                                        Toast.makeText(context,getResources().getString(R.string.addFail), Toast.LENGTH_SHORT).show();
+
                                     }
+                                }catch (Exception e){
+
                                 }
-                                meal.add(addMeal);
-                                getData();
-                                adapter.notifyDataSetChanged();
-                                alertDialog.dismiss();
                             }
 
                         }
@@ -264,10 +350,39 @@ public class EditMenuActivity extends AppCompatActivity {
 
         }
     }
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
-            drawerLayout.closeDrawers();
-        else
-            super.onBackPressed();
+    private void getData() {
+        list.clear();
+        for(int i=0;i<meal.size();i++){
+            for(int j=0;j<meal.size();j++){
+                if(Integer.toString(i).equals(meal.get(j).getSequence())){
+                    list.add(meal.get(j).getName()+"，"+getResources().getString(R.string.price)+" "+meal.get(j).getPrice()+" 元");
+                    break;
+                }
+            }
+        }
+    }
+    public class MainThreadHandler extends Handler {
+        public MainThreadHandler(){
+            super();
+        }
+        public MainThreadHandler(Looper looper){
+            super(looper);
+        }
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    getData();
+                    adapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
+                    break;
+                case FAIL:
+                    progressDialog.dismiss();
+                    Toast.makeText(context, getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            super.handleMessage(msg);
+
+        }
+
     }
 }

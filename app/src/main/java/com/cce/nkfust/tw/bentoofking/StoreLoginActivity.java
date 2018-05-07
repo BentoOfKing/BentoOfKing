@@ -57,14 +57,12 @@ public class StoreLoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             DatabaseLogin databaseLogin = new DatabaseLogin();
-
+            progressDialog = ProgressDialog.show(StoreLoginActivity.this, "請稍等...", "店家登入中...", true);
          //多執行緒
-
             StoreLoginLoginThread = new HandlerThread("StoreLogin1");
             StoreLoginLoginThread.start();
             StoreLoginThreadHandler = new Handler(StoreLoginLoginThread.getLooper());
             StoreLoginThreadHandler.post(databaseLogin);
-            progressDialog = ProgressDialog.show(StoreLoginActivity.this, "請稍等...", "店家登入中...", true);
 
         }
     }
@@ -136,7 +134,7 @@ public class StoreLoginActivity extends AppCompatActivity {
                     intent.setClass(StoreLoginActivity.this , MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo,userInfo);
-                    startActivity(intent);;
+                    startActivity(intent);
                 }else{
                     loginPrompt.setText("登入資料錯誤");
 
