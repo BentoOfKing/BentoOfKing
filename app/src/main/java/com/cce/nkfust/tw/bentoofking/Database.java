@@ -538,7 +538,6 @@ public class Database {
         try {
             int success = json.getInt(TAG_SUCCESS);
             if (success == 1) {
-                ;
                 return "Successful.";
             } else {
                 return "An error occurred.";

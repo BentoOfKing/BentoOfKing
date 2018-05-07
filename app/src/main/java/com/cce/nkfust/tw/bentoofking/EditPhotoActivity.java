@@ -170,12 +170,12 @@ public class EditPhotoActivity extends AppCompatActivity{
         for(int i=0;i<count;i++){
             Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            bm.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
             builder.addFormDataPart("img_"+Integer.toString(i),storeId+"_"+Integer.toString(i)+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
         }
         Bitmap bm = ((BitmapDrawable)mainImageView.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        bm.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
         builder.addFormDataPart("img_main",storeId+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
         MultipartBody build = builder.build();
 

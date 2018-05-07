@@ -59,6 +59,7 @@ public class EditMenuActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.editMenu));
         OnItemClickHandler onItemClickHandler = new OnItemClickHandler();
         mealListView.setOnItemClickListener(onItemClickHandler);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
         FloatingActionButtonHanbler floatingActionButtonHanbler = new FloatingActionButtonHanbler();
         floatingActionButton.setOnClickListener(floatingActionButtonHanbler);
         nextButton = findViewById(R.id.completeButton);

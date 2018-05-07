@@ -197,7 +197,9 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     break;
                 case 4://編輯照片
-
+                    intent.setClass(context,EditExistedPhotoActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 5://查看對手
 

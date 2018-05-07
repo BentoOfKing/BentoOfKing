@@ -30,6 +30,9 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -73,8 +76,8 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         client = new OkHttpClient();
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        store =(Store) intent.getSerializableExtra(passStoreInfo);
-        meal = (ArrayList<Meal>) intent.getSerializableExtra(passmenuInfo);
+        //store =(Store) intent.getSerializableExtra(passStoreInfo);
+        //meal = (ArrayList<Meal>) intent.getSerializableExtra(passmenuInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -99,6 +102,8 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         NextHandler nextHandler = new NextHandler();
         mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
         nextButton.setOnClickListener(nextHandler);
+        Thread t = new Thread(new LoadImage());
+        t.start();
     }
     public class NextHandler implements View.OnClickListener{
 
@@ -109,7 +114,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                 return;
             }
             else {
-                progressDialog = ProgressDialog.show(context, "請稍等...", "店家新增中...", true);
+                progressDialog = ProgressDialog.show(context, "請稍等...", "照片更新中...", true);
             }
             photoCount = 0;
             for(int i=0;i<7;i++){
@@ -118,41 +123,96 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                 }
                 photoCount++;
             }
-            AddStore addStore = new AddStore();
-            Thread thread = new Thread(addStore);
+            UpdateStore updateStore = new UpdateStore();
+            Thread thread = new Thread(updateStore);
             thread.start();
 
         }
     }
-    public class AddStore implements Runnable{
+    public class LoadImage implements Runnable{
+
+        @Override
+        public void run() {
+            try {
+                String[] photoString = userInfo.getStore().getPhoto().split(",");
+                DownloadWebPicture[] downloadWebPicture = new DownloadWebPicture[photoString.length];
+                for (int i = 1; i < photoString.length; i++) {
+                    if (i < 8) {
+                        otherImageView[i].setOnClickListener(imageViewClickHandler);
+                    }
+                }
+                if (photoString.length != 9) {
+                    otherImageView[photoString.length - 1].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                }
+                for (int i = 0; i < photoString.length; i++) {
+                    photoString[i] = new String("http://163.18.104.169/storeImage/" + photoString[i]);
+                    downloadWebPicture[i] = new DownloadWebPicture();
+                    downloadWebPicture[i].getUrlPic(photoString[i], i);
+                }
+            }catch (Exception e){
+
+            }
+        }
+    }
+    public class DownloadWebPicture {
+        private Bitmap bmp;
+        private int i;
+        public synchronized void getUrlPic(String url,int i) {
+            this.i=i;
+            Bitmap webImg = null;
+
+            try {
+                URL imgUrl = new URL(url);
+                HttpURLConnection httpURLConnection
+                        = (HttpURLConnection) imgUrl.openConnection();
+                httpURLConnection.connect();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                int length = (int) httpURLConnection.getContentLength();
+                int tmpLength = 512;
+                int readLen = 0,desPos = 0;
+                byte[] img = new byte[length];
+                byte[] tmp = new byte[tmpLength];
+                if (length != -1) {
+                    while ((readLen = inputStream.read(tmp)) > 0) {
+                        System.arraycopy(tmp, 0, img, desPos, readLen);
+                        desPos += readLen;
+                    }
+                    webImg = BitmapFactory.decodeByteArray(img, 0, img.length);
+                    if(desPos != length){
+                        throw new IOException("Only read" + desPos +"bytes");
+                    }
+                }
+                httpURLConnection.disconnect();
+                if(i==0){
+                    mainImageView.setImageBitmap(webImg);
+                }else{
+                    otherImageView[i-1].setImageBitmap(webImg);
+                }
+            }
+            catch (IOException e) {
+                Log.e("IOException", e.toString());
+            }
+        }
+    }
+    public class UpdateStore implements Runnable{
 
         @Override
         public void run() {
             Database database = new Database();
             try {
-                store.putRank("3");
-                store.putState("0");
-                store.putPoint("0");
-                int price = 0;
-                for(int i=0;i<meal.size();i++){
-                    price += Integer.parseInt(meal.get(i).getPrice());
-                }
-                price /= meal.size();
-                store.putPrice(Integer.toString(price));
-                store.putID(database.addStore(store));
-                postImage(photoCount);
-                String photoString = store.getID() + ".jpg";
+                postMainImage();
+                String photoString = userInfo.getStore().getID() + ".jpg";
                 for (int i = 0; i < photoCount; i++) {
-                    photoString += "," + store.getID() + "_" + Integer.toString(i) + ".jpg";
+                    photoString += "," + userInfo.getStore().getID() + "_" + Integer.toString(i) + ".jpg";
+                    postOtherImage(i);
                 }
-                store.putPhoto(photoString);
-                database.UpdateStore(store);
-                for(int i=0;i<meal.size();i++){
-                    meal.get(i).putStore(store.getID());
-                }
-                database.addMeal(meal);
-                mainThreadHandler.sendEmptyMessage(SUCCESS);
+                userInfo.getStore().putPhoto(photoString);
 
+                if(database.UpdateStore(userInfo.getStore()).equals("Successful.")) {
+                    mainThreadHandler.sendEmptyMessage(SUCCESS);
+                }else{
+                    mainThreadHandler.sendEmptyMessage(FAIL);
+                }
             }catch (Exception e){
                 mainThreadHandler.sendEmptyMessage(FAIL);
 
@@ -160,18 +220,12 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         }
     }
 
-    public void postImage(int count){
-        String storeId = store.getID();
+    public void postMainImage(){
+        String storeId = userInfo.getStore().getID();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        for(int i=0;i<count;i++){
-            Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-            builder.addFormDataPart("img_"+Integer.toString(i),storeId+"_"+Integer.toString(i)+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
-        }
         Bitmap bm = ((BitmapDrawable)mainImageView.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        bm.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
         builder.addFormDataPart("img_main",storeId+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
         MultipartBody build = builder.build();
 
@@ -193,7 +247,34 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
             }
         });
     }
+    public void postOtherImage(int i){
+        String storeId = userInfo.getStore().getID();
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
+        builder.addFormDataPart("img_"+Integer.toString(i),storeId+"_"+Integer.toString(i)+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
 
+        MultipartBody build = builder.build();
+
+        okhttp3.Request bi = new okhttp3.Request.Builder()
+                .url("http://163.18.104.169/storeImage/upload.php")
+                .post(build)
+                .build();
+
+        client.newCall(bi).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("TAG", "onFailure");
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Log.i("TAG", "onResponse: " + response.body().string());
+                //提交成功处理结果....
+            }
+        });
+    }
     public class ImageViewClickHandler implements View.OnClickListener{
         @Override
         public void onClick(View view) {
@@ -311,7 +392,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         public void handleMessage(Message msg){
             switch (msg.what){
                 case SUCCESS:
-                    Toast.makeText(context,getResources().getString(R.string.addStoreSuccessful), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,getResources().getString(R.string.imageUpdateSuc), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.setClass(context,MainActivity.class);
@@ -320,7 +401,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                     progressDialog.dismiss();
                     break;
                 case FAIL:
-                    Toast.makeText(context,getResources().getString(R.string.addStoreFail), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,getResources().getString(R.string.imageUpdateFail), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                     break;
             }
