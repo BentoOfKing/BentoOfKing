@@ -40,7 +40,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(memberDrawerListener);
                 break;
             case 2:
-                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
+                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.editMenu),context.getResources().getString(R.string.editPhoto),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.addpush),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,storeMenuItem));
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
@@ -191,18 +191,24 @@ public class Drawer extends AppCompatActivity{
                     intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
                     break;
-
-
-                case 3://查看對手
+                case 3://編輯菜單
+                    intent.setClass(context,EditExistedMenuActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
+                    break;
+                case 4://編輯照片
 
                     break;
-                case 4://新增推播
+                case 5://查看對手
 
                     break;
-                case 5://儲值點數
+                case 6://新增推播
 
                     break;
-                case 6:
+                case 7://儲值點數
+
+                    break;
+                case 8:
                     intent.setClass(context,AboutActivity.class);
                     context.startActivity(intent);
                     break;

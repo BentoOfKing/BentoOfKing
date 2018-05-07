@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cce.nkfust.tw.bentoofking.EditMenuActivity">
+    tools:context="com.cce.nkfust.tw.bentoofking.EditExistedMenuActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -59,7 +59,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="18dp"
-                android:text="@string/next" />
+                android:text="@string/complete" />
 
         </RelativeLayout>
 

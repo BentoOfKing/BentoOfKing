@@ -49,7 +49,9 @@
         <activity android:name=".OrderActivity" />
         <activity android:name=".CommentAddStore" />
         <activity android:name=".EditMember" />
-        <activity android:name=".ReviewStoreActivity"></activity>
+        <activity android:name=".ReviewStoreActivity" />
+        <activity android:name=".EditExistedMenuActivity" />
+        <activity android:name=".EditExistedPhotoActivity"></activity>
     </application>
 
 </manifest>

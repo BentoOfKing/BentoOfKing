@@ -635,6 +635,9 @@ public class Database {
                 if (success != 1) {
                     return "An error occurred.";
                 }
+                if(meal.size()==1){
+                    return json.getString(TAG_ID);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 return "Fail.";

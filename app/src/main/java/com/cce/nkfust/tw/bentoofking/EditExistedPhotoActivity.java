@@ -39,7 +39,7 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
-public class EditPhotoActivity extends AppCompatActivity{
+public class EditExistedPhotoActivity extends AppCompatActivity{
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private static String passUserInfo = "USER_INFO";
@@ -109,7 +109,7 @@ public class EditPhotoActivity extends AppCompatActivity{
                 return;
             }
             else {
-                progressDialog = ProgressDialog.show(EditPhotoActivity.this, "請稍等...", "店家新增中...", true);
+                progressDialog = ProgressDialog.show(context, "請稍等...", "店家新增中...", true);
             }
             photoCount = 0;
             for(int i=0;i<7;i++){
@@ -121,10 +121,6 @@ public class EditPhotoActivity extends AppCompatActivity{
             AddStore addStore = new AddStore();
             Thread thread = new Thread(addStore);
             thread.start();
-
-
-
-
 
         }
     }
@@ -217,39 +213,39 @@ public class EditPhotoActivity extends AppCompatActivity{
                 new AlertDialog.Builder(context)
                         .setItems(getResources().getStringArray(R.array.editPhoto),new DialogInterface.OnClickListener() {
                             boolean findEmpty;
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        switch (which){
-                                            case 0:
-                                                Intent intent = new Intent();
-                                                intent.setType("image/*");
-                                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                startActivityForResult(intent, REQUEST_PHOTO);
-                                                break;
-                                            case 1:
-                                                if(index == -1 || index == 7) {
-                                                    requestImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which){
+                                    case 0:
+                                        Intent intent = new Intent();
+                                        intent.setType("image/*");
+                                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                                        startActivityForResult(intent, REQUEST_PHOTO);
+                                        break;
+                                    case 1:
+                                        if(index == -1 || index == 7) {
+                                            requestImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                                        }else{
+                                            findEmpty = false;
+                                            for(int i=index ; i < 7 ; i++) {
+                                                if (otherImageView[i+1].getDrawable().getCurrent().getConstantState() != getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
+                                                    otherImageView[i].setImageBitmap(((BitmapDrawable)otherImageView[i+1].getDrawable()).getBitmap());
+                                                    if(i==6) otherImageView[i+1].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
                                                 }else{
-                                                    findEmpty = false;
-                                                    for(int i=index ; i < 7 ; i++) {
-                                                        if (otherImageView[i+1].getDrawable().getCurrent().getConstantState() != getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
-                                                            otherImageView[i].setImageBitmap(((BitmapDrawable)otherImageView[i+1].getDrawable()).getBitmap());
-                                                            if(i==6) otherImageView[i+1].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
-                                                        }else{
-                                                            otherImageView[i].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
-                                                            if(i!=7){
-                                                                otherImageView[i+1].setImageDrawable(new ColorDrawable(0x00000000));
-                                                                otherImageView[i+1].setOnClickListener(null);
-                                                            }
-                                                            break;
-                                                        }
+                                                    otherImageView[i].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
+                                                    if(i!=7){
+                                                        otherImageView[i+1].setImageDrawable(new ColorDrawable(0x00000000));
+                                                        otherImageView[i+1].setOnClickListener(null);
                                                     }
+                                                    break;
                                                 }
-                                                break;
+                                            }
                                         }
+                                        break;
+                                }
 
-                                    }
-                                })
+                            }
+                        })
                         .setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

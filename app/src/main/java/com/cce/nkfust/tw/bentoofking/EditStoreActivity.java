@@ -9,7 +9,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -27,7 +24,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -79,7 +75,7 @@ public class EditStoreActivity extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.editStore));
-        nextButton = findViewById(R.id.nextButton);
+        nextButton = findViewById(R.id.completeButton);
         NextHandler nextHandler = new NextHandler();
         nextButton.setOnClickListener(nextHandler);
         infoContentTextView = findViewById(R.id.infoContentTextView);

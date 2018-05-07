@@ -66,7 +66,7 @@ public class CommentAddStore extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.addStore));
-        nextButton = findViewById(R.id.nextButton);
+        nextButton = findViewById(R.id.completeButton);
         NextHandler nextHandler = new NextHandler();
         nextButton.setOnClickListener(nextHandler);
         infoContentTextView = findViewById(R.id.infoContentTextView);
