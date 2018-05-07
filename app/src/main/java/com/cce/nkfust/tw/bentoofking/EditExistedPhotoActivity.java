@@ -63,7 +63,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
     private OkHttpClient client;
     int index,photoCount;
     private Handler handler = new Handler();
-    private ProgressDialog progressDialog = null;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

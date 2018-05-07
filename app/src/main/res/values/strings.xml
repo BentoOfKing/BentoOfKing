@@ -199,5 +199,6 @@
     <string name="editFail">編輯失敗，請檢查網路狀態</string>
     <string name="editSuc">編輯成功</string>
     <string name="complete">完成</string>
-
+    <string name="hint">小提示</string>
+    <string name="callHint">電話播出後將視窗切回便當王，就可以一邊看統計資訊一邊訂購唷！</string>
 </resources>

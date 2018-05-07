@@ -1,16 +1,24 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +30,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +38,7 @@ import java.util.Date;
 public class OrderActivity extends AppCompatActivity {
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
+    public static final int REQUEST_CALL_PHONE = 9;
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private UserInfo userInfo;
@@ -44,6 +54,7 @@ public class OrderActivity extends AppCompatActivity {
     private TextView orderStatisticsTextView;
     private OrderMealAdapter adapter;
     private MemberOrder memberOrder;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +79,7 @@ public class OrderActivity extends AppCompatActivity {
         meal = new ArrayList<Meal>();
         GetMeal getMeal = new GetMeal();
         mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
+        progressDialog = ProgressDialog.show(context, "請稍等...", "資料載入中...", true);
         Thread thread = new Thread(getMeal);
         thread.start();
 
@@ -147,8 +159,10 @@ public class OrderActivity extends AppCompatActivity {
 
                         }
                     });
+                    progressDialog.dismiss();
                     break;
                 case FAIL:
+                    progressDialog.dismiss();
                     Toast.makeText(context, getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -162,6 +176,7 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            getCallPermission();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
             Date curDate = new Date(System.currentTimeMillis()) ;
             String str = formatter.format(curDate);
@@ -203,6 +218,40 @@ public class OrderActivity extends AppCompatActivity {
             }
             orderStatisticsTextView.setText("共 0 個便當，0 元");
             adapter.notifyDataSetChanged();
+        }
+    }
+    public void getCallPermission(){
+        int permission = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[] {android.Manifest.permission.CALL_PHONE},REQUEST_CALL_PHONE);
+            return ;
+        }else{
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.hint)
+                    .setMessage(R.string.callHint)
+                    .setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.getPhone()));
+                            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
+                                startActivity(myIntentDial);
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_CALL_PHONE:
+                if (grantResults.length > 0) {
+                    if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(context, getResources().getString(R.string.errorPermission), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            default: super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
