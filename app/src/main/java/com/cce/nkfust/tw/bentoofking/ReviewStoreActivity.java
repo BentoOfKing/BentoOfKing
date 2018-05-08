@@ -102,6 +102,7 @@ public class ReviewStoreActivity extends AppCompatActivity {
                     final String[] item = getResources().getStringArray(R.array.previewStoreArray);
                     storeListView.setAdapter(reviewStoreAdapter);//3.設Adapter
                     storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        Intent intent;
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
                             new AlertDialog.Builder(context)
@@ -110,15 +111,25 @@ public class ReviewStoreActivity extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case 0://審核資訊
-                                                    Intent intent = new Intent();
+                                                    intent = new Intent();
                                                     intent.setClass(context,PreviewStoreInfoActivity.class);
                                                     intent.putExtra(passUserInfo,userInfo);
                                                     intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
                                                     startActivity(intent);
                                                     break;
                                                 case 1://審核菜單
+                                                    intent = new Intent();
+                                                    intent.setClass(context,EditExistedMenuActivity.class);
+                                                    intent.putExtra(passUserInfo,userInfo);
+                                                    intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
+                                                    startActivity(intent);
                                                     break;
                                                 case 2://審核照片
+                                                    intent = new Intent();
+                                                    intent.setClass(context,EditExistedPhotoActivity.class);
+                                                    intent.putExtra(passUserInfo,userInfo);
+                                                    intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
+                                                    startActivity(intent);
                                                     break;
                                                 case 3://備註
                                                     break;

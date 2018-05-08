@@ -72,7 +72,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_photo);
+        setContentView(R.layout.activity_edit_existed_photo);
         context = this;
         client = new OkHttpClient();
         Intent intent = getIntent();
@@ -85,7 +85,12 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
-        toolbar.setTitle(getResources().getString(R.string.editPhoto));
+        if(userInfo.getIdentity()==3) {
+            userInfo.putStore((Store)intent.getSerializableExtra(passStoreInfo));
+            toolbar.setTitle(getResources().getString(R.string.previewStorePhoto));
+        }else {
+            toolbar.setTitle(getResources().getString(R.string.editPhoto));
+        }
         nextButton = findViewById(R.id.completeButton);
         mainImageView = findViewById(R.id.mainImageView);
         otherImageView = new ImageView[8];
@@ -443,11 +448,15 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
             switch (msg.what){
                 case SUCCESS:
                     Toast.makeText(context,getResources().getString(R.string.imageUpdateSuc), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.setClass(context,MainActivity.class);
-                    intent.putExtra(passUserInfo,userInfo);
-                    startActivity(intent);
+                    if(userInfo.getIdentity()==3){
+                        finish();
+                    }else {
+                        Intent intent = new Intent();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setClass(context, MainActivity.class);
+                        intent.putExtra(passUserInfo, userInfo);
+                        startActivity(intent);
+                    }
                     progressDialog.dismiss();
                     break;
                 case FAIL:

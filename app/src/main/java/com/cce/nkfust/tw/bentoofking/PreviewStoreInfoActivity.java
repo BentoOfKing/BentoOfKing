@@ -484,14 +484,11 @@ public class PreviewStoreInfoActivity extends AppCompatActivity {
             @Override
             public void run() {
                     Database database = new Database();
-                    Intent intent = new Intent();
-                    intent.setClass(context, ReviewStoreActivity.class);
-                    intent.putExtra(passUserInfo, userInfo);
-                    context.startActivity(intent);
                     database.UpdateStore(store);
                     Toast toast = Toast.makeText(context,
                             getResources().getString(R.string.EditSuccessful), Toast.LENGTH_LONG);
                     toast.show();
+                    finish();
             }
         }
 
