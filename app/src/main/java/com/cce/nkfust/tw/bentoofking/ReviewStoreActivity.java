@@ -75,7 +75,7 @@ public class ReviewStoreActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                database.refreshReviewStoreIndex();
+                database.refreshStoreIndex();
                 store = database.GetReviewStore();
                 storeArrayList.clear();
                 for(int i=0;i<store.length;i++){
