@@ -524,6 +524,8 @@ public class Database {
             params.add(new BasicNameValuePair("Password", store.getPassword()));
             params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(), "8859_1")));
             params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Note", new String(store.getNote().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("State", store.getState()));
             params.add(new BasicNameValuePair("Information", store.getInformation()));
             params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
             params.add(new BasicNameValuePair("Phone", store.getPhone()));

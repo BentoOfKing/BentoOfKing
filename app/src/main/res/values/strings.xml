@@ -219,4 +219,5 @@
     <string name="reportComment">檢舉評論</string>
     <string name="previewPush">審核推播</string>
     <string name="appeal">申訴</string>
+    <string name="note">備註</string>
 </resources>
