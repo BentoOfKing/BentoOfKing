@@ -67,7 +67,8 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
     int index,photoCount;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog;
-
+    DownloadWebPicture[] downloadWebPicture;
+    PhotoThreadHandler photoThreadHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,13 +100,15 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         imageViewClickHandler = new ImageViewClickHandler();
         mainImageView.setOnClickListener(imageViewClickHandler);
         otherImageView[0].setOnClickListener(imageViewClickHandler);
-        NextHandler nextHandler = new NextHandler();
+        CompeleteHandler compeleteHandler = new CompeleteHandler();
         mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
-        nextButton.setOnClickListener(nextHandler);
+        nextButton.setOnClickListener(compeleteHandler);
+        photoThreadHandler = new PhotoThreadHandler();
+        progressDialog = ProgressDialog.show(context, "請稍等...", "照片載入中...", true);
         Thread t = new Thread(new LoadImage());
         t.start();
     }
-    public class NextHandler implements View.OnClickListener{
+    public class CompeleteHandler implements View.OnClickListener{
 
         @Override
         public void onClick(View view) {
@@ -117,7 +120,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                 progressDialog = ProgressDialog.show(context, "請稍等...", "照片更新中...", true);
             }
             photoCount = 0;
-            for(int i=0;i<7;i++){
+            for(int i=0;i<8;i++){
                 if (otherImageView[i].getDrawable().getCurrent().getConstantState() == getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
                     break;
                 }
@@ -135,7 +138,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         public void run() {
             try {
                 String[] photoString = userInfo.getStore().getPhoto().split(",");
-                DownloadWebPicture[] downloadWebPicture = new DownloadWebPicture[photoString.length];
+                downloadWebPicture = new DownloadWebPicture[photoString.length];
                 for (int i = 1; i < photoString.length; i++) {
                     if (i < 8) {
                         otherImageView[i].setOnClickListener(imageViewClickHandler);
@@ -147,19 +150,72 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                 for (int i = 0; i < photoString.length; i++) {
                     photoString[i] = new String("http://163.18.104.169/storeImage/" + photoString[i]);
                     downloadWebPicture[i] = new DownloadWebPicture();
-                    downloadWebPicture[i].getUrlPic(photoString[i], i);
+                    downloadWebPicture[i] .getUrlPic(photoString[i], i);
+                    photoThreadHandler.sendEmptyMessage(i);
                 }
+                progressDialog.dismiss();
             }catch (Exception e){
-
+                progressDialog.dismiss();
+                photoThreadHandler.sendEmptyMessage(FAIL);
             }
         }
+    }
+
+    public class PhotoThreadHandler extends Handler {
+        public PhotoThreadHandler(){
+            super();
+        }
+        public PhotoThreadHandler(Looper looper){
+            super(looper);
+        }
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    mainImageView.setImageBitmap(downloadWebPicture[0].getPhoto());
+                    break;
+                case 1:
+                    otherImageView[0].setImageBitmap(downloadWebPicture[1].getPhoto());
+                    break;
+                case 2:
+                    otherImageView[1].setImageBitmap(downloadWebPicture[2].getPhoto());
+                    break;
+                case 3:
+                    otherImageView[2].setImageBitmap(downloadWebPicture[3].getPhoto());
+                    break;
+                case 4:
+                    otherImageView[3].setImageBitmap(downloadWebPicture[4].getPhoto());
+                    break;
+                case 5:
+                    otherImageView[4].setImageBitmap(downloadWebPicture[5].getPhoto());
+                    break;
+                case 6:
+                    otherImageView[5].setImageBitmap(downloadWebPicture[6].getPhoto());
+                    break;
+                case 7:
+                    otherImageView[6].setImageBitmap(downloadWebPicture[7].getPhoto());
+                    break;
+                case 8:
+                    otherImageView[7].setImageBitmap(downloadWebPicture[8].getPhoto());
+                    break;
+                case FAIL:
+                    progressDialog.dismiss();
+                    Toast.makeText(context, getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            super.handleMessage(msg);
+
+        }
+
     }
     public class DownloadWebPicture {
         private Bitmap bmp;
         private int i;
+        public Bitmap getPhoto(){
+            return bmp;
+        }
         public synchronized void getUrlPic(String url,int i) {
             this.i=i;
-            Bitmap webImg = null;
+            bmp = null;
 
             try {
                 URL imgUrl = new URL(url);
@@ -177,17 +233,12 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                         System.arraycopy(tmp, 0, img, desPos, readLen);
                         desPos += readLen;
                     }
-                    webImg = BitmapFactory.decodeByteArray(img, 0, img.length);
+                    bmp = BitmapFactory.decodeByteArray(img, 0, img.length);
                     if(desPos != length){
                         throw new IOException("Only read" + desPos +"bytes");
                     }
                 }
                 httpURLConnection.disconnect();
-                if(i==0){
-                    mainImageView.setImageBitmap(webImg);
-                }else{
-                    otherImageView[i-1].setImageBitmap(webImg);
-                }
             }
             catch (IOException e) {
                 Log.e("IOException", e.toString());
@@ -215,7 +266,6 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                 }
             }catch (Exception e){
                 mainThreadHandler.sendEmptyMessage(FAIL);
-
             }
         }
     }

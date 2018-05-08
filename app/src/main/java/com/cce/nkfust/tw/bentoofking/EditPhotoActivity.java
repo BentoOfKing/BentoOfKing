@@ -112,7 +112,7 @@ public class EditPhotoActivity extends AppCompatActivity{
                 progressDialog = ProgressDialog.show(EditPhotoActivity.this, "請稍等...", "店家新增中...", true);
             }
             photoCount = 0;
-            for(int i=0;i<7;i++){
+            for(int i=0;i<8;i++){
                 if (otherImageView[i].getDrawable().getCurrent().getConstantState() == getResources().getDrawable(R.drawable.ic_image_add).getConstantState()) {
                     break;
                 }
@@ -144,10 +144,11 @@ public class EditPhotoActivity extends AppCompatActivity{
                 price /= meal.size();
                 store.putPrice(Integer.toString(price));
                 store.putID(database.addStore(store));
-                postImage(photoCount);
+                postMainImage();
                 String photoString = store.getID() + ".jpg";
                 for (int i = 0; i < photoCount; i++) {
                     photoString += "," + store.getID() + "_" + Integer.toString(i) + ".jpg";
+                    postOtherImage(i);
                 }
                 store.putPhoto(photoString);
                 database.UpdateStore(store);
@@ -163,20 +164,40 @@ public class EditPhotoActivity extends AppCompatActivity{
             }
         }
     }
-
-    public void postImage(int count){
+    public void postMainImage(){
         String storeId = store.getID();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        for(int i=0;i<count;i++){
-            Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
-            builder.addFormDataPart("img_"+Integer.toString(i),storeId+"_"+Integer.toString(i)+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
-        }
         Bitmap bm = ((BitmapDrawable)mainImageView.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
         builder.addFormDataPart("img_main",storeId+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
+        MultipartBody build = builder.build();
+
+        okhttp3.Request bi = new okhttp3.Request.Builder()
+                .url("http://163.18.104.169/storeImage/upload.php")
+                .post(build)
+                .build();
+
+        client.newCall(bi).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("TAG", "onFailure");
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Log.i("TAG", "onResponse: " + response.body().string());
+                //提交成功处理结果....
+            }
+        });
+    }
+    public void postOtherImage(int i){
+        String storeId = store.getID();
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        Bitmap bm = ((BitmapDrawable)otherImageView[i].getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
+        builder.addFormDataPart("img_"+Integer.toString(i),storeId+"_"+Integer.toString(i)+".jpg", RequestBody.create(MediaType.parse("image/jpeg"),byteArrayOutputStream.toByteArray()));
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()

@@ -84,10 +84,32 @@ public class ReviewStoreActivity extends AppCompatActivity {
                 case SUCCESS:
                     LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     reviewStoreAdapter = new ReviewStoreAdapter(inflater,storeArrayList);
+                    final String[] item = getResources().getStringArray(R.array.previewStoreArray);
                     storeListView.setAdapter(reviewStoreAdapter);//3.設Adapter
                     storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            new AlertDialog.Builder(context)
+                                    .setItems(item, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case 0://審核資訊
+                                                    break;
+                                                case 1://審核菜單
+                                                    break;
+                                                case 2://審核照片
+                                                    break;
+                                                case 3://備註
+                                                    break;
+                                                case 4://不通過
+                                                    break;
+                                                case 5://通過
+                                                    break;
+                                            }
+                                        }
+                                    })
+                                    .show();
                             //連到下一頁
                             Toast.makeText(context, storeArrayList.get((int)l).getStoreName(), Toast.LENGTH_SHORT).show();
                         }
