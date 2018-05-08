@@ -85,7 +85,7 @@ public class Database {
     JSONParser jParser;
     JSONObject json;
 
-    private int range, index = 0;
+    private int range, index = 0,reviewRange,reviewIndex=0;
     ArrayList<HashMap<String, String>> storesList;
 
     String result = "";
@@ -414,7 +414,7 @@ public class Database {
         Store returnStore[];
         try {
             params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
             json = jParser.makeHttpRequest(getStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
@@ -429,18 +429,18 @@ public class Database {
             // looping through All Products
 
             if (stores.length() == 10) {
-                range = 10;
+                reviewRange = 10;
             } else {
-                range = stores.length();
+                reviewRange = stores.length();
             }
-            returnStore = new Store[range];
-            for (int i = 0; i < range; i++) {
+            returnStore = new Store[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
                 JSONObject c = stores.getJSONObject(i);
 
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
             }
-            index += range;
+            reviewIndex += reviewRange;
             return returnStore;
         } catch (Exception e) {
             System.out.println("error");
@@ -453,7 +453,7 @@ public class Database {
     public void refreshStoreIndex() {
         index = 0;
     }
-
+    public void refreshReviewStoreIndex() { reviewIndex = 0; }
 
     public Store[] GetStoreByPosition(String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
         JSONObject json;
