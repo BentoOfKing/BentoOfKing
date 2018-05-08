@@ -67,30 +67,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/OldPassword"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/OldPassword"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/font_size" />
-
-                        <EditText
-                            android:id="@+id/OldpasswordCheckEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:ems="10"
-                            android:inputType="textPassword" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/PasswordTextView"
+                            android:id="@+id/passwordTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -105,8 +82,32 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPassword"
-                            />
+                            android:hint="欲修改資料請填寫密碼"
+                            android:inputType="textPassword" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/NewPasswordTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/NewPassword"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <EditText
+                            android:id="@+id/NewPasswordEditText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_weight="2"
+                            android:ems="10"
+                            android:hint="若無需修改密碼請留白"
+                            android:inputType="textPassword" />
                     </TableRow>
 
                     <TableRow
@@ -129,8 +130,8 @@
                             android:layout_height="45dp"
                             android:layout_weight="2"
                             android:ems="10"
-                            android:inputType="textPassword"
-                            />
+                            android:hint="若無需修改密碼請留白"
+                            android:inputType="textPassword" />
                     </TableRow>
 
 

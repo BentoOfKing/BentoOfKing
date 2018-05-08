@@ -39,7 +39,7 @@ import javax.xml.validation.Validator;
 public class EditMember extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private String registerResult;
-    private Member memberRegister;
+    private Member member;
     private Comment editComment;
     private Database database;
     private UserInfo userInfo;
@@ -47,9 +47,9 @@ public class EditMember extends AppCompatActivity {
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
     private TextView emailTextView;
-    private EditText passwordEditText;
+    private EditText NewPasswordEditText;  //改 原passwordEditText
     private EditText passwordCheckEditText;
-    private EditText OldpasswordCheckEditText;
+    private EditText passwordEditText; //改 原OldpasswordCheckEditText
     private EditText nicknameEditText;
     private Button registerButton;
     private TextView Sex;
@@ -72,9 +72,9 @@ public class EditMember extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.edidInfo));
         emailTextView = findViewById(R.id.emailTextView);
-        passwordEditText = findViewById(R.id.passwordEditText);
+        NewPasswordEditText = findViewById(R.id.NewPasswordEditText);
         passwordCheckEditText = findViewById(R.id.passwordCheckEditText);
-        OldpasswordCheckEditText = findViewById(R.id.OldpasswordCheckEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
         nicknameEditText = findViewById(R.id.nicknameEditText);
         registerButton = findViewById(R.id.registerButton);
         Sex = findViewById(R.id.Sex1);
@@ -87,8 +87,13 @@ public class EditMember extends AppCompatActivity {
         else{
             Sex.setText("女");
         }
+
+
         nicknameEditText.setText(userInfo.getMember().getNickname());
+
+       /* nicknameEditText.setText(userInfo.getMember().getNickname());
         Toast.makeText(EditMember.this,"若要該改密碼請填新舊密碼",Toast.LENGTH_SHORT).show();
+        */
     }
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
@@ -112,13 +117,13 @@ public class EditMember extends AppCompatActivity {
     public class RegisterConfirm implements Runnable{
         @Override
         public void run() {
-            if(TextUtils.isEmpty(OldpasswordCheckEditText.getText().toString())){
-                Toast.makeText(EditMember.this,"請填寫舊密碼",Toast.LENGTH_SHORT).show();
+            if(TextUtils.isEmpty(passwordEditText.getText().toString())){
+                Toast.makeText(EditMember.this,"請填寫密碼",Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 return;
             }
-            if(!userInfo.getMember().getPassword().equals(OldpasswordCheckEditText.getText().toString())){
-                Toast.makeText(EditMember.this,"舊密碼錯誤",Toast.LENGTH_SHORT).show();
+            if(!userInfo.getMember().getPassword().equals(passwordEditText.getText().toString())){
+                Toast.makeText(EditMember.this,"密碼錯誤",Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 return;
             }
@@ -129,7 +134,7 @@ public class EditMember extends AppCompatActivity {
                     return;
                 }
                 else{
-                    if(TextUtils.isEmpty(passwordEditText.getText().toString())&&TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
+                    if(TextUtils.isEmpty(NewPasswordEditText.getText().toString())&&TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
                         userInfo.getMember().putNickname(nicknameEditText.getText().toString());
                         database = new Database();
                         database.UpdateMember(userInfo.getMember());
@@ -156,7 +161,7 @@ public class EditMember extends AppCompatActivity {
                             progressDialog.dismiss();
                             return;
                         }
-                        if(passwordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())){
+                        if(NewPasswordEditText.getText().toString().equals(passwordCheckEditText.getText().toString())){
                         }
                         else{
                             Toast toast = Toast.makeText(EditMember.this,
@@ -179,19 +184,8 @@ public class EditMember extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
             userInfo.getMember().putNickname(nicknameEditText.getText().toString());
-            userInfo.getMember().putPassword(passwordEditText.getText().toString());
+            userInfo.getMember().putPassword(NewPasswordEditText.getText().toString());
             database = new Database();
             database.UpdateMember(userInfo.getMember());
             Toast toast = Toast.makeText(EditMember.this,

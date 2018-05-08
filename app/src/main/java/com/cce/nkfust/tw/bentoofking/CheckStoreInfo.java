@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.lang.UProperty;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,12 +41,18 @@ public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static final int UPDATE_COMMENT = 63;
-    private static final int ACTION_DIALOG = 71;
+    private static final int UPDATE_ARRAYLIST = 68;
+    private static final int UPDATE_UI = 71;
     private static final int SENT_COMMENT = 64;
     private static final int DELETE_COMMENT = 65;
     private static final int EDIT_COMMENT = 66;
     private static final int EDIT_REPLY = 67;
+    private static final int GET_BITMAP = 69;
+    private static final int LAYOUT_WEIGHT_31 = 104,LAYOUT_WEIGHT_ADDRESS = 48,LAYOUT_WEIGHT_BUSINESS = 48,LAYOUT_WEIGHT_LISTVIEW = 108;
     private String[] commentScoreArray = {"☆☆☆☆☆","☆☆☆☆","☆☆☆","☆☆","☆"};
+    private LinearLayout store31Layout;
+    private LinearLayout storeAddressLayout;
+    private LinearLayout storeBusinessLayout;
     private int commentMode;
     private Comment editComment;
     private Button reportButton;
@@ -73,7 +81,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private Thread getArrayList;
     private HandlerThread commentThread;
     private CommentHandler CmtHandler;
-    private Handler mainHandler;
+    private MainThreadHandler mainHandler;
     private Snackbar snackbar;
     private ImageView storeInfo1;
     private ImageView storeInfo2;
@@ -85,112 +93,74 @@ public class CheckStoreInfo extends AppCompatActivity {
     private ImageView[] starArray;
     private TextView storeAveragePrice;
     private TextView storeBusiness;
+    private Bitmap storePhotoBitmap;
+    private Handler_A anotherHandler;
     @Override
-
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        createMainHandler();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_2_check_storeinfonew);
+        InfoReceive();
         variableSetup();
-        intent = getIntent();
-        getUserInfo();
-        this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
-        ConnectDataBaseThread();
         UIconnect();
-        if(storeInfoBundle.getIdentity()==2)
-            UpdateUI();
+        UIsetup();
+        UIhandle();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UIupdate();
+    }
+
+    private void InfoReceive() {
+        intent = getIntent();
+        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
+        if(userInfo == null) userInfo = new UserInfo();
+        this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
+    }
+
+    private void UIhandle(){
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (userInfo.getIdentity() == 0) {
+                    snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView), "訪客無法使用菜單功能", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    return;
+                }
                 intent.setClass(CheckStoreInfo.this,OrderActivity.class);
                 intent.putExtra(passStoreInfo,storeInfoBundle.getStore());
                 intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);
             }
         });
-
+        sentCommentButton.setOnClickListener(new SentComment());
+        commentListView.setOnItemClickListener(new DoSomethingToComment());
     }
-
     private void variableSetup(){
+        mainHandler = new MainThreadHandler(Looper.getMainLooper());
         starArray = new ImageView[5];
-    }
-
-    private void createMainHandler(){
-        mainHandler = new Handler(Looper.getMainLooper()){
-            @Override
-            public void handleMessage(Message msg){
-                super.handleMessage(msg);
-                switch(msg.what){
-                    case UPDATE_COMMENT:
-                        ConnectDataBaseThread();
-                        UpdateUI();
-                        break;
-                }
-            }
-        };
-    }
-
-    private void UpdateUI(){
-        this.storeName.setText(storeInfoBundle.getStore().getStoreName());
-        this.storeAddress.setText(storeInfoBundle.getStore().getAddress());
-        this.storeAveragePrice.setText(storeInfoBundle.getStore().getPrice());
-        this.storeBusiness.setText(getStoreBusiness());
-        updateStoreInfo();
-        updateStoreScore();/*
-        Thread bitMapthread = new Thread (new Runnable() {
-            @Override
-            public void run() {
-                final Bitmap bitmap = getBitmapFromURL(storeInfoBundle.getStore().getPhoto());
-                CheckStoreInfo.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        storeIcon.setImageBitmap(bitmap);
-                    }
-                });
-            }
-        });
-        bitMapthread.start();
-        try {
-            bitMapthread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
+        database = new Database();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        try {
-            getArrayList.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        CommentListViewBaseAdapter adapter = new CommentListViewBaseAdapter(commentArrayList,inflater);
-        commentListView.setAdapter(adapter);
-        SentComment sentCommentListener = new SentComment();
-        sentCommentButton.setOnClickListener(sentCommentListener);
-        adapter.notifyDataSetChanged();
-        DoSomethingToComment commentListListener = new DoSomethingToComment();
-        commentListView.setOnItemClickListener(commentListListener);
+        commentArrayList = new ArrayList<Comment>();
+        adapter = new CommentListViewBaseAdapter(commentArrayList,inflater);
         commentMode = SENT_COMMENT;
+        databaseForComment = new Database();
+        CheckStoreInfo.this.commentThread = new HandlerThread("CommentThread");
+        CheckStoreInfo.this.commentThread.start();
+        CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
+        CheckStoreInfo.this.anotherHandler = new Handler_A(CheckStoreInfo.this.commentThread.getLooper());
+    }
+    private void UIsetup(){
+        commentListView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ACTION_DIALOG){
-            if(resultCode == RESULT_OK){
-                UpdateCommment();
-            }
-        }
+    private void UIupdate(){
+        CmtHandler.sendEmptyMessage(UPDATE_ARRAYLIST);
+        anotherHandler.sendEmptyMessage(GET_BITMAP);
     }
 
-    public void UpdateCommment(){
-        CmtHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mainHandler.sendEmptyMessage(UPDATE_COMMENT);
-            }
-        }, 500);
-    }
 
 
     private void updateStoreInfo(){
@@ -240,6 +210,9 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.drawerListView = findViewById(R.id.drawerListView);
         this.drawerLayout = findViewById(R.id.drawerLayout);
         this.commentListView = findViewById(R.id.commentListView);
+        this.store31Layout = findViewById(R.id.storeInfo31Layout);
+        this.storeAddressLayout = findViewById(R.id.storeAddressLayout);
+        this.storeBusinessLayout = findViewById(R.id.storeBusinessLayout);
         this.storeInfo1 = findViewById(R.id.storeInfo1);
         this.storeInfo2 = findViewById(R.id.storeInfo2);
         this.storeInfo3 = findViewById(R.id.storeInfo3);
@@ -263,31 +236,15 @@ public class CheckStoreInfo extends AppCompatActivity {
         drawer.setToolbarNavigation();
     }
 
-    private void ConnectDataBaseThread(){
-        ConnectDatabase connectDatabase = new ConnectDatabase();
-        getArrayList = new Thread(connectDatabase);
-        getArrayList.start();
-    }
 
 
-    private static Bitmap getBitmapFromURL(String imageUrl)
-    {
-        try
-        {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+    private void setLayoutExpandListView(){
+        commentListView.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, 0, LAYOUT_WEIGHT_31+LAYOUT_WEIGHT_ADDRESS+LAYOUT_WEIGHT_BUSINESS+LAYOUT_WEIGHT_LISTVIEW ));
+        store31Layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0));
+        storeAddressLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0));
+        storeBusinessLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0));
     }
+
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(findViewById(R.id.drawerListView)))
             drawerLayout.closeDrawers();
@@ -295,15 +252,38 @@ public class CheckStoreInfo extends AppCompatActivity {
             super.onBackPressed();
     }
 
-    private void getUserInfo(){
-        userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
-        if(userInfo == null) userInfo = new UserInfo();
+    private class MainThreadHandler extends Handler {
+        public MainThreadHandler() {
+            super();
+        }
+        public MainThreadHandler(Looper looper) {
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDATE_COMMENT:
+                    adapter.refresh(commentArrayList);
+                    break;
+                case UPDATE_UI:
+                    CheckStoreInfo.this.storeName.setText(storeInfoBundle.getStore().getStoreName());
+                    CheckStoreInfo.this.storeAddress.setText(storeInfoBundle.getStore().getAddress());
+                    CheckStoreInfo.this.storeAveragePrice.setText(storeInfoBundle.getStore().getPrice());
+                    CheckStoreInfo.this.storeBusiness.setText(getStoreBusiness());
+                    updateStoreInfo();
+                    updateStoreScore();
+//                    storeIcon.setImageBitmap(storePhotoBitmap);
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+            super.handleMessage(msg);
+        }
     }
+
 
     public class ConnectDatabase implements Runnable{
         @Override
         public void run() {
-            CheckStoreInfo.this.database = new Database();
             commentArrayList = new ArrayList<Comment>();
             commentlist = database.getComment("Store",CheckStoreInfo.this.storeInfoBundle.getStore().getID());
             for(int i=0;i<commentlist.length;i++){
@@ -333,9 +313,6 @@ public class CheckStoreInfo extends AppCompatActivity {
                 askForCommentScore.setItems(commentScoreArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CheckStoreInfo.this.commentThread = new HandlerThread("SentComment");
-                        CheckStoreInfo.this.commentThread.start();
-                        CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
                         Message msg = new Message();
                         msg.what = SENT_COMMENT;
                         Bundle commentInfo = new Bundle();
@@ -350,9 +327,6 @@ public class CheckStoreInfo extends AppCompatActivity {
                 AlertDialog dialog = askForCommentScore.create();
                 dialog.show();
             }else if(commentMode == EDIT_COMMENT){
-                CheckStoreInfo.this.commentThread = new HandlerThread("EditComment");
-                CheckStoreInfo.this.commentThread.start();
-                CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
                 editComment.putNote(commentEditText.getText().toString());
                 commentEditText.setText("");
                 Message msg = new Message();
@@ -362,9 +336,6 @@ public class CheckStoreInfo extends AppCompatActivity {
                 msg.setData(commentInfo);
                 CmtHandler.sendMessage(msg);
             }else if(commentMode == EDIT_REPLY){
-                CheckStoreInfo.this.commentThread = new HandlerThread("EditComment");
-                CheckStoreInfo.this.commentThread.start();
-                CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
                 editComment.putReply(commentEditText.getText().toString());
                 Message msg = new Message();
                 msg.what = EDIT_REPLY;
@@ -378,6 +349,22 @@ public class CheckStoreInfo extends AppCompatActivity {
             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
+    private class Handler_A extends Handler{
+        public Handler_A(Looper looper){super(looper);}
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_BITMAP:
+  //                  storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
+                    mainHandler.sendEmptyMessage(UPDATE_UI);
+                    break;
+            }
+        }
+    }
+
 
     private class CommentHandler extends Handler{
         public CommentHandler(Looper looper){
@@ -397,17 +384,24 @@ public class CheckStoreInfo extends AppCompatActivity {
                     databaseForComment.addComment(newComment);
                     break;
                 case DELETE_COMMENT:
-                    databaseForComment = new Database();
                     databaseForComment.deleteComment(msg.getData().getString("CommentID"));
                     break;
                 case EDIT_COMMENT:
-                    databaseForComment = new Database();
                     databaseForComment.updateComment((Comment)msg.getData().getSerializable("CommentEdit"));
                     break;
                 case EDIT_REPLY:
-                    databaseForComment = new Database();
                     databaseForComment.updateComment((Comment)msg.getData().getSerializable("CommentEdit"));
                     break;
+                case UPDATE_ARRAYLIST:
+                    commentArrayList = new ArrayList<Comment>();
+                    commentlist = database.getComment("Store",CheckStoreInfo.this.storeInfoBundle.getStore().getID());
+                    for(int i=0;i<commentlist.length;i++){
+                        commentArrayList.add(commentlist[i]);
+                        Member member = database.GetSingleMember(commentlist[i].getMember());
+                        commentArrayList.get(i).setMemberNickName(member.getNickname());
+                    }
+                    break;
+
             }
             CmtHandler.postDelayed(new Runnable() {
                 @Override
@@ -473,9 +467,6 @@ public class CheckStoreInfo extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if(selections.get(which).equals("刪除")){
-                        CheckStoreInfo.this.commentThread = new HandlerThread("DeleteComment");
-                        CheckStoreInfo.this.commentThread.start();
-                        CheckStoreInfo.this.CmtHandler = new CommentHandler(CheckStoreInfo.this.commentThread.getLooper());
                         Message msg = new Message();
                         msg.what = DELETE_COMMENT;
                         Bundle bag = new Bundle();
@@ -515,5 +506,22 @@ public class CheckStoreInfo extends AppCompatActivity {
 
 
 
-
+    private static Bitmap getBitmapFromURL(String imageUrl)
+    {
+        try
+        {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

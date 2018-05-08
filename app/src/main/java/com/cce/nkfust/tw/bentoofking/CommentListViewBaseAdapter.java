@@ -42,6 +42,11 @@ public class CommentListViewBaseAdapter extends BaseAdapter {
         this.inflater = inflater;
     }
 
+    public void refresh(ArrayList<Comment> arrayList){
+        elementData = arrayList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return this.elementData.size();
