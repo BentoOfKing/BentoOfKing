@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 public class ReviewStoreActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private static String passStoreInfo = "STORE_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private static final int MORE_STORE = 39;
@@ -102,13 +103,18 @@ public class ReviewStoreActivity extends AppCompatActivity {
                     storeListView.setAdapter(reviewStoreAdapter);//3.設Adapter
                     storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
                             new AlertDialog.Builder(context)
                                     .setItems(item, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case 0://審核資訊
+                                                    Intent intent = new Intent();
+                                                    intent.setClass(context,PreviewStoreInfoActivity.class);
+                                                    intent.putExtra(passUserInfo,userInfo);
+                                                    intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
+                                                    startActivity(intent);
                                                     break;
                                                 case 1://審核菜單
                                                     break;
@@ -124,8 +130,6 @@ public class ReviewStoreActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                            //連到下一頁
-                            Toast.makeText(context, storeArrayList.get((int)l).getStoreName(), Toast.LENGTH_SHORT).show();
                         }
                     });
                     break;

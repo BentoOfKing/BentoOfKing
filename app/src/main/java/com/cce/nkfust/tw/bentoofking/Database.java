@@ -28,6 +28,7 @@ import java.util.List;
 public class Database {
     private static String getStoreURL = "http://163.18.104.169/databaseConnect/getStore.php";
     private static String getStoreByPositionURL = "http://163.18.104.169/databaseConnect/getStoreByPosition.php";
+    private static String getReviewStoreURL = "http://163.18.104.169/databaseConnect/getReviewStore.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
     private static String storeLoginURL = "http://163.18.104.169/databaseConnect/store_login.php";
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
@@ -46,6 +47,7 @@ public class Database {
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
     private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
+
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -85,7 +87,7 @@ public class Database {
     JSONParser jParser;
     JSONObject json;
 
-    private int range, index = 0,reviewRange,reviewIndex=0;
+    private int range, index = 0;
     ArrayList<HashMap<String, String>> storesList;
 
     String result = "";
@@ -414,8 +416,8 @@ public class Database {
         Store returnStore[];
         try {
             params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
-            json = jParser.makeHttpRequest(getStoreURL, "GET", params);
+            params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+            json = jParser.makeHttpRequest(getReviewStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
             stores = json.getJSONArray(TAG_STORES);
@@ -429,18 +431,18 @@ public class Database {
             // looping through All Products
 
             if (stores.length() == 10) {
-                reviewRange = 10;
+                range = 10;
             } else {
-                reviewRange = stores.length();
+                range = stores.length();
             }
-            returnStore = new Store[reviewRange];
-            for (int i = 0; i < reviewRange; i++) {
+            returnStore = new Store[range];
+            for (int i = 0; i < range; i++) {
                 JSONObject c = stores.getJSONObject(i);
 
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
             }
-            reviewIndex += reviewRange;
+            index += range;
             return returnStore;
         } catch (Exception e) {
             System.out.println("error");
@@ -453,7 +455,7 @@ public class Database {
     public void refreshStoreIndex() {
         index = 0;
     }
-    public void refreshReviewStoreIndex() { reviewIndex = 0; }
+
 
     public Store[] GetStoreByPosition(String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
         JSONObject json;
