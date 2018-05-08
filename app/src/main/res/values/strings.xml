@@ -214,4 +214,9 @@
         <item>不通過</item>
         <item>通過</item>
     </array>
+    <string name="banMember">停權會員</string>
+    <string name="storeError">店家錯誤</string>
+    <string name="reportComment">檢舉評論</string>
+    <string name="previewPush">審核推播</string>
+    <string name="appeal">申訴</string>
 </resources>

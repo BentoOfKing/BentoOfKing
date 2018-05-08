@@ -45,7 +45,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
             case 3:
-                String[] adminMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.reviewStore),context.getResources().getString(R.string.logout)};
+                String[] adminMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.banMember),context.getResources().getString(R.string.reviewStore),context.getResources().getString(R.string.storeError),context.getResources().getString(R.string.reportComment),context.getResources().getString(R.string.previewPush),context.getResources().getString(R.string.appeal),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,adminMenuItem));
                 drawerListView.setOnItemClickListener(adminDrawerListener);
                 break;
@@ -243,10 +243,25 @@ public class Drawer extends AppCompatActivity{
                     ((Activity)context).finish();
                     break;
                 case 1:
+                    //停權會員
+                    break;
+                case 2:
                     //審核店家
                     intent.setClass(context,ReviewStoreActivity.class);
                     intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
+                    break;
+                case 3:
+                    //店家錯誤
+                    break;
+                case 4:
+                    //檢舉評論
+                    break;
+                case 5:
+                    //審核推播
+                    break;
+                case 6:
+                    //申訴
                     break;
                 default:
                     intent.setClass(context,MainActivity.class);
