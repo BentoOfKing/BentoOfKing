@@ -184,6 +184,7 @@ public class Drawer extends AppCompatActivity{
                 case 1://查看店家
                     intent.setClass(context,CheckStoreInfo.class);
                     intent.putExtra(passUserInfo,userInfo);
+                    intent.putExtra("storeInfo",userInfo);
                     context.startActivity(intent);
                     break;
                 case 2://編輯店家
