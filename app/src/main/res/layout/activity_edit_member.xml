@@ -143,23 +143,36 @@
                         <TextView
                             android:id="@+id/Sex"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/sex"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/font_size" />
 
-                        <TextView
-                            android:id="@+id/Sex1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                        <RadioGroup
+                            android:id="@+id/RadioSex"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
                             android:layout_weight="2"
                             android:gravity="center"
-                            android:text="@string/sex"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/font_size" />
+                            android:orientation="horizontal">
 
+                            <RadioButton
+                                android:id="@+id/radio_m"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/man"
+                                />
+
+                            <RadioButton
+                                android:id="@+id/radio_f"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/woman" />
+                        </RadioGroup>
                     </TableRow>
 
                     <TableRow
