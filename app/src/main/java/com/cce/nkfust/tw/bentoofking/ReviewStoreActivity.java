@@ -168,6 +168,9 @@ public class ReviewStoreActivity extends AppCompatActivity {
                                                 case 4://不通過
                                                     break;
                                                 case 5://通過
+                                                    if(storeArrayList.get((int)l).getState().equals("2")){
+                                                        storeArrayList.get((int)l).putEmail(storeArrayList.get((int)l).getEmail().substring(0,storeArrayList.get((int)l).getEmail().length()-1));
+                                                    }
                                                     storeArrayList.get((int)l).putState("1");
                                                     beUpdateStore=storeArrayList.get((int)l);
                                                     Thread t = new Thread(new UpdateStore());

@@ -120,6 +120,7 @@ public class BecomeHaveStoreActivity extends AppCompatActivity {
             if(isFind){
                 retureStore.putEmail(store.getEmail()+"*");
                 retureStore.putPassword(store.getPassword());
+                retureStore.putState("2");
                 retureStore.putNote("由 "+store.getEmail()+" 申請,"+retureStore.getNote());
                 Database database = new Database();
                 if(database.UpdateStore(retureStore).equals("Successful.")){
