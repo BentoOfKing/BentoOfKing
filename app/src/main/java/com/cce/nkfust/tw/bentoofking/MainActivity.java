@@ -16,17 +16,13 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
@@ -83,7 +79,18 @@ public class MainActivity extends AppCompatActivity {
     private Boolean isGPSenabled = false;
     private Boolean isNetworkEnabled = false;
     private Boolean returnBool = false;
-    private Context context;
+
+
+    private Member RecordMember;
+    private Store RecordStore;
+    private Admin RecordAdmin;
+    private ProgressDialog progressDialog;
+    private Handler LoginRecordThreadHandler;
+    private HandlerThread LoginRecordThread;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         storelist = (ListView) findViewById(R.id.storeListView);
         swipeLayout = findViewById(R.id.swipeLayout);
-        context = this;
     }
 
     private void UIhandle() {
@@ -498,7 +504,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void requestUserLocation() {
         //判斷當前是否已經獲得了定位權限
-
         int permissionFineLoaction = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int permissionCoarseLocation = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (permissionFineLoaction != PackageManager.PERMISSION_GRANTED || permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
@@ -631,27 +636,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
     //---以上為定位程式---
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.searchItem);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //提交按钮的点击事件
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //当输入框内容改变的时候回调
-                return true;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }
 }
