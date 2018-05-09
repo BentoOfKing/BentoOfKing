@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -383,8 +384,11 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                             builder.include(storeLocation);
                         }
                         LatLngBounds latLngBounds = builder.build();
-                        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngBounds.getCenter()));
-
+                        int width = getResources().getDisplayMetrics().widthPixels;
+                        int height = getResources().getDisplayMetrics().heightPixels;
+                        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+                        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(latLngBounds, width, height, padding);
+                        mMap.animateCamera(cu);
                     }
                     break;
             }
@@ -448,7 +452,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
         public void run() {
             float[] res = new float[1];
             Location.distanceBetween(Double.parseDouble(Latitude),Double.parseDouble(Longitude),mMap.getCameraPosition().target.latitude,mMap.getCameraPosition().target.longitude,res);
-            if(res[0] >= 5000){
+            if(res[0] >= 5000 && !isSearch){
                 researchButton.setVisibility(View.VISIBLE);
             }
             timerHandler.postDelayed(this, 3000);
