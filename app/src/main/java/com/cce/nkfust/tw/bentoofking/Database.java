@@ -352,6 +352,7 @@ public class Database {
     }
 
 
+
     public Store[] GetStore(String country, int rankState, int priceState) {
         JSONObject json;
         JSONArray stores = null;
