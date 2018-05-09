@@ -28,6 +28,9 @@ import java.util.List;
 public class Database {
     private static String getStoreURL = "http://163.18.104.169/databaseConnect/getStore.php";
     private static String getStoreByPositionURL = "http://163.18.104.169/databaseConnect/getStoreByPosition.php";
+    private static String getStoreByMapURL = "http://163.18.104.169/databaseConnect/getStoreByMap.php";
+    private static String getReviewStoreURL = "http://163.18.104.169/databaseConnect/getReviewStore.php";
+    private static String getStoreForRegisterURL = "http://163.18.104.169/databaseConnect/getStoreForRegister.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
     private static String storeLoginURL = "http://163.18.104.169/databaseConnect/store_login.php";
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
@@ -349,6 +352,27 @@ public class Database {
         }
     }
 
+    public Store GetStoreForRegister(String Name,String Address,String Phone){
+        int success;
+        try {
+            jParser = null;
+            jParser = new JSONParser();
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Name", Name));
+            params.add(new BasicNameValuePair("Address", Address));
+            params.add(new BasicNameValuePair("Phone", Phone));
+            json = null;
+            json = jParser.makeHttpRequest(getStoreForRegisterURL, "GET", params);
+            Log.d("Get single member.", json.toString());
+            JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
+            JSONObject c = productObj.getJSONObject(0);
+            Store store = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+            return store;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public Store[] GetStore(String country, int rankState, int priceState) {
         JSONObject json;
@@ -415,7 +439,7 @@ public class Database {
         try {
             params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
-            json = jParser.makeHttpRequest(getStoreURL, "GET", params);
+            json = jParser.makeHttpRequest(getReviewStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
             stores = json.getJSONArray(TAG_STORES);
@@ -515,15 +539,69 @@ public class Database {
         }
     }
 
+    public Store[] GetStoreByMap(String Longitude, String Latitude, String Search) {
+        JSONObject json;
+        JSONArray stores = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Store returnStore[];
+        try {
+            storesList = new ArrayList<HashMap<String, String>>();
+            params = new ArrayList<NameValuePair>();
+
+            params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+            params.add(new BasicNameValuePair("Longitude", Longitude));
+            params.add(new BasicNameValuePair("Latitude", Latitude));
+            params.add(new BasicNameValuePair("Distance", Integer.toString(25)));
+            params.add(new BasicNameValuePair("Search", Search));
+            json = jParser.makeHttpRequest(getStoreByMapURL, "GET", params);
+            Log.d("All Stores: ", json.toString());
+            //int success = json.getInt(TAG_SUCCESS);
+            stores = json.getJSONArray(TAG_STORES);
+
+        } catch (Exception e) {
+            Store[] nullStore = new Store[0];
+            return nullStore;
+        }
+        try {
+            // looping through All Products
+
+            if (stores.length() == 10) {
+                range = 10;
+            } else {
+                range = stores.length();
+            }
+            returnStore = new Store[range];
+            for (int i = 0; i < range; i++) {
+                JSONObject c = stores.getJSONObject(i);
+
+                // Storing each json item in variable
+                returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+                returnStore[i].putDistance(c.getString(TAG_Distance));
+            }
+            index += range;
+            return returnStore;
+        } catch (Exception e) {
+            System.out.println("error");
+            System.out.print(e);
+            Store[] nullStore = new Store[0];
+            return nullStore;
+        }
+    }
+
     public String UpdateStore(Store store) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         try {
             params.add(new BasicNameValuePair("ID", store.getID()));
+            params.add(new BasicNameValuePair("Email", store.getEmail()));
             params.add(new BasicNameValuePair("Password", store.getPassword()));
             params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(), "8859_1")));
             params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Note", new String(store.getNote().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("State", store.getState()));
             params.add(new BasicNameValuePair("Information", store.getInformation()));
             params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
             params.add(new BasicNameValuePair("Phone", store.getPhone()));
@@ -553,24 +631,21 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        try {
             params.add(new BasicNameValuePair("Email", store.getEmail()));
             params.add(new BasicNameValuePair("Password", store.getPassword()));
-            params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(), "8859_1")));
-            params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Name", store.getStoreName()));
+            params.add(new BasicNameValuePair("Address", store.getAddress()));
             params.add(new BasicNameValuePair("Information", store.getInformation()));
             params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
             params.add(new BasicNameValuePair("Phone", store.getPhone()));
             params.add(new BasicNameValuePair("Photo", store.getPhoto()));
             params.add(new BasicNameValuePair("Point", store.getPoint()));
             params.add(new BasicNameValuePair("State", store.getState()));
-            params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
-            params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
+            params.add(new BasicNameValuePair("Longitude", store.getLongitude().substring(0,10)));
+            params.add(new BasicNameValuePair("Latitude", store.getLatitude().substring(0,10)));
             params.add(new BasicNameValuePair("Rank", store.getRank()));
             params.add(new BasicNameValuePair("Price", store.getPrice()));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+
         json = null;
         json = jParser.makeHttpRequest(addStoreURL, "POST", params);
         Log.d("Update Comment.", json.toString());

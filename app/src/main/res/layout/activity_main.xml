@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:logo="@drawable/toolbar_logo"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="便當王" />
 
     <android.support.v4.widget.DrawerLayout

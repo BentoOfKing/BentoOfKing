@@ -137,6 +137,11 @@ public class EditPhotoActivity extends AppCompatActivity{
                 store.putRank("3");
                 store.putState("0");
                 store.putPoint("0");
+                if(userInfo.getIdentity() == 1){
+                    store.putNote("由 "+userInfo.getMember().getEmail()+" 新增");
+                }else {
+                    store.putNote("");
+                }
                 int price = 0;
                 for(int i=0;i<meal.size();i++){
                     price += Integer.parseInt(meal.get(i).getPrice());
@@ -144,8 +149,8 @@ public class EditPhotoActivity extends AppCompatActivity{
                 price /= meal.size();
                 store.putPrice(Integer.toString(price));
                 store.putID(database.addStore(store));
-                postMainImage();
                 String photoString = store.getID() + ".jpg";
+                postMainImage();
                 for (int i = 0; i < photoCount; i++) {
                     photoString += "," + store.getID() + "_" + Integer.toString(i) + ".jpg";
                     postOtherImage(i);

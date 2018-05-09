@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 
 public class ReviewStoreActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private static String passStoreInfo = "STORE_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private static final int MORE_STORE = 39;
@@ -46,6 +49,8 @@ public class ReviewStoreActivity extends AppCompatActivity {
     private HandlerThread anotherThread;
     private Store[] store;
     private Database database;
+    private Store beUpdateStore;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +79,7 @@ public class ReviewStoreActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                database.refreshReviewStoreIndex();
+                database.refreshStoreIndex();
                 store = database.GetReviewStore();
                 storeArrayList.clear();
                 for(int i=0;i<store.length;i++){
@@ -101,31 +106,80 @@ public class ReviewStoreActivity extends AppCompatActivity {
                     final String[] item = getResources().getStringArray(R.array.previewStoreArray);
                     storeListView.setAdapter(reviewStoreAdapter);//3.設Adapter
                     storeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        LayoutInflater inflater;
+                        AlertDialog alertDialog;
+                        EditText editText;
+                        Intent intent;
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
                             new AlertDialog.Builder(context)
                                     .setItems(item, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             switch (which){
                                                 case 0://審核資訊
+                                                    intent = new Intent();
+                                                    intent.setClass(context,PreviewStoreInfoActivity.class);
+                                                    intent.putExtra(passUserInfo,userInfo);
+                                                    intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
+                                                    startActivity(intent);
                                                     break;
                                                 case 1://審核菜單
+                                                    intent = new Intent();
+                                                    intent.setClass(context,EditExistedMenuActivity.class);
+                                                    intent.putExtra(passUserInfo,userInfo);
+                                                    intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
+                                                    startActivity(intent);
                                                     break;
                                                 case 2://審核照片
+                                                    intent = new Intent();
+                                                    intent.setClass(context,EditExistedPhotoActivity.class);
+                                                    intent.putExtra(passUserInfo,userInfo);
+                                                    intent.putExtra(passStoreInfo,storeArrayList.get((int)l));
+                                                    startActivity(intent);
                                                     break;
                                                 case 3://備註
+                                                    inflater = LayoutInflater.from(context);
+                                                    View view = inflater.inflate(R.layout.alertdialog_note, null);
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                                    builder.setTitle(getResources().getString(R.string.note));
+                                                    builder.setView(view);
+                                                    editText = view.findViewById(R.id.noteEditText);
+                                                    editText.setText(storeArrayList.get((int)l).getNote());
+                                                    builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            storeArrayList.get((int)l).putNote(editText.getText().toString());
+                                                            beUpdateStore=storeArrayList.get((int)l);
+                                                            Thread t = new Thread(new UpdateStore());
+                                                            t.start();
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    alertDialog = builder.create();
+                                                    alertDialog.show();
                                                     break;
                                                 case 4://不通過
                                                     break;
                                                 case 5://通過
+                                                    if(storeArrayList.get((int)l).getState().equals("2")){
+                                                        storeArrayList.get((int)l).putEmail(storeArrayList.get((int)l).getEmail().substring(0,storeArrayList.get((int)l).getEmail().length()-1));
+                                                    }
+                                                    storeArrayList.get((int)l).putState("1");
+                                                    beUpdateStore=storeArrayList.get((int)l);
+                                                    Thread t = new Thread(new UpdateStore());
+                                                    t.start();
                                                     break;
                                             }
                                         }
                                     })
                                     .show();
-                            //連到下一頁
-                            Toast.makeText(context, storeArrayList.get((int)l).getStoreName(), Toast.LENGTH_SHORT).show();
                         }
                     });
                     break;
@@ -141,6 +195,23 @@ public class ReviewStoreActivity extends AppCompatActivity {
         }
 
     }
+
+    private class UpdateStore implements Runnable {
+
+        @Override
+        public void run() {
+            if(database.UpdateStore(beUpdateStore).equals("Successful.")){
+                database = null;
+                database = new Database();
+                Thread thread = new Thread(new GetStore());
+                thread.start();
+            }else{
+                mainThreadHandler.sendEmptyMessage(FAIL);
+            }
+        }
+    }
+
+
     private class Handler_A extends Handler {
         public Handler_A(Looper looper) {
             super(looper);

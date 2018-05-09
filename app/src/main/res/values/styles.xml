@@ -7,9 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/myToolbar</item>
-
     </style>
-
     <style name="AppStartTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
@@ -19,11 +17,17 @@
         <item name="titleTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="contentInsetStart">0dp</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
 
     <style name="Theme.ActivityDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>

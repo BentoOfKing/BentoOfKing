@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 public class EditExistedMenuActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private static String passStoreInfo = "STORE_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private UserInfo userInfo;
@@ -58,7 +59,12 @@ public class EditExistedMenuActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        toolbar.setTitle(getResources().getString(R.string.editMenu));
+        if(userInfo.getIdentity()==3) {
+            toolbar.setTitle(getResources().getString(R.string.previewStoreMenu));
+            userInfo.putStore((Store)intent.getSerializableExtra(passStoreInfo));
+        }else{
+            toolbar.setTitle(getResources().getString(R.string.editMenu));
+        }
         mealListView = findViewById(R.id.mealListView);
         Thread thread = new Thread(new GetMeal());
         thread.start();
@@ -208,12 +214,16 @@ public class EditExistedMenuActivity extends AppCompatActivity {
             try {
                     t1.join();
                     if(result.equals("Successful.")) {
-                    Intent intent = new Intent();
-                    intent.setClass(context, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra(passUserInfo, userInfo);
-                    startActivity(intent);
-                        progressDialog.dismiss();
+                        if(userInfo.getIdentity()==3){
+                            finish();
+                        }else {
+                            Intent intent = new Intent();
+                            intent.setClass(context, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.putExtra(passUserInfo, userInfo);
+                            startActivity(intent);
+                        }
+                    progressDialog.dismiss();
                     Toast.makeText(context,getResources().getString(R.string.editSuc), Toast.LENGTH_SHORT).show();
                     finish();
                 }else{

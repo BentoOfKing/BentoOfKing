@@ -1,7 +1,9 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -55,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.storeLoginButton);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         loginButton.setOnClickListener(loginButtonHandler);
+
+
 
     }
     public class LoginButtonHandler implements View.OnClickListener{
@@ -110,6 +114,23 @@ public class LoginActivity extends AppCompatActivity {
                     intent.setClass(LoginActivity.this, MainActivity.class);//有修改
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo, userInfo);
+
+                    /////
+                    String NumberTemp = member.getEmail();
+                    String PasswordTemp = member.getPassword();
+
+
+                    SharedPreferences LoginRecord = getApplication().
+                            getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+
+                    LoginRecord.edit()
+                            .putString("Recordemail",NumberTemp)
+                            .putString("Recordpassword",PasswordTemp)
+                            .putInt("RecordFlag",1)
+                            .commit();
+
+                    /////
+
                     progressDialog.dismiss();
                     startActivity(intent);
 

@@ -52,12 +52,16 @@ public class EditMember extends AppCompatActivity {
     private EditText passwordEditText; //改 原OldpasswordCheckEditText
     private EditText nicknameEditText;
     private Button registerButton;
-    private TextView Sex;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog = null;
 
+    private RadioButton radio_m;
+    private RadioButton radio_f;
+    private String sex="";
+
     private HandlerThread RegisterThread;
     private Handler RegisterThreadHandler;
+    private RadioGroup RadioSex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,15 +81,17 @@ public class EditMember extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         nicknameEditText = findViewById(R.id.nicknameEditText);
         registerButton = findViewById(R.id.registerButton);
-        Sex = findViewById(R.id.Sex1);
+        radio_m = findViewById(R.id.radio_m);
+        radio_f = findViewById(R.id.radio_f);
         RegisterButtonHandler registerButtonHandler = new RegisterButtonHandler();
         registerButton.setOnClickListener(registerButtonHandler);
         emailTextView.setText(userInfo.getMember().getEmail());
-        if (userInfo.getMember().getSex().equals("1")) {
-            Sex.setText("男");
+        RadioSex = findViewById(R.id.RadioSex);
+        if(userInfo.getMember().getSex().equals("1")){
+            radio_m.setChecked(true);
         }
-        else{
-            Sex.setText("女");
+        else {
+            radio_f.setChecked(true);
         }
 
 
@@ -117,6 +123,13 @@ public class EditMember extends AppCompatActivity {
     public class RegisterConfirm implements Runnable{
         @Override
         public void run() {
+            if(RadioSex.getCheckedRadioButtonId() == R.id.radio_f){
+                sex="0";
+            }
+            else if(RadioSex.getCheckedRadioButtonId() == R.id.radio_m){
+                sex="1";
+            }
+
             if(TextUtils.isEmpty(passwordEditText.getText().toString())){
                 Toast.makeText(EditMember.this,"請填寫密碼",Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
@@ -124,6 +137,11 @@ public class EditMember extends AppCompatActivity {
             }
             if(!userInfo.getMember().getPassword().equals(passwordEditText.getText().toString())){
                 Toast.makeText(EditMember.this,"密碼錯誤",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                return;
+            }
+            if(RadioSex.getCheckedRadioButtonId() != R.id.radio_f && RadioSex.getCheckedRadioButtonId() != R.id.radio_m){
+                Toast.makeText(EditMember.this,"請選擇性別",Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 return;
             }
@@ -136,6 +154,7 @@ public class EditMember extends AppCompatActivity {
                 else{
                     if(TextUtils.isEmpty(NewPasswordEditText.getText().toString())&&TextUtils.isEmpty(passwordCheckEditText.getText().toString())){
                         userInfo.getMember().putNickname(nicknameEditText.getText().toString());
+                        userInfo.getMember().putSex(sex);
                         database = new Database();
                         database.UpdateMember(userInfo.getMember());
                         Toast toast = Toast.makeText(EditMember.this,
@@ -186,6 +205,7 @@ public class EditMember extends AppCompatActivity {
 
             userInfo.getMember().putNickname(nicknameEditText.getText().toString());
             userInfo.getMember().putPassword(NewPasswordEditText.getText().toString());
+            userInfo.getMember().putSex(sex);
             database = new Database();
             database.UpdateMember(userInfo.getMember());
             Toast toast = Toast.makeText(EditMember.this,
