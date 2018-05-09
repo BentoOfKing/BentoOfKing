@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/border"
-    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@drawable/comment_item_selector"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/commentDate2"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:text=" - "
+        android:textColor="#59493f"
         app:layout_constraintBottom_toBottomOf="@+id/storeReply"
         app:layout_constraintEnd_toStartOf="@+id/commentDate"
         app:layout_constraintTop_toTopOf="@+id/storeReply"
@@ -23,6 +25,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:text="評論內容........."
+        android:textColor="#59493f"
         app:layout_constraintBottom_toBottomOf="@+id/ScoreTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/colon"
@@ -34,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="店家回覆 : "
+        android:textColor="#59493f"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentMember" />
 
@@ -41,6 +45,7 @@
         android:id="@+id/storeReply"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:textColor="#59493f"
         app:layout_constraintBottom_toBottomOf="@+id/replyTitle"
         app:layout_constraintEnd_toStartOf="@+id/commentDate2"
         app:layout_constraintStart_toEndOf="@+id/replyTitle"
@@ -52,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="評論人"
+        android:textColor="#59493f"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:text="2018/03/10"
+        android:textColor="#59493f"
         app:layout_constraintBottom_toBottomOf="@+id/storeReply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/storeReply" />
@@ -70,6 +77,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:text=":"
+        android:textColor="#59493f"
         app:layout_constraintBottom_toBottomOf="@+id/ScoreTextView"
         app:layout_constraintStart_toEndOf="@+id/ScoreTextView"
         app:layout_constraintTop_toTopOf="@+id/ScoreTextView" />
@@ -80,6 +88,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:text="(☆☆☆☆☆)"
+        android:textColor="#59493f"
         app:layout_constraintBottom_toBottomOf="@+id/commentMember"
         app:layout_constraintStart_toEndOf="@+id/commentMember"
         app:layout_constraintTop_toTopOf="@+id/commentMember" />

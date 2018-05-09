@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,9 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
 
     public static class ViewHolder{
         ImageView storeIcon;
-        LinearLayout storeListViewLayout;
+        ConstraintLayout storeListViewLayout;
         TextView storeName;
-        TextView storeStatus;
+        ImageView storeStatus;
         TextView storeDistance;
         TextView storeEvaluation;
         TextView storePrice;
@@ -72,11 +73,12 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
         viewHolder.storeName.setText(getItem(position).getStorename());
-        viewHolder.storePrice.setText("平均價位:"+getItem(position).getPrice());
-        viewHolder.storeStatus.setText(getItem(position).getStatus());
-        viewHolder.storeEvaluation.setText("評價:"+getItem(position).getEvaluation());
+        viewHolder.storePrice.setText("平均價位 : "+getItem(position).getPrice());
+        if(getItem(position).getStatus().equals("未營業"))
+            viewHolder.storeStatus.setImageResource(R.drawable.store_close);
+        viewHolder.storeEvaluation.setText("評價 : "+getItem(position).getEvaluation()+"★");
         if(!getItem(position).getDistance().equals("null"))
-            viewHolder.storeDistance.setText("距離:" + String.format("%.1f", Double.valueOf(getItem(position).getDistance())) + "公里");
+            viewHolder.storeDistance.setText("距離 : " + String.format("%.1f", Double.valueOf(getItem(position).getDistance())) + "公里");
         else
             viewHolder.storeDistance.setText("");
         Thread thread = new Thread (new Runnable() {

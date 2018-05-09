@@ -1,77 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/border"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="110dp">
 
     <ImageView
         android:id="@+id/storeIcon"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/colorPrimaryDark" />
 
-    <TableLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/storeInfoLayout3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:stretchColumns="*">
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:text="店家名稱"
+        android:textColor="#59493f"
+        android:textSize="22sp"
+        app:layout_constraintStart_toEndOf="@+id/storeIcon"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/storeScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="店家評分"
+        android:textColor="#59493f"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/storeInfoLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/storeInfoLayout3" />
 
-            <TextView
-                android:id="@+id/storeInfoLayout3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="店家名稱"
-                android:textSize="18sp" />
+    <TextView
+        android:id="@+id/storePrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:text="平均價位"
+        android:textColor="#59493f"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/storeScore"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/storeStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="狀態"
-                android:textAlignment="viewEnd"
-                android:textSize="18sp" />
-        </TableRow>
+    <TextView
+        android:id="@+id/storeDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="距離"
+        android:textAlignment="viewEnd"
+        android:textColor="#59493f"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/storeScore"
+        app:layout_constraintTop_toBottomOf="@+id/storeScore" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/storeStatus"
+        android:layout_width="75dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="15dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/storePrice"
+        app:srcCompat="@drawable/store_open" />
 
-            <TextView
-                android:id="@+id/storeScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="店家評分"
-                android:textSize="18sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/storePrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="平均價位"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/storeDistance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="距離"
-                android:textAlignment="viewEnd"
-                android:textSize="18sp" />
-        </TableRow>
-
-    </TableLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
