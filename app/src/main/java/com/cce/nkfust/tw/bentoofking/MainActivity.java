@@ -1,9 +1,11 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,13 +18,17 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
@@ -51,6 +57,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int REFRESH_ACTIVITY = 5278, requestCodeFineLoaction = 1, requestCodeCoarseLocation = 2, MORE_STORE = 5279, REFRESH_STORELIST = 5273, SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER = 5275, SEND_GPS_FILTER = 5276, REFRESHING = 5277;
+    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -79,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
     private Boolean isGPSenabled = false;
     private Boolean isNetworkEnabled = false;
     private Boolean returnBool = false;
+    private Member RecordMember;
+    private Store RecordStore;
+    private Admin RecordAdmin;
+    private ProgressDialog progressDialog;
+    private Context context;
+    private Handler LoginRecordThreadHandler;
+    private HandlerThread LoginRecordThread;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void UIconnect() {
+        context = this;
         toolbar = findViewById(R.id.toolbar);
         locationButton = findViewById(R.id.locationButton);
         sortButton = findViewById(R.id.sortButton);
@@ -138,10 +157,25 @@ public class MainActivity extends AppCompatActivity {
                 android.R.color.holo_blue_light,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light);
-        toolbar.inflateMenu(R.menu.toolbar_menu);
+        setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.mapItem:
+                        Intent intent = new Intent();
+                        intent.setClass(context,HomeMapsActivity.class);
+                        intent.putExtra(passUserInfo,userInfo);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
+            }
+        });
         Drawer drawer = new Drawer();
         drawer.init(this, toolbar, drawerListView, drawerLayout, userInfo);
         storelist.setAdapter(adapter);
+        CDBTHandler.sendEmptyMessage(GET_USERINFO);
     }
 
     private void UIupdate() {
@@ -405,6 +439,40 @@ public class MainActivity extends AppCompatActivity {
                     GPSfilter.setData(GPSbag);
                     CDBTHandler.sendMessage(GPSfilter);
                     break;
+                case GET_USERINFO:
+                    SharedPreferences LoginRecord = getApplication().
+                            getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+                    String NumberTemp = LoginRecord.getString("Recordemail","*");
+                    String PasswordTemp = LoginRecord.getString("Recordpassword","*");
+                    int RecordFlag = LoginRecord.getInt("RecordFlag",0);
+                    database = new Database();
+
+                    if(userInfo.getIdentity()==0){
+                        LoginRecord.edit()
+                                .putString("Recordemail","*")
+                                .putString("Recordpassword","*")
+                                .putInt("RecordFlag",0)
+                                .commit();
+                    }
+
+
+                    if(RecordFlag==1) {
+                        RecordMember = database.MemberLogin(NumberTemp, PasswordTemp);
+                        userInfo.putMember(RecordMember);
+                        userInfo.setIdentity(1);
+                    }
+                    else if(RecordFlag==2) {
+                        RecordStore = database.StoreLogin(NumberTemp, PasswordTemp);
+                        userInfo.putStore(RecordStore);
+                        userInfo.setIdentity(2);
+                    }
+                    else if(RecordFlag==3) {
+                        RecordAdmin = database.AdminLogin(NumberTemp, PasswordTemp);
+                        userInfo.putAdmin(RecordAdmin);
+                        userInfo.setIdentity(3);
+                    }
+                    mainHandler.sendEmptyMessage(CREATE_DRAWER);
+                    break;
             }
         }
     }
@@ -428,6 +496,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case REFRESHING:
                     swipeLayout.setRefreshing(true);
+                    break;
+                case CREATE_DRAWER:
+                    Drawer drawer = new Drawer();
+                    drawer.init(MainActivity.this, toolbar, drawerListView, drawerLayout, userInfo);
                     break;
             }
             super.handleMessage(msg);
@@ -610,4 +682,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
     //---以上為定位程式---
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.searchItem);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSubmitButtonEnabled(true);//显示提交按钮
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //提交按钮的点击事件
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //当输入框内容改变的时候回调
+                return true;
+            }
+        });
+
+        return true;
+    }
 }

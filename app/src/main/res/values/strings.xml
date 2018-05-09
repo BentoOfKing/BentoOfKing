@@ -219,4 +219,7 @@
     <string name="reportComment">檢舉評論</string>
     <string name="previewPush">審核推播</string>
     <string name="appeal">申訴</string>
+    <string name="note">備註</string>
+    <string name="title_activity_home_maps">Map</string>
+    <string name="research">重新搜尋</string>
 </resources>

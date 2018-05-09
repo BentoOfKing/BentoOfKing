@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/noteEditText"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_margin="25dp"
+        android:ems="10"
+        android:gravity="top|left"
+        android:inputType="textMultiLine|textShortMessage|textLongMessage|textPersonName"
+        android:maxLines="5"
+        android:minLines="1"
+        android:textAlignment="viewStart" />
+</RelativeLayout>

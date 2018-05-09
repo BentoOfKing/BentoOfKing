@@ -3,6 +3,7 @@ package com.cce.nkfust.tw.bentoofking;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class Drawer extends AppCompatActivity{
+
+
+
     private static String passUserInfo = "USER_INFO";
+    Member member;
     Context context;
     Toolbar toolbar;
     UserInfo userInfo;
@@ -50,6 +55,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(adminDrawerListener);
                 break;
             default:
+
                 String[] visitorMenuItem = {context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.memberLogin),context.getResources().getString(R.string.storeLogin),context.getResources().getString(R.string.register),context.getResources().getString(R.string.becomeStore),context.getResources().getString(R.string.about)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,visitorMenuItem));
                 drawerListView.setOnItemClickListener(visitorDrawerListener);
@@ -103,6 +109,7 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     break;
                 default:
+
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
@@ -154,10 +161,11 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     break;
                 default:
-                    intent.setClass(context,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    context.startActivity(intent);
-                    ((Activity)context).finish();
+                        intent.setClass(context, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(intent);
+                        ((Activity) context).finish();
+
                     break;
             }
             Handler handler = new Handler();
@@ -184,6 +192,7 @@ public class Drawer extends AppCompatActivity{
                 case 1://查看店家
                     intent.setClass(context,CheckStoreInfo.class);
                     intent.putExtra(passUserInfo,userInfo);
+                    intent.putExtra("storeInfo",userInfo);
                     context.startActivity(intent);
                     break;
                 case 2://編輯店家
@@ -215,6 +224,7 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     break;
                 default:
+
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
@@ -264,6 +274,8 @@ public class Drawer extends AppCompatActivity{
                     //申訴
                     break;
                 default:
+
+
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);

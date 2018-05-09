@@ -1,7 +1,9 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.widget.DrawerLayout;
@@ -126,6 +128,19 @@ public class StoreLoginActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo,userInfo);
                     startActivity(intent);
+
+                    String NumberTemp = store.getEmail();
+                    String PasswordTemp = store.getPassword();
+                    SharedPreferences LoginRecord = getApplication().
+                            getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+
+                    LoginRecord.edit()
+                            .putString("Recordemail",NumberTemp)
+                            .putString("Recordpassword",PasswordTemp)
+                            .putInt("RecordFlag",2)
+                            .commit();
+                    progressDialog.dismiss();
+
                 }else if(admin!=null){
                     userInfo = new UserInfo();
                     userInfo.setIdentity(3);
@@ -135,6 +150,18 @@ public class StoreLoginActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo,userInfo);
                     startActivity(intent);
+
+                    String NumberTemp = admin.getEmail();
+                    String PasswordTemp = admin.getPassword();
+                    SharedPreferences LoginRecord = getApplication().
+                            getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+
+                    LoginRecord.edit()
+                            .putString("Recordemail",NumberTemp)
+                            .putString("Recordpassword",PasswordTemp)
+                            .putInt("RecordFlag",3)
+                            .commit();
+                    progressDialog.dismiss();
                 }else{
                     loginPrompt.setText("登入資料錯誤");
 
