@@ -222,4 +222,5 @@
     <string name="note">備註</string>
     <string name="title_activity_home_maps">Map</string>
     <string name="research">重新搜尋</string>
+    <string name="cannotSearchStore">找不到這個店家</string>
 </resources>

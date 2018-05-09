@@ -691,6 +691,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //提交按钮的点击事件
+
                 return true;
             }
 

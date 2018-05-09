@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -61,23 +63,26 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private Context context;
     private LocationManager mLocation;
     private Boolean returnBool;
-    private String Latitude,Longitude;
+    private String Latitude,Longitude,Search;
     private ProgressDialog progressDialog;
     private Database database;
     private Store[] stores;
     private ArrayList<Store> allStore;
     private Store clickStore;
     private MainThreadHandler mainThreadHandler;
-    private static final int SUCCESS = 66,PHOTO_SUCCESS = 78;
+    private static final int SUCCESS = 66,SEARCH_END = 78;
     private Button researchButton;
     private Handler timerHandler;
     private ImageView storeIcon;
     private DownloadWebPicture downloadWebPicture;
+    private boolean isSearch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        Search = "%";
+        isSearch = false;
         context = this;
         allStore = new ArrayList<Store>();
         researchButton = findViewById(R.id.researchButton);
@@ -337,9 +342,11 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
         @Override
         public void run() {
-            stores = database.GetStoreByMap(Longitude,Latitude);
+            stores = database.GetStoreByMap(Longitude,Latitude,Search);
             if(stores.length > 0 ){
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
+            }else{
+                mainThreadHandler.sendEmptyMessage(SEARCH_END);
             }
         }
     }
@@ -359,10 +366,27 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                         LatLng storeLocation = new LatLng(Double.parseDouble(stores[i].getLatitude()),Double.parseDouble(stores[i].getLongitude()));
                         mMap.addMarker(new MarkerOptions().position(storeLocation).title(stores[i].getStoreName()));
                         allStore.add(stores[i]);
+
                     }
                     Thread t = new Thread(new GetStore());
                     t.start();
                 break;
+                case SEARCH_END:
+                    if(allStore.size() == 0){
+                        Toast toast = Toast.makeText(context,getResources().getString(R.string.cannotSearchStore), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                    if(isSearch){
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        for(int i=0;i<allStore.size();i++){
+                            LatLng storeLocation = new LatLng(Double.parseDouble(allStore.get(i).getLatitude()),Double.parseDouble(allStore.get(i).getLongitude()));
+                            builder.include(storeLocation);
+                        }
+                        LatLngBounds latLngBounds = builder.build();
+                        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngBounds.getCenter()));
+
+                    }
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -436,11 +460,36 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
         MenuItem searchItem = menu.findItem(R.id.searchItem);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSubmitButtonEnabled(true);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener(){
+            @Override
+            public boolean onClose() {
+                isSearch = false;
+                Search = "%";
+                allStore.clear();
+                mMap.clear();
+                database.refreshStoreIndex();
+                Latitude = Double.toString(mMap.getCameraPosition().target.latitude);
+                Longitude = Double.toString(mMap.getCameraPosition().target.longitude);
+                Thread t = new Thread(new GetStore());
+                t.start();
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //提交按钮的点击事件
-
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                isSearch = true;
+                Search = "%"+query+"%";
+                allStore.clear();
+                mMap.clear();
+                database.refreshStoreIndex();
+                Latitude = Double.toString(mMap.getCameraPosition().target.latitude);
+                Longitude = Double.toString(mMap.getCameraPosition().target.longitude);
+                Thread t = new Thread(new GetStore());
+                t.start();
                 return true;
             }
 

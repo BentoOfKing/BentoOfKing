@@ -516,7 +516,7 @@ public class Database {
         }
     }
 
-    public Store[] GetStoreByMap(String Longitude, String Latitude) {
+    public Store[] GetStoreByMap(String Longitude, String Latitude, String Search) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
@@ -526,10 +526,12 @@ public class Database {
         try {
             storesList = new ArrayList<HashMap<String, String>>();
             params = new ArrayList<NameValuePair>();
+
             params.add(new BasicNameValuePair("Index", Integer.toString(index)));
             params.add(new BasicNameValuePair("Longitude", Longitude));
             params.add(new BasicNameValuePair("Latitude", Latitude));
             params.add(new BasicNameValuePair("Distance", Integer.toString(25)));
+            params.add(new BasicNameValuePair("Search", Search));
             json = jParser.makeHttpRequest(getStoreByMapURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
