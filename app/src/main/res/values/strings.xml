@@ -223,4 +223,8 @@
     <string name="title_activity_home_maps">Map</string>
     <string name="research">重新搜尋</string>
     <string name="cannotSearchStore">找不到這個店家</string>
+    <string name="findSuc">查詢成功</string>
+    <string name="findFail">查詢失敗</string>
+    <string name="storeRegisterSuc">註冊成功，審核時間約2~3天，\n請耐心等待</string>
+    <string name="storeRegisterFail">註冊失敗，請檢查網路狀態</string>
 </resources>

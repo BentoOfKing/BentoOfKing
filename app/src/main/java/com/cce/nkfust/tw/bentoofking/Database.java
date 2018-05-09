@@ -30,6 +30,7 @@ public class Database {
     private static String getStoreByPositionURL = "http://163.18.104.169/databaseConnect/getStoreByPosition.php";
     private static String getStoreByMapURL = "http://163.18.104.169/databaseConnect/getStoreByMap.php";
     private static String getReviewStoreURL = "http://163.18.104.169/databaseConnect/getReviewStore.php";
+    private static String getStoreForRegisterURL = "http://163.18.104.169/databaseConnect/getStoreForRegister.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
     private static String storeLoginURL = "http://163.18.104.169/databaseConnect/store_login.php";
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
@@ -351,7 +352,27 @@ public class Database {
         }
     }
 
+    public Store GetStoreForRegister(String Name,String Address,String Phone){
+        int success;
+        try {
+            jParser = null;
+            jParser = new JSONParser();
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Name", Name));
+            params.add(new BasicNameValuePair("Address", Address));
+            params.add(new BasicNameValuePair("Phone", Phone));
+            json = null;
+            json = jParser.makeHttpRequest(getStoreForRegisterURL, "GET", params);
+            Log.d("Get single member.", json.toString());
+            JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
+            JSONObject c = productObj.getJSONObject(0);
+            Store store = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+            return store;
 
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public Store[] GetStore(String country, int rankState, int priceState) {
         JSONObject json;
@@ -574,6 +595,7 @@ public class Database {
         jParser = new JSONParser();
         try {
             params.add(new BasicNameValuePair("ID", store.getID()));
+            params.add(new BasicNameValuePair("Email", store.getEmail()));
             params.add(new BasicNameValuePair("Password", store.getPassword()));
             params.add(new BasicNameValuePair("Name", new String(store.getStoreName().getBytes(), "8859_1")));
             params.add(new BasicNameValuePair("Address", new String(store.getAddress().getBytes(), "8859_1")));
