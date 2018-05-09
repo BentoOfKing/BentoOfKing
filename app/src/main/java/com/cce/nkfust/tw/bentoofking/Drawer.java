@@ -163,9 +163,13 @@ public class Drawer extends AppCompatActivity{
                 default:
                         intent.setClass(context, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(passUserInfo,userInfo);
+                        userInfo.putStore(null);
+                        userInfo.putAdmin(null);
+                        userInfo.putMember(null);
+                        userInfo.setIdentity(4);
                         context.startActivity(intent);
                         ((Activity) context).finish();
-
                     break;
             }
             Handler handler = new Handler();
@@ -227,6 +231,11 @@ public class Drawer extends AppCompatActivity{
 
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
+                    userInfo.putStore(null);
+                    userInfo.putAdmin(null);
+                    userInfo.putMember(null);
+                    userInfo.setIdentity(4);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;
@@ -278,6 +287,11 @@ public class Drawer extends AppCompatActivity{
 
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(passUserInfo,userInfo);
+                    userInfo.putStore(null);
+                    userInfo.putAdmin(null);
+                    userInfo.putMember(null);
+                    userInfo.setIdentity(4);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                     break;

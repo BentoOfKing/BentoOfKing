@@ -447,12 +447,17 @@ public class MainActivity extends AppCompatActivity {
                     int RecordFlag = LoginRecord.getInt("RecordFlag",0);
                     database = new Database();
 
-                    if(userInfo.getIdentity()==0){
+                    if(userInfo.getIdentity()==4){
                         LoginRecord.edit()
                                 .putString("Recordemail","*")
                                 .putString("Recordpassword","*")
                                 .putInt("RecordFlag",0)
                                 .commit();
+                         NumberTemp = LoginRecord.getString("Recordemail","*");
+                         PasswordTemp = LoginRecord.getString("Recordpassword","*");
+                        RecordFlag = LoginRecord.getInt("RecordFlag",0);
+                        userInfo.getIdentity();
+
                     }
 
 
