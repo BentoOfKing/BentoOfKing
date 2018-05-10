@@ -374,7 +374,7 @@ public class Database {
         }
     }
 
-    public Store[] GetStore(String country, int rankState, int priceState) {
+    public Store[] GetStore(String Search,String country, int rankState, int priceState) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
@@ -394,6 +394,7 @@ public class Database {
             params.add(new BasicNameValuePair("Country", country));
             params.add(new BasicNameValuePair("RankString", rankString));
             params.add(new BasicNameValuePair("PriceString", priceString));
+            params.add(new BasicNameValuePair("Search", Search));
             json = jParser.makeHttpRequest(getStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
@@ -480,7 +481,7 @@ public class Database {
     public void refreshReviewStoreIndex() { reviewIndex = 0; }
     public void refreshCommentIndex() { commentIndex=0; }
 
-    public Store[] GetStoreByPosition(String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
+    public Store[] GetStoreByPosition(String Search,String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
@@ -504,6 +505,7 @@ public class Database {
             params.add(new BasicNameValuePair("RankString", rankString));
             params.add(new BasicNameValuePair("PriceString", priceString));
             params.add(new BasicNameValuePair("Distance", Integer.toString(distance)));
+            params.add(new BasicNameValuePair("Search", Search));
             json = jParser.makeHttpRequest(getStoreByPositionURL, "GET", params);
             Log.d("All Stores: ", json.toString());
             //int success = json.getInt(TAG_SUCCESS);
