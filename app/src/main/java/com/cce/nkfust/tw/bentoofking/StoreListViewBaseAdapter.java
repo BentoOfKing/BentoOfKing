@@ -84,7 +84,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
         viewHolder.storePrice.setText("平均價位 : "+getItem(position).getPrice());
         if(getItem(position).getStatus().equals("未營業"))
             viewHolder.storeStatus.setImageResource(R.drawable.store_close);
-        viewHolder.storeEvaluation.setText("評價 : "+getItem(position).getEvaluation()+"★");
+        viewHolder.storeEvaluation.setText("評價 : "+getItem(position).getEvaluation());
         if(!getItem(position).getDistance().equals("null"))
             viewHolder.storeDistance.setText("距離 : " + String.format("%.1f", Double.valueOf(getItem(position).getDistance())) + "公里");
         else

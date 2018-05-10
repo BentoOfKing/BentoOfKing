@@ -73,4 +73,13 @@
         app:layout_constraintTop_toBottomOf="@+id/storePrice"
         app:srcCompat="@drawable/store_open" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="25dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/storeScore"
+        app:layout_constraintStart_toEndOf="@+id/storeScore"
+        app:layout_constraintTop_toTopOf="@+id/storeScore"
+        app:srcCompat="@drawable/star_on" />
+
 </android.support.constraint.ConstraintLayout>
