@@ -20,13 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class CommentListViewBaseAdapter extends BaseAdapter {
-    private static final int DELETE_COMMENT = 64;
     private ArrayList<Comment> elementData;
     private LayoutInflater inflater;
-    private Context context;
-    private Database databaseForComment;
-    private HandlerThread threadForDataBase;
-    private Handler handlerForTFDB;
+
     public static class ViewHolder{
         ConstraintLayout commentListViewLayout;
         TextView commentScore;

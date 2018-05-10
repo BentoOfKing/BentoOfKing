@@ -88,7 +88,7 @@ public class Database {
     JSONParser jParser;
     JSONObject json;
 
-    private int range, index = 0,reviewRange,reviewIndex=0;
+    private int range, index = 0,reviewRange,reviewIndex=0,commentIndex=0;
     ArrayList<HashMap<String, String>> storesList;
 
     String result = "";
@@ -103,14 +103,14 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("Item", item));
         params.add(new BasicNameValuePair("Content", content));
-        params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+        params.add(new BasicNameValuePair("Index", Integer.toString(commentIndex)));
         json = null;
         json = jParser.makeHttpRequest(getCommentURL, "GET", params);
         Log.d("Comments: ", json.toString());
         try {
             comments = json.getJSONArray(TAG_COMMENTS);
             Comment retrunComment[] = new Comment[comments.length()];
-            index += comments.length();
+            commentIndex += comments.length();
             for (int i = 0; i < comments.length(); i++) {
                 JSONObject c = comments.getJSONObject(i);
                 retrunComment[i] = new Comment(c.getString(TAG_ID), c.getString(TAG_Member), c.getString(TAG_Store), c.getString(TAG_Score), c.getString(TAG_StoreContent), c.getString(TAG_Time), c.getString(TAG_Reply), c.getString(TAG_Note));
@@ -478,6 +478,7 @@ public class Database {
         index = 0;
     }
     public void refreshReviewStoreIndex() { reviewIndex = 0; }
+    public void refreshCommentIndex() { commentIndex=0; }
 
     public Store[] GetStoreByPosition(String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
         JSONObject json;

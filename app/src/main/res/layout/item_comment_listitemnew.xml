@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contentView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/comment_item_selector"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="0">
+
+            <TextView
+                android:id="@+id/commentMember"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="會員暱稱"
+                android:textColor="#59493f" />
+
+            <LinearLayout
+                android:id="@+id/layout21"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_weight="0"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/star1"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/star_off" />
+
+                <ImageView
+                    android:id="@+id/star2"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/star_off" />
+
+                <ImageView
+                    android:id="@+id/star3"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/star_off" />
+
+                <ImageView
+                    android:id="@+id/star4"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/star_off" />
+
+                <ImageView
+                    android:id="@+id/star5"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/star_off" />
+
+                <TextView
+                    android:id="@+id/commentDate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom|left"
+                    android:text="YY/MM/DD"
+                    android:textColor="#59493f"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="評論內容"
+                android:textColor="#59493f" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/replyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="店家名稱"
+                android:textColor="#59493f" />
+
+            <TextView
+                android:id="@+id/storeReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="店家回覆"
+                android:textColor="#59493f" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
