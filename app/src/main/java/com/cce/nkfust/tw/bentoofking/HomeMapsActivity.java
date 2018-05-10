@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -166,15 +167,20 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
             View popWindow = inflater.inflate(R.layout.storelistview_item, null);
             if(clickStore != null) {
                 storeIcon = popWindow.findViewById(R.id.storeIcon);
+                ImageView storeStatus = popWindow.findViewById(R.id.storeStatus);
                 TextView storeInfoLayout3 = popWindow.findViewById(R.id.storeInfoLayout3);
                 TextView storeScore = popWindow.findViewById(R.id.storeScore);
                 TextView storePrice = popWindow.findViewById(R.id.storePrice);
-                TextView storeStatus = popWindow.findViewById(R.id.storeStatus);
                 TextView storeDistance = popWindow.findViewById(R.id.storeDistance);
                 storeInfoLayout3.setText(marker.getTitle());
                 storeScore.setText("評價："+clickStore.getRank());
                 storePrice.setText("平均價位："+clickStore.getPrice());
                 storeDistance.setText("");
+                if(setDoBusiness(clickStore.getBusinessHours())){
+                    storeStatus.setImageDrawable(getResources().getDrawable(R.drawable.store_open));
+                }else{
+                    storeStatus.setImageDrawable(getResources().getDrawable(R.drawable.store_close));
+                }
                 Thread t = new Thread(new LoadImage());
                 t.start();
                 try{
@@ -187,7 +193,24 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
             return(popWindow);
         }
     }
-
+    private Boolean setDoBusiness(String storeTime){
+        Time time = new Time();
+        time.setToNow();
+        int timeNow = time.hour*60 + time.minute;
+        int amStart=0,amEnd=0,pmStart=0,pmEnd=0;
+        if(storeTime.length()>=8) {
+            amStart = Integer.valueOf(storeTime.substring(0, 2)) * 60 + Integer.valueOf(storeTime.substring(2, 4));
+            amEnd = Integer.valueOf(storeTime.substring(4, 6)) * 60 + Integer.valueOf(storeTime.substring(6, 8));
+        }
+        if(storeTime.length()>=16) {
+            pmStart = Integer.valueOf(storeTime.substring(8, 10)) * 60 + Integer.valueOf(storeTime.substring(10, 12));
+            pmEnd = Integer.valueOf(storeTime.substring(12, 14)) * 60 + Integer.valueOf(storeTime.substring(14, 16));
+        }
+        if((timeNow>=amStart&&timeNow<amEnd)||(timeNow>=pmStart&&timeNow<pmEnd))
+            return true;
+        else
+            return false;
+    }
     public Store findMarkerStore(Marker marker){
         for(int i=0;i<allStore.size();i++){
             if(Double.toString(marker.getPosition().latitude).equals(allStore.get(i).getLatitude()) && Double.toString(marker.getPosition().longitude).equals(allStore.get(i).getLongitude())){
