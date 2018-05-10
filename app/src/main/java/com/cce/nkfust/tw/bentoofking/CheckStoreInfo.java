@@ -111,7 +111,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private CommentListViewRecyclerAdapter recyclerAdapter;
     private ConstraintLayout storePictureLayout;
     private int imageHeight;
-    private ImageView storeScroll;
+    private ImageButton storeScroll;
     private ConstraintLayout.LayoutParams params;
 
     @Override
@@ -325,9 +325,11 @@ public class CheckStoreInfo extends AppCompatActivity {
                         imageHeight = storePictureLayout.getMeasuredHeight();
                         params.height = 0;
                         storePictureLayout.setLayoutParams(params);
+                        storeScroll.setImageResource(R.drawable.comment_scroll_down);
                     }else{
                         params.height = imageHeight;
                         storePictureLayout.setLayoutParams(params);
+                        storeScroll.setImageResource(R.drawable.comment_scroll_up);
                     }
                     break;
             }
