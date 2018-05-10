@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,9 +23,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -106,6 +109,11 @@ public class CheckStoreInfo extends AppCompatActivity {
     private RecyclerView commentRecyclerView;
     private LinearLayoutManager recyclerManager;
     private CommentListViewRecyclerAdapter recyclerAdapter;
+    private ConstraintLayout storePictureLayout;
+    private int imageHeight;
+    private ImageView storeScroll;
+    private ConstraintLayout.LayoutParams params;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -176,6 +184,12 @@ public class CheckStoreInfo extends AppCompatActivity {
         commentRecyclerView.setAdapter(recyclerAdapter);
         commentRecyclerView.setFocusable(false);
         recyclerAdapter.setOnItemClickListener(new RecyclerListItemHandler());
+        storeScroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainHandler.sendEmptyMessage(998);
+            }
+        });
     }
 
     private void UIupdate(){
@@ -250,7 +264,9 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storeAveragePrice = findViewById(R.id.storeAveragePrice);
         this.storeBusiness = findViewById(R.id.storeBusiness);
         this.commentRecyclerView = findViewById(R.id.commentRecyclerView);
-//        this.nestedScrollLayout = findViewById(R.id.nestedScrollLayout);
+        this.storePictureLayout = findViewById(R.id.storePictureLayout);
+        this.storeScroll = findViewById(R.id.scrollButton);
+        this.params = (ConstraintLayout.LayoutParams) storeIcon.getLayoutParams();
         newDrawer();
     }
 
@@ -297,13 +313,33 @@ public class CheckStoreInfo extends AppCompatActivity {
                     CheckStoreInfo.this.storeBusiness.setText(getStoreBusiness());
                     updateStoreInfo();
                     updateStoreScore();
-//                    storeIcon.setImageBitmap(storePhotoBitmap);
+                    CheckStoreInfo.this.params.height = getScreenWidth()*9/16;
+                    storeIcon.setLayoutParams(CheckStoreInfo.this.params);
+                    storeIcon.setImageBitmap(storePhotoBitmap);
                     recyclerAdapter.notifyDataSetChanged();
                     adapter.notifyDataSetChanged();
+                    break;
+                case 998:
+                    ViewGroup.LayoutParams params = storePictureLayout.getLayoutParams();
+                    if(storePictureLayout.getMeasuredHeight()>0) {
+                        imageHeight = storePictureLayout.getMeasuredHeight();
+                        params.height = 0;
+                        storePictureLayout.setLayoutParams(params);
+                    }else{
+                        params.height = imageHeight;
+                        storePictureLayout.setLayoutParams(params);
+                    }
                     break;
             }
             super.handleMessage(msg);
         }
+    }
+
+
+    public int getScreenWidth(){
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return  dm.widthPixels ;
     }
 
 
@@ -384,7 +420,7 @@ public class CheckStoreInfo extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case GET_BITMAP:
-  //                  storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
+                    storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
                     mainHandler.sendEmptyMessage(UPDATE_UI);
                     break;
             }
@@ -450,6 +486,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                     }
                     mainHandler.sendEmptyMessage(UPDATE_COMMENT);
                     break;
+
 
             }
 
