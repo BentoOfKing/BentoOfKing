@@ -31,8 +31,6 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
     private Context context;
 
 
-
-
     public static class ViewHolder{
         ImageView storeIcon;
         ConstraintLayout storeListViewLayout;
