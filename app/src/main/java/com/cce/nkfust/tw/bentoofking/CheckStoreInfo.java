@@ -26,6 +26,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,6 +193,35 @@ public class CheckStoreInfo extends AppCompatActivity {
                 mainHandler.sendEmptyMessage(998);
             }
         });
+        setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                return false;
+            }
+        });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_more, menu);
+        MenuItem item1 = menu.findItem(R.id.item1);
+        MenuItem item2 = menu.findItem(R.id.item2);
+        MenuItem item3 = menu.findItem(R.id.item3);
+        if(userInfo.getIdentity()==1){
+            item1.setTitle(getResources().getString(R.string.favorite));
+            item2.setTitle(getResources().getString(R.string.errorReport));
+            item3.setVisible(false);
+        }else if(userInfo.getIdentity()==2 || userInfo.getIdentity()==0 || userInfo.getIdentity()==4){
+            item1.setVisible(false);
+            item2.setVisible(false);
+            item3.setVisible(false);
+        }else if(userInfo.getIdentity()==3){
+            item1.setTitle(getResources().getString(R.string.editStore));
+            item2.setTitle(getResources().getString(R.string.editMenu));
+            item3.setTitle(getResources().getString(R.string.editPhoto));
+        }
+        return true;
     }
 
     private void UIupdate(){
