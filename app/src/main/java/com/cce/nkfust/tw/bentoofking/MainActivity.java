@@ -57,7 +57,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int REFRESH_ACTIVITY = 5278, requestCodeFineLoaction = 1, requestCodeCoarseLocation = 2, MORE_STORE = 5279, REFRESH_STORELIST = 5273, SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER = 5275, SEND_GPS_FILTER = 5276, REFRESHING = 5277;
-    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6669;
+    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -414,6 +414,7 @@ public class MainActivity extends AppCompatActivity {
                         lastBag.putInt("distanceStateNow", MainActivity.this.distanceState);
                         lastBag.putInt("distanceNow", MainActivity.this.distanceKm);
                     }
+                    lastBag.putBoolean("businessStateNow", MainActivity.this.bussinessState);
                     lastBag.putInt("locationStateNow", MainActivity.this.locationState);
                     lastBag.putInt("rankStateNow", MainActivity.this.rankState);
                     lastBag.putInt("priceStateNow", MainActivity.this.priceState);
