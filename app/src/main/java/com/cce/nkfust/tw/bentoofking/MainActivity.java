@@ -689,11 +689,20 @@ public class MainActivity extends AppCompatActivity {
         MenuItem searchItem = menu.findItem(R.id.searchItem);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSubmitButtonEnabled(true);//显示提交按钮
+        searchView.setOnCloseListener(new SearchView.OnCloseListener(){
+            @Override
+            public boolean onClose() {
+                searchString = "%";
+                CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //提交按钮的点击事件
-
+                searchString = "%"+query+"%";
+                CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                 return true;
             }
 
