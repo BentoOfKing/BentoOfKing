@@ -368,9 +368,9 @@
 
                         <ImageButton
                             android:id="@+id/scrollButton"
-                            android:layout_width="50dp"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="0dp"
                             android:layout_weight="0"
                             android:background="#00FFFFFF"
                             android:scaleType="centerInside"
