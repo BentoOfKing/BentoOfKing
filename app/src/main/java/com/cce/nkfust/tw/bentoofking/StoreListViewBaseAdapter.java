@@ -25,6 +25,9 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
     private int identionBase;
     private Context context;
 
+
+
+
     public static class ViewHolder{
         ImageView storeIcon;
         ConstraintLayout storeListViewLayout;
@@ -81,19 +84,24 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
             viewHolder.storeDistance.setText("距離 : " + String.format("%.1f", Double.valueOf(getItem(position).getDistance())) + "公里");
         else
             viewHolder.storeDistance.setText("");
-        Thread thread = new Thread (new Runnable() {
-            @Override
-            public void run() {
-                final Bitmap bitmap = getBitmapFromURL(getItem(position).getImageURL());
-                ((Activity)StoreListViewBaseAdapter.this.context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setImageBitmap(viewHolder,bitmap);
-                    }
-                });
-            }
-        });
-        thread.start();
+
+        if(getItem(position).getStoreBitmap()==null) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final Bitmap bitmap = getBitmapFromURL(getItem(position).getImageURL());
+                    ((Activity) StoreListViewBaseAdapter.this.context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setImageBitmap(viewHolder, bitmap, position);
+                        }
+                    });
+                }
+            });
+            thread.start();
+        }
+        else
+            viewHolder.storeIcon.setImageBitmap(getItem(position).getStoreBitmap());
         //等待將會使滑動的時候lag
         /*try {
             thread.join();
@@ -104,7 +112,8 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
     }
 
 
-    private void setImageBitmap(ViewHolder viewHolder,Bitmap bitmap){
+    private void setImageBitmap(ViewHolder viewHolder,Bitmap bitmap, int position){
+        elementData.get(position).setStoreBitmap(bitmap);
         viewHolder.storeIcon.setImageBitmap(bitmap);
     }
 

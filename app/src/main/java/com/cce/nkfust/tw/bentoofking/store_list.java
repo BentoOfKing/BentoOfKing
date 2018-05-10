@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.graphics.Bitmap;
 import android.text.format.Time;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ public class store_list {
     private String distance;
     private String status;
     private Store store;
+    private Bitmap bitmap = null;
     public store_list(Store inputStore){
         store = inputStore;
         this.imageURL = store.getFirstPhoto();
@@ -77,4 +79,7 @@ public class store_list {
     public String getImageURL(){ return this.imageURL; }
     public void setImageURL(String imageURL){ this.imageURL = imageURL; }
     public Store getStoreInfo(){ return this.store; }
+    public void setStoreBitmap(Bitmap bitmap){ this.bitmap = bitmap; }
+    public Bitmap getStoreBitmap(){ return this.bitmap; }
+
 }
