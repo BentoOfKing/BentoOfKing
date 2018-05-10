@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.lang.UProperty;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -309,6 +310,14 @@ public class CheckStoreInfo extends AppCompatActivity {
                 case UPDATE_UI:
                     CheckStoreInfo.this.toolbar.setTitle(storeInfoBundle.getStore().getStoreName());
                     CheckStoreInfo.this.storeAddress.setText(storeInfoBundle.getStore().getAddress());
+                    CheckStoreInfo.this.storeAddress.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Uri mapUri = Uri.parse("google.navigation:q="+storeInfoBundle.getStore().getLatitude()+","+storeInfoBundle.getStore().getLongitude());
+                            Intent intent = new Intent(Intent.ACTION_VIEW, mapUri);
+                            startActivity(intent);
+                        }
+                    });
                     CheckStoreInfo.this.storeAveragePrice.setText(storeInfoBundle.getStore().getPrice());
                     CheckStoreInfo.this.storeBusiness.setText(getStoreBusiness());
                     updateStoreInfo();
