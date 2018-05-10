@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private Handler LoginRecordThreadHandler;
     private HandlerThread LoginRecordThread;
+    private String searchString = "%";
 
 
 
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         filterButton = findViewById(R.id.filterButton);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
-        storelist = (ListView) findViewById(R.id.storeListView);
+        storelist = findViewById(R.id.storeListView);
         swipeLayout = findViewById(R.id.swipeLayout);
     }
 
@@ -327,11 +328,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             //缺更新資料
                             distanceKm = distanceKmTmp;
-                            if (bussinessCheckBox.isChecked()) {
-                                bussinessState = true;
-                            } else {
-                                bussinessState = false;
-                            }
+                            bussinessState = bussinessCheckBox.isChecked();
                             CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                             dialog.dismiss();
                         }
@@ -366,9 +363,9 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case MORE_STORE:
                     if (msg.getData().getInt("locationStateNow") != 0)
-                        store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"));
+                        store = database.GetStore(MainActivity.this.searchString,getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow")); //,msg.getData().getInt
                     else
-                        store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
+                        store = database.GetStoreByPosition(MainActivity.this.searchString,msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
                         if ((!msg.getData().getBoolean("businessStateNow")) || additem.getStatus().equals("營業中"))
@@ -379,9 +376,9 @@ public class MainActivity extends AppCompatActivity {
                 case REFRESH_STORELIST:
                     database.refreshStoreIndex();
                     if (msg.getData().getInt("locationStateNow") != 0)
-                        store = database.GetStore(getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"));
+                        store = database.GetStore(MainActivity.this.searchString,getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"));
                     else
-                        store = database.GetStoreByPosition(msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
+                        store = database.GetStoreByPosition(MainActivity.this.searchString,msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
                     storeLists.clear();
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
