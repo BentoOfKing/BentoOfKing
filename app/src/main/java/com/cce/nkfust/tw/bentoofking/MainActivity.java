@@ -454,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
                          NumberTemp = LoginRecord.getString("Recordemail","*");
                          PasswordTemp = LoginRecord.getString("Recordpassword","*");
                         RecordFlag = LoginRecord.getInt("RecordFlag",0);
+                        userInfo.setIdentity(0);
                         userInfo.getIdentity();
 
                     }
