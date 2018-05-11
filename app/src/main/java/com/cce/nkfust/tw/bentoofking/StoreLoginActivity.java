@@ -51,7 +51,7 @@ public class StoreLoginActivity extends AppCompatActivity {
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginPrompt = findViewById(R.id.loginPrompt);
-        storeLoginButton = findViewById(R.id.storeLoginButton);
+        storeLoginButton = findViewById(R.id.storeLoginButton1);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         storeLoginButton.setOnClickListener(loginButtonHandler);
     }

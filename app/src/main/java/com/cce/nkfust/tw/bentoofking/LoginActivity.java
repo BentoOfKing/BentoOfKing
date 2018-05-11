@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginPrompt = findViewById(R.id.loginPrompt);
-        loginButton = findViewById(R.id.storeLoginButton);
+        loginButton = findViewById(R.id.storeLoginButton1);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         loginButton.setOnClickListener(loginButtonHandler);
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
-    private Button haveStoreButton,notHaveStoreButton;
+    private ImageButton haveStoreButton,notHaveStoreButton;
     private EditText emailEditText,passwordEditText,passwordCheckEditText;
     private Context context;
     @Override
@@ -38,7 +39,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.becomeStore));
-        haveStoreButton = findViewById(R.id.storeLoginButton);
+        haveStoreButton = findViewById(R.id.storeLoginButton1);
         notHaveStoreButton = findViewById(R.id.notHaveStoreButton);
         ButtonHandler buttonHandler = new ButtonHandler();
         haveStoreButton.setOnClickListener(buttonHandler);
@@ -63,7 +64,7 @@ public class BecomeStoreActivity extends AppCompatActivity {
             store.putPassword(passwordEditText.getText().toString());
             Intent intent = new Intent();
             switch (view.getId()){
-                case R.id.storeLoginButton:
+                case R.id.storeLoginButton1:
                     intent.setClass(BecomeStoreActivity.this,BecomeHaveStoreActivity.class);
                     intent.putExtra(passUserInfo,userInfo);
                     intent.putExtra(passStoreInfo,store);
