@@ -454,6 +454,7 @@ public class MainActivity extends AppCompatActivity {
                          NumberTemp = LoginRecord.getString("Recordemail","*");
                          PasswordTemp = LoginRecord.getString("Recordpassword","*");
                         RecordFlag = LoginRecord.getInt("RecordFlag",0);
+                        userInfo.setIdentity(0);
                         userInfo.getIdentity();
 
                     }
@@ -677,13 +678,6 @@ public class MainActivity extends AppCompatActivity {
         return  returnBool;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-
-    }
     //---以上為定位程式---
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -715,5 +709,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        class UpdateMemberInfo implements Runnable{
+            @Override
+            public void run() {
+                Database d = new Database();
+                userInfo.putMember(d.GetSingleMember(userInfo.getMember().getEmail()));
+            }
+        }
+        if(userInfo.getIdentity()==1){
+            Thread t = new Thread(new UpdateMemberInfo());
+            t.start();
+        }
+
     }
 }

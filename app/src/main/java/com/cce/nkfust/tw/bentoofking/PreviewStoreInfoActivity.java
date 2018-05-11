@@ -72,7 +72,11 @@ public class PreviewStoreInfoActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         drawer.setToolbarNavigation();
-        toolbar.setTitle(getResources().getString(R.string.previewStoreInfo));
+        if(store.getState().equals("1")){
+            toolbar.setTitle(getResources().getString(R.string.editStore));
+        }else {
+            toolbar.setTitle(getResources().getString(R.string.previewStoreInfo));
+        }
         nextButton = findViewById(R.id.completeButton);
         NextHandler nextHandler = new NextHandler();
         nextButton.setOnClickListener(nextHandler);

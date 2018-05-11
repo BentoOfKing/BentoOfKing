@@ -247,7 +247,9 @@ public class Database {
         try {
             params.add(new BasicNameValuePair("Email", member.getEmail()));
             params.add(new BasicNameValuePair("Password", member.getPassword()));
+            params.add(new BasicNameValuePair("Favorite", member.getFavorite()));
             params.add(new BasicNameValuePair("Nickname", new String(member.getNickname().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Note", new String(member.getNote().getBytes(), "8859_1")));
             params.add(new BasicNameValuePair("Longitude", member.getLongitude()));
             params.add(new BasicNameValuePair("Latitude", member.getLatitude()));
 
@@ -682,7 +684,7 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email), "", m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
             } else {
                 return null;

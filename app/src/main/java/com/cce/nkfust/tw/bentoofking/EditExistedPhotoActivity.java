@@ -87,7 +87,11 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         drawer.setToolbarNavigation();
         if(userInfo.getIdentity()==3) {
             userInfo.putStore((Store)intent.getSerializableExtra(passStoreInfo));
-            toolbar.setTitle(getResources().getString(R.string.previewStorePhoto));
+            if(userInfo.getStore().getState().equals("1")){
+                toolbar.setTitle(getResources().getString(R.string.editPhoto));
+            }else {
+                toolbar.setTitle(getResources().getString(R.string.previewStorePhoto));
+            };
         }else {
             toolbar.setTitle(getResources().getString(R.string.editPhoto));
         }

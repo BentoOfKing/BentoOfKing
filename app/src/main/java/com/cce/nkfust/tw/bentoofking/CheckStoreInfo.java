@@ -41,18 +41,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
+    private static final int UPDATE_MEMBER = 1;
+    private static final int UPDATE_MEMBER_FAIL = 2;
     private static final int UPDATE_COMMENT = 63;
     private static final int UPDATE_ARRAYLIST = 68;
     private static final int UPDATE_UI = 71;
@@ -116,6 +122,9 @@ public class CheckStoreInfo extends AppCompatActivity {
     private int imageHeight;
     private ImageButton storeScroll;
     private ConstraintLayout.LayoutParams params;
+    private Context context;
+    private ArrayList<String> myFavoriteTokens;
+    private Boolean isFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -140,6 +149,16 @@ public class CheckStoreInfo extends AppCompatActivity {
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         if(userInfo == null) userInfo = new UserInfo();
         this.storeInfoBundle = (UserInfo) intent.getSerializableExtra("storeInfo");
+        if(userInfo.getIdentity() == 1){
+            String[] Tokens = userInfo.getMember().getFavorite().split(",");
+            myFavoriteTokens = new ArrayList<String>();
+            isFavorite = false;
+            for(int i=0;i<Tokens.length;i++){
+                myFavoriteTokens.add(Tokens[i]);
+                if(Tokens[i].equals(storeInfoBundle.getStore().getID()))
+                    isFavorite = true;
+            }
+        }
     }
 
     private void UIhandle(){
@@ -180,6 +199,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         CheckStoreInfo.this.anotherHandler = new Handler_A(CheckStoreInfo.this.commentThread.getLooper());
     }
     private void UIsetup(){
+        context = this;
         commentListView.setAdapter(adapter);
         commentRecyclerView.setLayoutManager(recyclerManager);
         commentRecyclerView.setHasFixedSize(true);
@@ -195,13 +215,86 @@ public class CheckStoreInfo extends AppCompatActivity {
         });
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            Intent intent;
+
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                String favorite;
+                switch (item.getItemId()) {
+                    case R.id.item1:
+                        if (userInfo.getIdentity() == 1) {//我的最愛
+                            if(isFavorite) {
+                                favorite = new String("");
+                                for(int i=0 ,size = myFavoriteTokens.size();i<size;i++) {
+                                    if (myFavoriteTokens.get(i).equals(storeInfoBundle.getStore().getID())){
+                                        myFavoriteTokens.remove(i);
+                                        i--;
+                                        size--;
+                                    }else {
+                                        favorite += myFavoriteTokens.get(i) + ",";
+                                    }
+                                }
+                                    userInfo.getMember().putFavorite(favorite);
+                                    Thread t = new Thread(new UpdateMember());
+                                    t.start();
+                                }else {
+                                if (userInfo.getMember().getFavorite().length() > 512) {
+                                    Toast.makeText(context, getResources().getString(R.string.favoriteFull), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    favorite = new String("");
+                                    favorite += userInfo.getMember().getFavorite() + storeInfoBundle.getStore().getID() + ",";
+                                    userInfo.getMember().putFavorite(favorite);
+                                    Thread t = new Thread(new UpdateMember());
+                                    t.start();
+                                }
+                            }
+                        } else if (userInfo.getIdentity() == 3) {//編輯店家
+                            intent = new Intent();
+                            intent.setClass(context, PreviewStoreInfoActivity.class);
+                            intent.putExtra(passUserInfo, userInfo);
+                            intent.putExtra(passStoreInfo, storeInfoBundle.getStore());
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item2:
+                        if (userInfo.getIdentity() == 1) {//錯誤回報
 
+                        } else if (userInfo.getIdentity() == 3) {//編輯菜單
+                            intent = new Intent();
+                            intent.setClass(context, EditExistedMenuActivity.class);
+                            intent.putExtra(passUserInfo, userInfo);
+                            intent.putExtra(passStoreInfo, storeInfoBundle.getStore());
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item3:
+                        if (userInfo.getIdentity() == 3) {//編輯照片
+                            intent = new Intent();
+                            intent.setClass(context, EditExistedPhotoActivity.class);
+                            intent.putExtra(passUserInfo, userInfo);
+                            intent.putExtra(passStoreInfo, storeInfoBundle.getStore());
+                            startActivity(intent);
+                        }
+                        break;
+                }
                 return false;
             }
         });
     }
+
+    public class UpdateMember implements Runnable{
+
+        @Override
+        public void run() {
+            Database d = new Database();
+            if(d.UpdateMember(userInfo.getMember()).equals("Successful.")) {
+                mainHandler.sendEmptyMessage(UPDATE_MEMBER);
+            }else{
+                mainHandler.sendEmptyMessage(UPDATE_MEMBER_FAIL);
+            }
+        }
+    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_more, menu);
@@ -209,7 +302,11 @@ public class CheckStoreInfo extends AppCompatActivity {
         MenuItem item2 = menu.findItem(R.id.item2);
         MenuItem item3 = menu.findItem(R.id.item3);
         if(userInfo.getIdentity()==1){
-            item1.setTitle(getResources().getString(R.string.favorite));
+            if(isFavorite){
+                item1.setTitle(getResources().getString(R.string.removeFavorite));
+            }else{
+                item1.setTitle(getResources().getString(R.string.addFavorite));
+            }
             item2.setTitle(getResources().getString(R.string.errorReport));
             item3.setVisible(false);
         }else if(userInfo.getIdentity()==2 || userInfo.getIdentity()==0 || userInfo.getIdentity()==4){
@@ -223,7 +320,6 @@ public class CheckStoreInfo extends AppCompatActivity {
         }
         return true;
     }
-
     private void UIupdate(){
         CmtHandler.sendEmptyMessage(UPDATE_ARRAYLIST);
         anotherHandler.sendEmptyMessage(GET_BITMAP);
@@ -370,6 +466,22 @@ public class CheckStoreInfo extends AppCompatActivity {
                         params.height = imageHeight;
                         storePictureLayout.setLayoutParams(params);
                         storeScroll.setImageResource(R.drawable.comment_scroll_up);
+                    }
+                    break;
+                case UPDATE_MEMBER:
+                    isFavorite = !isFavorite;
+                    supportInvalidateOptionsMenu();
+                    if(isFavorite) {
+                        Toast.makeText(context, getResources().getString(R.string.addSuc), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, getResources().getString(R.string.removeSuc), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case UPDATE_MEMBER_FAIL:
+                    if(isFavorite){
+                        Toast.makeText(context, getResources().getString(R.string.removeFail), Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context, getResources().getString(R.string.addFail), Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
