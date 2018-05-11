@@ -32,7 +32,7 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ffda8b"
+                android:background="#f2ce82"
                 android:orientation="horizontal">
 
                 <Button

@@ -91,6 +91,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
+    private Drawer drawer;
     private UserInfo userInfo;
     private Intent intent;
     private Database database;
@@ -183,6 +184,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         mainHandler = new MainThreadHandler(Looper.getMainLooper());
         starArray = new ImageView[5];
         database = new Database();
+        drawer = new Drawer();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         commentArrayList = new ArrayList<Comment>();
         adapter = new CommentListViewBaseAdapter(commentArrayList,inflater);
@@ -280,6 +282,8 @@ public class CheckStoreInfo extends AppCompatActivity {
                 return false;
             }
         });
+        drawer.init(this,this.toolbar,drawerListView,drawerLayout,this.userInfo);
+        drawer.setToolbarNavigation();
     }
 
     public class UpdateMember implements Runnable{
@@ -395,14 +399,9 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.storePictureLayout = findViewById(R.id.storePictureLayout);
         this.storeScroll = findViewById(R.id.scrollButton);
         this.params = (ConstraintLayout.LayoutParams) storeIcon.getLayoutParams();
-        newDrawer();
     }
 
-    private void newDrawer(){
-        Drawer drawer = new Drawer();
-        drawer.init(this,this.toolbar,drawerListView,drawerLayout,this.userInfo);
-        drawer.setToolbarNavigation();
-    }
+
 
 
 
