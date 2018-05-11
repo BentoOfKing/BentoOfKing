@@ -35,6 +35,7 @@ public class StoreLoginActivity extends AppCompatActivity {
     private HandlerThread StoreLoginLoginThread;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog;
+    private int EmptyFlag=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +79,18 @@ public class StoreLoginActivity extends AppCompatActivity {
 
             database = new Database();
             initial = new  Database();
-            store = database.StoreLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
-            if( store.getEmail().equals("Email error.") && (admin == null|| admin.getEmail().equals("Email error.")|| admin.getEmail().equals("Password error."))){
-                admin = database.AdminLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
+            if(emailEditText.getText().toString().equals("")){
+                EmptyFlag=1;
+                Toast toast = Toast.makeText(StoreLoginActivity.this,
+                        getResources().getString(R.string.emailError), Toast.LENGTH_LONG);  //全空白
+                toast.show();
+                progressDialog.dismiss();
+            }
+            else{
+                store = database.StoreLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                if (store.getEmail().equals("Email error.") && (admin == null || admin.getEmail().equals("Email error.") || admin.getEmail().equals("Password error."))) {
+                    admin = database.AdminLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                }
             }
             StoreLoginUiHandler.post(storeLoginConfirm);
         }
@@ -90,86 +100,85 @@ public class StoreLoginActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-
-            if (store.getEmail().equals("Password error.")&&(admin==null||admin.getEmail().equals("Email error."))) {
-                Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-            }else if(store.getEmail().equals("Email error.")&&(admin==null||admin.getEmail().equals("Email error."))){
-                Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        getResources().getString(R.string.emailError), Toast.LENGTH_LONG);  //全空白
-                toast.show();
-                progressDialog.dismiss();
-            }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Email error.")){
-                Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        getResources().getString(R.string.emailError), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-            }else if(store.getEmail().equals("Email error.")&&admin.getEmail().equals("Password error.")){
-                Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-            }
-
-
+            if(EmptyFlag==1){}
             else {
-                Toast toast = Toast.makeText(StoreLoginActivity.this,
-                        getResources().getString(R.string.loginSuccessful), Toast.LENGTH_LONG);
-                toast.show();
-                progressDialog.dismiss();
-                if(admin==null||admin.getEmail().equals("Email error.")){
-                    userInfo = new UserInfo();
-                    userInfo.setIdentity(2);
-                    userInfo.putStore(store);
-                    Intent intent = new Intent();
-                    intent.setClass(StoreLoginActivity.this , MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra(passUserInfo,userInfo);
-                    startActivity(intent);
 
-                    String NumberTemp = store.getEmail();
-                    String PasswordTemp = store.getPassword();
-                    SharedPreferences LoginRecord = getApplication().
-                            getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
-
-                    LoginRecord.edit()
-                            .putString("Recordemail",NumberTemp)
-                            .putString("Recordpassword",PasswordTemp)
-                            .putInt("RecordFlag",2)
-                            .commit();
+                if (store.getEmail().equals("Password error.") && (admin == null || admin.getEmail().equals("Email error."))) {
+                    Toast toast = Toast.makeText(StoreLoginActivity.this,
+                            getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
+                    toast.show();
                     progressDialog.dismiss();
-
-                }else if(admin!=null){
-                    userInfo = new UserInfo();
-                    userInfo.setIdentity(3);
-                    userInfo.putAdmin(admin);
-                    Intent intent = new Intent();
-                    intent.setClass(StoreLoginActivity.this , MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra(passUserInfo,userInfo);
-                    startActivity(intent);
-
-                    String NumberTemp = admin.getEmail();
-                    String PasswordTemp = admin.getPassword();
-                    SharedPreferences LoginRecord = getApplication().
-                            getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
-
-                    LoginRecord.edit()
-                            .putString("Recordemail",NumberTemp)
-                            .putString("Recordpassword",PasswordTemp)
-                            .putInt("RecordFlag",3)
-                            .commit();
+                } else if (store.getEmail().equals("Email error.") && (admin == null || admin.getEmail().equals("Email error."))) {
+                    Toast toast = Toast.makeText(StoreLoginActivity.this,
+                            getResources().getString(R.string.emailError), Toast.LENGTH_LONG);  //全空白
+                    toast.show();
                     progressDialog.dismiss();
-                }else{
-                    loginPrompt.setText("登入資料錯誤");
+                } else if (store.getEmail().equals("Email error.") && admin.getEmail().equals("Email error.")) {
+                    Toast toast = Toast.makeText(StoreLoginActivity.this,
+                            getResources().getString(R.string.emailError), Toast.LENGTH_LONG);
+                    toast.show();
+                    progressDialog.dismiss();
+                } else if (store.getEmail().equals("Email error.") && admin.getEmail().equals("Password error.")) {
+                    Toast toast = Toast.makeText(StoreLoginActivity.this,
+                            getResources().getString(R.string.passwordError), Toast.LENGTH_LONG);
+                    toast.show();
+                    progressDialog.dismiss();
+                } else {
+                    Toast toast = Toast.makeText(StoreLoginActivity.this,
+                            getResources().getString(R.string.loginSuccessful), Toast.LENGTH_LONG);
+                    toast.show();
+                    progressDialog.dismiss();
+                    if (admin == null || admin.getEmail().equals("Email error.")) {
+                        userInfo = new UserInfo();
+                        userInfo.setIdentity(2);
+                        userInfo.putStore(store);
+                        Intent intent = new Intent();
+                        intent.setClass(StoreLoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(passUserInfo, userInfo);
+                        startActivity(intent);
 
+                        String NumberTemp = store.getEmail();
+                        String PasswordTemp = store.getPassword();
+                        SharedPreferences LoginRecord = getApplication().
+                                getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+
+                        LoginRecord.edit()
+                                .putString("Recordemail", NumberTemp)
+                                .putString("Recordpassword", PasswordTemp)
+                                .putInt("RecordFlag", 2)
+                                .commit();
+                        progressDialog.dismiss();
+
+                    } else if (admin != null) {
+                        userInfo = new UserInfo();
+                        userInfo.setIdentity(3);
+                        userInfo.putAdmin(admin);
+                        Intent intent = new Intent();
+                        intent.setClass(StoreLoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(passUserInfo, userInfo);
+                        startActivity(intent);
+
+                        String NumberTemp = admin.getEmail();
+                        String PasswordTemp = admin.getPassword();
+                        SharedPreferences LoginRecord = getApplication().
+                                getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+
+                        LoginRecord.edit()
+                                .putString("Recordemail", NumberTemp)
+                                .putString("Recordpassword", PasswordTemp)
+                                .putInt("RecordFlag", 3)
+                                .commit();
+                        progressDialog.dismiss();
+                    } else {
+                        loginPrompt.setText("登入資料錯誤");
+
+                    }
                 }
+
+
             }
-
-
-
 
         }
     }
