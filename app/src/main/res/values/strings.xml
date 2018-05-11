@@ -228,4 +228,9 @@
     <string name="storeRegisterSuc">註冊成功，審核時間約2~3天，\n請耐心等待</string>
     <string name="storeRegisterFail">註冊失敗，請檢查網路狀態</string>
     <string name="errorReport">錯誤回報</string>
+    <string name="favoriteFull">我的最愛已滿，無法新增</string>
+    <string name="addFavorite">加到我的最愛</string>
+    <string name="removeFavorite">移除我的最愛</string>
+    <string name="removeSuc">移除成功</string>
+    <string name="removeFail">移除失敗</string>
 </resources>

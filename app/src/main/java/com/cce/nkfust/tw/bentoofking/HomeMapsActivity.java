@@ -530,4 +530,20 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
 
         return super.onCreateOptionsMenu(menu);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        class UpdateMemberInfo implements Runnable{
+            @Override
+            public void run() {
+                Database d = new Database();
+                userInfo.putMember(d.GetSingleMember(userInfo.getMember().getEmail()));
+            }
+        }
+        if(userInfo.getIdentity()==1){
+            Thread t = new Thread(new UpdateMemberInfo());
+            t.start();
+        }
+
+    }
 }

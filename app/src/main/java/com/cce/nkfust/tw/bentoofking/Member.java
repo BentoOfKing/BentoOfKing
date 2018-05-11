@@ -33,7 +33,7 @@ public class Member implements Serializable{
     void putSex(String Sex){
         this.Sex = Sex;
     }
-    void putFavorite(String Information){
+    void putFavorite(String Favorite){
         this.Favorite = Favorite;
     }
     void putState(String State){

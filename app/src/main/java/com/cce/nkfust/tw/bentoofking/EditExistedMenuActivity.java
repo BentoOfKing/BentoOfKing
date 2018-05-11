@@ -60,15 +60,20 @@ public class EditExistedMenuActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         if(userInfo.getIdentity()==3) {
-            toolbar.setTitle(getResources().getString(R.string.previewStoreMenu));
             userInfo.putStore((Store)intent.getSerializableExtra(passStoreInfo));
+            if(userInfo.getStore().getState().equals("1")){
+                toolbar.setTitle(getResources().getString(R.string.editMenu));
+            }else{
+                toolbar.setTitle(getResources().getString(R.string.previewStoreMenu));
+            }
+
         }else{
             toolbar.setTitle(getResources().getString(R.string.editMenu));
         }
         mealListView = findViewById(R.id.mealListView);
+        progressDialog = ProgressDialog.show(context, "請稍等...", "資料載入中...", true);
         Thread thread = new Thread(new GetMeal());
         thread.start();
-        progressDialog = ProgressDialog.show(context, "請稍等...", "資料載入中...", true);
         mainThreadHandler = new MainThreadHandler();
         meal = new ArrayList<Meal>();
         list = new ArrayList<String>();
