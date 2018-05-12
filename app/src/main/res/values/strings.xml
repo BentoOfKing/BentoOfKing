@@ -235,4 +235,9 @@
     <string name="removeFail">移除失敗</string>
     <string name="title">標題</string>
     <string name="content">內容</string>
+    <string name="pleaseEnterTitle">請輸入標題</string>
+    <string name="pleaseEnterContent">請輸入內容</string>
+    <string name="appelaSuc">申訴成功</string>
+    <string name="appelaFail">申訴失敗</string>
+    <string name="appelaComment">檢舉評論</string>
 </resources>

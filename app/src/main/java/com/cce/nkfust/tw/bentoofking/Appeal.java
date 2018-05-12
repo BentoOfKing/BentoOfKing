@@ -5,26 +5,29 @@ package com.cce.nkfust.tw.bentoofking;
  */
 
 public class Appeal {
-    private String ID,Member,Type,Title,Content,Result,Note;
+    private String ID,Declarant,Appealed,Type,Title,Content,Result,Note;
     public Appeal(){}
-    public Appeal(String ID,String Member,String Type,String Title,String Content,String Result,String Note){
+    public Appeal(String ID,String Declarant,String Appealed,String Type,String Title,String Content,String Result,String Note){
         this.ID = ID;
-        this.Member = Member;
-        this.Type = Type;
+        this.Declarant = Declarant;
+        this.Appealed = Appealed;
+        this.Type = Type; //0:一般申訴，1:店家錯誤，2:檢舉評論
         this.Title = Title;
         this.Content = Content;
         this.Result = Result;
         this.Note = Note;
     }
     public String getID(){return this.ID;}
-    public String getMember(){return this.Member;}
+    public String getDeclarant(){return this.Declarant;}
+    public String getAppealed(){return this.Appealed;}
     public String getType(){return this.Type;}
     public String getTitle(){return this.Title;}
     public String getContent(){return this.Content;}
     public String getResult(){return this.Result;}
     public String getNote(){return this.Note;}
     public void putID(String ID){this.ID = ID;}
-    public void putMember(String Member){this.Member = Member;}
+    public void putDeclarant(String Declarant){this.Declarant = Declarant;}
+    public void putAppealed(String Appealed){this.Appealed = Appealed;}
     public void putType(String Type){this.Type = Type;}
     public void putTitle(String Title){this.Title = Title;}
     public void putContent(String Content){this.Content = Content;}
