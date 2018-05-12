@@ -1,6 +1,5 @@
 package com.cce.nkfust.tw.bentoofking;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.Inflater;
 
 public class CheckStoreInfo extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
@@ -260,6 +261,34 @@ public class CheckStoreInfo extends AppCompatActivity {
                         break;
                     case R.id.item2:
                         if (userInfo.getIdentity() == 1) {//錯誤回報
+                            LayoutInflater inflater = LayoutInflater.from(context);
+                            View view = inflater.inflate(R.layout.alertdialog_report, null);
+                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                            builder.setTitle(getResources().getString(R.string.errorReport));
+                            builder.setView(view);
+                            final EditText titleEditText = view.findViewById(R.id.titleEditText);
+                            final EditText contentEditText = view.findViewById(R.id.contentEditText);
+                            builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(titleEditText.getText().equals("")){
+
+                                    }else if(contentEditText.getText().equals("")){
+
+                                    }else{
+
+                                    }
+                                    dialog.dismiss();
+                                }
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
 
                         } else if (userInfo.getIdentity() == 3) {//編輯菜單
                             intent = new Intent();

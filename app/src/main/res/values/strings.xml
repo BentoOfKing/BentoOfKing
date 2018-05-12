@@ -233,4 +233,6 @@
     <string name="removeFavorite">移除我的最愛</string>
     <string name="removeSuc">移除成功</string>
     <string name="removeFail">移除失敗</string>
+    <string name="title">標題</string>
+    <string name="content">內容</string>
 </resources>

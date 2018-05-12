@@ -354,6 +354,29 @@ public class Database {
         }
     }
 
+    public Store[] GetSpecifiedStore(ArrayList<String> ID){
+        int success;
+        Store[] store = new Store[ID.size()];
+        for(int i=0;i<ID.size();i++) {
+            try {
+                jParser = null;
+                jParser = new JSONParser();
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("ID", ID.get(i)));
+                json = null;
+                json = jParser.makeHttpRequest(getStoreForRegisterURL, "GET", params);
+                Log.d("Get specified atore.", json.toString());
+                JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
+                JSONObject c = productObj.getJSONObject(0);
+                store[i] = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return store;
+    }
+
     public Store GetStoreForRegister(String Name,String Address,String Phone){
         int success;
         try {
