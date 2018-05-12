@@ -173,7 +173,6 @@ public class MyFavoriteStore extends AppCompatActivity {
             switch (msg.what) {
                 case MORE_STORE:
                     store = database.GetSpecifiedStore((ArrayList<String>) msg.getData().getSerializable("Favorites"));
-                    storeLists.clear();
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
                         storeLists.add(additem);
@@ -291,20 +290,5 @@ public class MyFavoriteStore extends AppCompatActivity {
         }
 
 
-        //---以上為定位程式---
-        @Override
-        protected void onResume() {
-            super.onResume();
-            class UpdateMemberInfo implements Runnable {
-                @Override
-                public void run() {
-                    Database d = new Database();
-                    userInfo.putMember(d.GetSingleMember(userInfo.getMember().getEmail()));
-                }
-            }
-            if (userInfo.getIdentity() == 1) {
-                Thread t = new Thread(new UpdateMemberInfo());
-                t.start();
-            }
-        }
+
 }
