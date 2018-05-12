@@ -11,7 +11,7 @@ public class Appeal {
         this.ID = ID;
         this.Declarant = Declarant;
         this.Appealed = Appealed;
-        this.Type = Type; //0:一般申訴，1:店家錯誤，2:檢舉評論
+        this.Type = Type; //0:會員申訴，1:店家申訴，2:店家錯誤，3:檢舉評論
         this.Title = Title;
         this.Content = Content;
         this.Result = Result;

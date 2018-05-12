@@ -31,6 +31,7 @@ public class Database {
     private static String getStoreByMapURL = "http://163.18.104.169/databaseConnect/getStoreByMap.php";
     private static String getReviewStoreURL = "http://163.18.104.169/databaseConnect/getReviewStore.php";
     private static String getStoreForRegisterURL = "http://163.18.104.169/databaseConnect/getStoreForRegister.php";
+    private static String getSpecifiedStoreURL = "http://163.18.104.169/databaseConnect/getSpecifiedStore.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
     private static String storeLoginURL = "http://163.18.104.169/databaseConnect/store_login.php";
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
@@ -365,7 +366,7 @@ public class Database {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("ID", ID.get(i)));
                 json = null;
-                json = jParser.makeHttpRequest(getStoreForRegisterURL, "GET", params);
+                json = jParser.makeHttpRequest(getSpecifiedStoreURL, "GET", params);
                 Log.d("Get specified atore.", json.toString());
                 JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
                 JSONObject c = productObj.getJSONObject(0);

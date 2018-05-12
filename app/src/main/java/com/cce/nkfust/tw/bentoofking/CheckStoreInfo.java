@@ -304,7 +304,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                                         appeal.putAppealed(storeInfoBundle.getStore().getID());
                                         appeal.putTitle(titleEditText.getText().toString());
                                         appeal.putContent(contentEditText.getText().toString());
-                                        appeal.putType("1");
+                                        appeal.putType("2");
                                         Thread t = new Thread(new AddAppeal());
                                         t.start();
                                         alertDialog.dismiss();
@@ -827,7 +827,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                                     appeal.putAppealed(selectComment.getID());
                                     appeal.putTitle(titleEditText.getText().toString());
                                     appeal.putContent(contentEditText.getText().toString());
-                                    appeal.putType("2");
+                                    appeal.putType("3");
                                     Thread t = new Thread(new AddAppeal());
                                     t.start();
                                     alertDialog.dismiss();
