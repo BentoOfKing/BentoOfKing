@@ -371,7 +371,8 @@ public class Database {
                 store[i] = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
 
             } catch (Exception e) {
-                return null;
+                store = new Store[0];
+                return store;
             }
         }
         return store;

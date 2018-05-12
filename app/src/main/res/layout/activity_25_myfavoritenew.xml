@@ -29,43 +29,6 @@
             android:orientation="vertical"
             android:weightSum="1">
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="#f2ce82"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/locationButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#00FFFFFF"
-                    android:text="@string/location"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/sortButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#00FFFFFF"
-                    android:text="@string/sort"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/filterButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#00FFFFFF"
-                    android:text="@string/filter"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeLayout"
                 android:layout_width="match_parent"
