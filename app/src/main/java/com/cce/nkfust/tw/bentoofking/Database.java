@@ -49,6 +49,7 @@ public class Database {
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
     private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
+    private static String addAppealURL = "http://163.18.104.169/databaseConnect/addAppeal.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -875,5 +876,32 @@ public class Database {
         }
         return "Successful.";
     }
-
+    public String AddAppeal(Appeal appeal) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        try{
+            params.add(new BasicNameValuePair("Declarant",appeal.getDeclarant()));
+            params.add(new BasicNameValuePair("Appealed", appeal.getAppealed()));
+            params.add(new BasicNameValuePair("Type", appeal.getType()));
+            params.add(new BasicNameValuePair("Title", new String(appeal.getTitle().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Content", new String(appeal.getContent().getBytes(), "8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        json = null;
+        json = jParser.makeHttpRequest(addAppealURL, "POST", params);
+        Log.d("Add appeal.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
 }
