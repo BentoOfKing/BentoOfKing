@@ -57,7 +57,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int REFRESH_ACTIVITY = 5278, requestCodeFineLoaction = 1, requestCodeCoarseLocation = 2, MORE_STORE = 5279, REFRESH_STORELIST = 5273, SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER = 5275, SEND_GPS_FILTER = 5276, REFRESHING = 5277;
-    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668;
+    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668,INFO_RESULT = 6669;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -173,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        Drawer drawer = new Drawer();
-        drawer.init(this, toolbar, drawerListView, drawerLayout, userInfo);
+        //Drawer drawer = new Drawer();
+        //drawer.init(this, toolbar, drawerListView, drawerLayout, userInfo);
         storelist.setAdapter(adapter);
         CDBTHandler.sendEmptyMessage(GET_USERINFO);
     }
@@ -520,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
             storeInfoBundle.putStore(MainActivity.this.storeLists.get(position).getStoreInfo());
             intent.putExtra("storeInfo", storeInfoBundle);
             intent.putExtra(MainActivity.passUserInfo, MainActivity.this.userInfo);
-            startActivity(intent);
+            startActivityForResult(intent,INFO_RESULT);
         }
     }
 
@@ -710,20 +710,16 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        class UpdateMemberInfo implements Runnable{
-            @Override
-            public void run() {
-                Database d = new Database();
-                userInfo.putMember(d.GetSingleMember(userInfo.getMember().getEmail()));
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if( resultCode == RESULT_OK){
+            if(requestCode == INFO_RESULT){
+                userInfo = (UserInfo) data.getExtras().getSerializable("USER_INFO");
+                if (userInfo == null) userInfo = new UserInfo();
             }
         }
-        if(userInfo.getIdentity()==1){
-            Thread t = new Thread(new UpdateMemberInfo());
-            t.start();
-        }
-
     }
 }
