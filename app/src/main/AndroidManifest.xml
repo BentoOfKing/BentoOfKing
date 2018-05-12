@@ -66,7 +66,8 @@
         <activity
             android:name=".HomeMapsActivity"
             android:label="@string/title_activity_home_maps" />
-        <activity android:name=".MyFavoriteStore"></activity>
+        <activity android:name=".MyFavoriteStore" />
+        <activity android:name=".StoreErrorActivity"></activity>
     </application>
 
 </manifest>

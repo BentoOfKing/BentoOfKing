@@ -408,6 +408,9 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 3:
                     //店家錯誤
+                    intent.setClass(context,StoreErrorActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 4:
                     //檢舉評論

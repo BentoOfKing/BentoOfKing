@@ -51,6 +51,9 @@ public class Database {
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
     private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
     private static String addAppealURL = "http://163.18.104.169/databaseConnect/addAppeal.php";
+    private static String updateAppealURL = "http://163.18.104.169/databaseConnect/updateAppeal.php";
+    private static String getAppealURL = "http://163.18.104.169/databaseConnect/getAppeal.php";
+    private static final String TAG_APPEAL = "appeal";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -85,8 +88,12 @@ public class Database {
     private static final String TAG_Distance = "Distance";
     private static final String TAG_Meal = "Meal";
     private static final String TAG_Sequence = "Sequence";
-
-
+    private static final String TAG_Declarant = "Declarant";
+    private static final String TAG_Appealed = "Appealed";
+    private static final String TAG_Type = "Type";
+    private static final String TAG_Title = "Title";
+    private static final String TAG_Content = "Content";
+    private static final String TAG_Result = "Result";
     JSONParser jParser;
     JSONObject json;
 
@@ -903,6 +910,67 @@ public class Database {
         } catch (JSONException e) {
             e.printStackTrace();
             return "Fail.";
+        }
+    }
+    public String UpdateAppeal(Appeal appeal) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        try{
+            params.add(new BasicNameValuePair("ID",appeal.getID()));
+            params.add(new BasicNameValuePair("Result", new String(appeal.getResult().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Note", new String(appeal.getNote().getBytes(), "8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        json = null;
+        json = jParser.makeHttpRequest(updateAppealURL, "POST", params);
+        Log.d("Edit appeal.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+
+    public Appeal[] GetAppeal(String type) {
+        JSONObject json;
+        JSONArray appeals = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Appeal returnAppeal[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            params.add(new BasicNameValuePair("Type", type));
+            json = jParser.makeHttpRequest(getAppealURL, "GET", params);
+            Log.d("All Appeal: ", json.toString());
+            appeals = json.getJSONArray(TAG_APPEAL);
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            if (appeals.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = appeals.length();
+            }
+            returnAppeal = new Appeal[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject c = appeals.getJSONObject(i);
+                returnAppeal[i] = new Appeal(c.getString(TAG_ID), c.getString(TAG_Declarant), c.getString(TAG_Appealed), c.getString(TAG_Type), c.getString(TAG_Title), c.getString(TAG_Content), c.getString(TAG_Result), c.getString(TAG_Note));
+            }
+            reviewIndex += reviewRange;
+            return returnAppeal;
+        } catch (Exception e) {
+            return null;
         }
     }
 }
