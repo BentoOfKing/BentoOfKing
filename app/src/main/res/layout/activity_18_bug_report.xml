@@ -39,7 +39,7 @@
                 android:inputType="textMultiLine"
                 android:selectAllOnFocus="false"
                 android:singleLine="false"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintBottom_toTopOf="@+id/completeButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewForAction"
                 app:layout_constraintTop_toBottomOf="@+id/textViewForAction" />
@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/completeButton"
                 android:layout_width="110dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="15dp"

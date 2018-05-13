@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/5/5.
  */
 
-public class Appeal {
+public class Appeal implements Serializable {
     private String ID,Declarant,Appealed,Type,Title,Content,Result,Note;
     public Appeal(){}
     public Appeal(String ID,String Declarant,String Appealed,String Type,String Title,String Content,String Result,String Note){

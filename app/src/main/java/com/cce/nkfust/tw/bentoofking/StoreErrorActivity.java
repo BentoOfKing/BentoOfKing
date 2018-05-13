@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 public class StoreErrorActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
+    private static String passAppealInfo = "APPEAL_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
@@ -49,10 +50,12 @@ public class StoreErrorActivity extends AppCompatActivity {
     private Database database;
     private Appeal beUpdateAppeal;
     private ProgressDialog progressDialog;
+    private Boolean firstOnResume;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_error);
+        firstOnResume = true;
         context = this;
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
@@ -104,13 +107,13 @@ public class StoreErrorActivity extends AppCompatActivity {
                     final String[] item = getResources().getStringArray(R.array.previewStoreArray);
                     appealListView.setAdapter(appealAdapter);//3.設Adapter
                     appealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        LayoutInflater inflater;
-                        AlertDialog alertDialog;
-                        EditText editText;
-                        Intent intent;
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
-
+                            Intent intent = new Intent();
+                            intent.setClass(context,CheckStoreErrorActivity.class);
+                            intent.putExtra(passUserInfo,userInfo);
+                            intent.putExtra(passAppealInfo,appealArrayList.get((int) l));
+                            startActivity(intent);
                         }
                     });
                     break;
@@ -156,11 +159,21 @@ public class StoreErrorActivity extends AppCompatActivity {
                 }
             }
         }
-
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
         }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!firstOnResume){
+            appealArrayList.clear();
+            database = null;
+            database = new Database();
+            anotherHandler.sendEmptyMessage(MORE_STORE);
+        }
+        firstOnResume = false;
     }
 }
 

@@ -30,6 +30,7 @@ public class Database {
     private static String getStoreByPositionURL = "http://163.18.104.169/databaseConnect/getStoreByPosition.php";
     private static String getStoreByMapURL = "http://163.18.104.169/databaseConnect/getStoreByMap.php";
     private static String getReviewStoreURL = "http://163.18.104.169/databaseConnect/getReviewStore.php";
+    private static String getSingleStoreURL = "http://163.18.104.169/databaseConnect/getSingleStore.php";
     private static String getStoreForRegisterURL = "http://163.18.104.169/databaseConnect/getStoreForRegister.php";
     private static String getSpecifiedStoreURL = "http://163.18.104.169/databaseConnect/getSpecifiedStore.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
@@ -462,6 +463,36 @@ public class Database {
             System.out.print(e);
             Store[] nullStore = new Store[0];
             return nullStore;
+        }
+    }
+
+    public Store GetSingleStore(String ID) {
+        JSONObject json;
+        JSONArray stores = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Store returnStore;
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("ID", ID));
+            json = jParser.makeHttpRequest(getSingleStoreURL, "GET", params);
+            Log.d("Get A Store: ", json.toString());
+            //int success = json.getInt(TAG_SUCCESS);
+            stores = json.getJSONArray(TAG_STORES);
+
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            System.out.println("OK");
+            // looping through All Products
+            JSONObject c = stores.getJSONObject(0);
+            // Storing each json item in variable
+            returnStore = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+            return returnStore;
+        } catch (Exception e) {
+            return null;
         }
     }
 
