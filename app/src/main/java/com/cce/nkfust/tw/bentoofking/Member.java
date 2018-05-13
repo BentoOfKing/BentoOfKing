@@ -8,13 +8,14 @@ import java.io.Serializable;
 
 
 public class Member implements Serializable{
-    String Email,Password,Nickname,Sex,Favorite,State,Note,Longitude,Latitude;
+    String Email,Password,Nickname,Sex,Point,Favorite,State,Note,Longitude,Latitude;
     public Member(){}
-    public Member(String Email,String Password,String Nickname,String Sex,String Favorite,String State,String Note){
+    public Member(String Email,String Password,String Nickname,String Sex,String Point,String Favorite,String State,String Note){
         this.Email = Email;
         this.Password = Password;
         this.Nickname = Nickname;
         this.Sex = Sex;
+        this.Point = Point;
         this.Favorite = Favorite;
         this.State = State;
         this.Note = Note;
@@ -32,6 +33,9 @@ public class Member implements Serializable{
     }
     void putSex(String Sex){
         this.Sex = Sex;
+    }
+    void putPoint(String Point){
+        this.Point = Point;
     }
     void putFavorite(String Favorite){
         this.Favorite = Favorite;
@@ -59,6 +63,9 @@ public class Member implements Serializable{
     }
     String getSex(){
         return Sex;
+    }
+    String getPoint(){
+        return Point;
     }
     String getFavorite(){
         return Favorite;

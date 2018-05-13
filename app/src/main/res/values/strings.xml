@@ -240,4 +240,15 @@
     <string name="appelaSuc">申訴成功</string>
     <string name="appelaFail">申訴失敗</string>
     <string name="appelaComment">檢舉評論</string>
+    <string name="save">儲存</string>
+    <string name="dealComplete">處理完成</string>
+    <string name="enterDealResult">請輸入處理結果</string>
+    <string name="checkStoreError">查看店家錯誤</string>
+    <string name="connectError">連線失敗，請檢查網路狀態</string>
+    <string name="checkMember">查看會員</string>
+    <string name="point">點數</string>
+    <string name="state">狀態</string>
+    <string name="memberAppeal">會員申訴</string>
+    <string name="storeAppeal">店家申訴</string>
+
 </resources>

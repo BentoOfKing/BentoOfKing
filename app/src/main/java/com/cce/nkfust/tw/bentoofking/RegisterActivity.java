@@ -181,7 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
                 sex="1";
             }
             //SEX判斷
-            memberRegister = new Member(emailEditText.getText().toString(), passwordEditText.getText().toString(), nicknameEditText.getText().toString(), sex, "", "", "");
+            memberRegister = new Member(emailEditText.getText().toString(), passwordEditText.getText().toString(), nicknameEditText.getText().toString(), sex,"0", "", "", "");
             database = new Database();
 //登入判斷
 

@@ -22,8 +22,6 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -286,10 +284,10 @@ class ReviewStoreAdapter extends BaseAdapter { //2.建Adapter
     public View getView(final int position, View view, ViewGroup viewGroup) {
         if (view == null) {
             viewHolder = new ViewHolder();
-            view = this.inflater.inflate(R.layout.review_store_item, null);
-            viewHolder.storeTextView = view.findViewById(R.id.storeTextView);
-            viewHolder.noteTextView = view.findViewById(R.id.noteTextView);
-            viewHolder.storeLinearLayout = view.findViewById(R.id.storeLinearLayout);
+            view = this.inflater.inflate(R.layout.admin_item, null);
+            viewHolder.storeTextView = view.findViewById(R.id.titleTextView);
+            viewHolder.noteTextView = view.findViewById(R.id.subtitleTextView);
+            viewHolder.storeLinearLayout = view.findViewById(R.id.LinearLayout);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();

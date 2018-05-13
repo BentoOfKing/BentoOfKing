@@ -32,6 +32,7 @@ public class Drawer extends AppCompatActivity{
     private static final int ADD_APPEAL = 3;
     private static final int ADD_APPEAL_FAIL = 4;
     private static String passUserInfo = "USER_INFO";
+    private static String passMemberInfo = "MEMBER_INFO";
     Member member;
     Context context;
     Toolbar toolbar;
@@ -60,7 +61,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
             case 3:
-                String[] adminMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.banMember),context.getResources().getString(R.string.reviewStore),context.getResources().getString(R.string.storeError),context.getResources().getString(R.string.reportComment),context.getResources().getString(R.string.previewPush),context.getResources().getString(R.string.appeal),context.getResources().getString(R.string.logout)};
+                String[] adminMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.banMember),context.getResources().getString(R.string.reviewStore),context.getResources().getString(R.string.storeError),context.getResources().getString(R.string.reportComment),context.getResources().getString(R.string.previewPush),context.getResources().getString(R.string.memberAppeal),context.getResources().getString(R.string.storeAppeal),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,adminMenuItem));
                 drawerListView.setOnItemClickListener(adminDrawerListener);
                 break;
@@ -140,6 +141,10 @@ public class Drawer extends AppCompatActivity{
             Intent intent = new Intent();
             switch (i){
                 case 0:
+                    intent.setClass(context,CheckMemberActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    intent.putExtra(passMemberInfo,userInfo.getMember());
+                    context.startActivity(intent);
                     break;
                 case 1:
                     //主頁
@@ -399,6 +404,9 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 1:
                     //停權會員
+                    intent.setClass(context,BanedMemberActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 2:
                     //審核店家
@@ -408,19 +416,30 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 3:
                     //店家錯誤
+                    intent.setClass(context,StoreErrorActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 4:
                     //檢舉評論
+                    intent.setClass(context,AppealCommentActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 5:
                     //審核推播
                     break;
                 case 6:
-                    //申訴
+                    //會員申訴
+
+                    break;
+                case 7:
+                    //店家申訴
+                    intent.setClass(context,StoreAppealActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 default:
-
-
                     intent.setClass(context,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra(passUserInfo,userInfo);

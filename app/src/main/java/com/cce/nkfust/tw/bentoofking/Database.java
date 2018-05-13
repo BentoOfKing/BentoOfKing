@@ -30,6 +30,7 @@ public class Database {
     private static String getStoreByPositionURL = "http://163.18.104.169/databaseConnect/getStoreByPosition.php";
     private static String getStoreByMapURL = "http://163.18.104.169/databaseConnect/getStoreByMap.php";
     private static String getReviewStoreURL = "http://163.18.104.169/databaseConnect/getReviewStore.php";
+    private static String getSingleStoreURL = "http://163.18.104.169/databaseConnect/getSingleStore.php";
     private static String getStoreForRegisterURL = "http://163.18.104.169/databaseConnect/getStoreForRegister.php";
     private static String getSpecifiedStoreURL = "http://163.18.104.169/databaseConnect/getSpecifiedStore.php";
     private static String memberLoginURL = "http://163.18.104.169/databaseConnect/member_login.php";
@@ -38,6 +39,7 @@ public class Database {
     private static String memberRegisterURL = "http://163.18.104.169/databaseConnect/member_register.php";
     private static String getCommentURL = "http://163.18.104.169/databaseConnect/getComment.php";
     private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
+    private static String getBanedMemberURL = "http://163.18.104.169/databaseConnect/getBanedMember.php";
     private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
     private static String deleteCommentURL = "http://163.18.104.169/databaseConnect/deleteComment.php";
     private static String updateCommentURL = "http://163.18.104.169/databaseConnect/updateComment.php";
@@ -51,6 +53,9 @@ public class Database {
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
     private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
     private static String addAppealURL = "http://163.18.104.169/databaseConnect/addAppeal.php";
+    private static String updateAppealURL = "http://163.18.104.169/databaseConnect/updateAppeal.php";
+    private static String getAppealURL = "http://163.18.104.169/databaseConnect/getAppeal.php";
+    private static final String TAG_APPEAL = "appeal";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -85,8 +90,12 @@ public class Database {
     private static final String TAG_Distance = "Distance";
     private static final String TAG_Meal = "Meal";
     private static final String TAG_Sequence = "Sequence";
-
-
+    private static final String TAG_Declarant = "Declarant";
+    private static final String TAG_Appealed = "Appealed";
+    private static final String TAG_Type = "Type";
+    private static final String TAG_Title = "Title";
+    private static final String TAG_Content = "Content";
+    private static final String TAG_Result = "Result";
     JSONParser jParser;
     JSONObject json;
 
@@ -251,6 +260,7 @@ public class Database {
             params.add(new BasicNameValuePair("Password", member.getPassword()));
             params.add(new BasicNameValuePair("Favorite", member.getFavorite()));
             params.add(new BasicNameValuePair("Nickname", new String(member.getNickname().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("State", member.getState()));
             params.add(new BasicNameValuePair("Note", new String(member.getNote().getBytes(), "8859_1")));
             params.add(new BasicNameValuePair("Longitude", member.getLongitude()));
             params.add(new BasicNameValuePair("Latitude", member.getLatitude()));
@@ -289,7 +299,7 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Point), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
             } else {
                 Member member = new Member();
@@ -455,6 +465,36 @@ public class Database {
             System.out.print(e);
             Store[] nullStore = new Store[0];
             return nullStore;
+        }
+    }
+
+    public Store GetSingleStore(String ID) {
+        JSONObject json;
+        JSONArray stores = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Store returnStore;
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("ID", ID));
+            json = jParser.makeHttpRequest(getSingleStoreURL, "GET", params);
+            Log.d("Get A Store: ", json.toString());
+            //int success = json.getInt(TAG_SUCCESS);
+            stores = json.getJSONArray(TAG_STORES);
+
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            System.out.println("OK");
+            // looping through All Products
+            JSONObject c = stores.getJSONObject(0);
+            // Storing each json item in variable
+            returnStore = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+            return returnStore;
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -710,11 +750,46 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Point), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
             } else {
                 return null;
             }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Member[] GetBanedMember() {
+        JSONObject json;
+        JSONArray members = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Member returnMember[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            json = jParser.makeHttpRequest(getBanedMemberURL, "GET", params);
+            Log.d("All Member: ", json.toString());
+            members = json.getJSONArray(TAG_MEMBERS);
+        } catch (Exception e) {
+            Member[] nullMember = new Member[0];
+            return nullMember;
+        }
+        try {
+            if (members.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = members.length();
+            }
+            returnMember = new Member[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject m = members.getJSONObject(i);
+                returnMember[i] = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Point), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+            }
+            reviewIndex += reviewRange;
+            return returnMember;
         } catch (Exception e) {
             return null;
         }
@@ -903,6 +978,67 @@ public class Database {
         } catch (JSONException e) {
             e.printStackTrace();
             return "Fail.";
+        }
+    }
+    public String UpdateAppeal(Appeal appeal) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        try{
+            params.add(new BasicNameValuePair("ID",appeal.getID()));
+            params.add(new BasicNameValuePair("Result", new String(appeal.getResult().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Note", new String(appeal.getNote().getBytes(), "8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        json = null;
+        json = jParser.makeHttpRequest(updateAppealURL, "POST", params);
+        Log.d("Edit appeal.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+
+    public Appeal[] GetAppeal(String type) {
+        JSONObject json;
+        JSONArray appeals = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Appeal returnAppeal[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            params.add(new BasicNameValuePair("Type", type));
+            json = jParser.makeHttpRequest(getAppealURL, "GET", params);
+            Log.d("All Appeal: ", json.toString());
+            appeals = json.getJSONArray(TAG_APPEAL);
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            if (appeals.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = appeals.length();
+            }
+            returnAppeal = new Appeal[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject c = appeals.getJSONObject(i);
+                returnAppeal[i] = new Appeal(c.getString(TAG_ID), c.getString(TAG_Declarant), c.getString(TAG_Appealed), c.getString(TAG_Type), c.getString(TAG_Title), c.getString(TAG_Content), c.getString(TAG_Result), c.getString(TAG_Note));
+            }
+            reviewIndex += reviewRange;
+            return returnAppeal;
+        } catch (Exception e) {
+            return null;
         }
     }
 }
