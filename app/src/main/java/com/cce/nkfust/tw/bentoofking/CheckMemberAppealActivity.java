@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CheckStoreAppealActivity extends AppCompatActivity {
+public class CheckMemberAppealActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passAppealInfo = "APPEAL_INFO";
     private static String passMemberInfo = "MEMBER_INFO";
@@ -31,7 +31,6 @@ public class CheckStoreAppealActivity extends AppCompatActivity {
     private static final int GET_FAIL = 2;
     private UserInfo userInfo;
     private Appeal appeal;
-    private Store store;
     private Member member;
     private Toolbar toolbar;
     private ListView drawerListView;
@@ -59,7 +58,7 @@ public class CheckStoreAppealActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        toolbar.setTitle(getResources().getString(R.string.storeAppeal));
+        toolbar.setTitle(getResources().getString(R.string.memberAppeal));
         titleTextView = findViewById(R.id.titleTextView);
         titleTextView.setText(appeal.getTitle());
         declarantTextView = findViewById(R.id.declarantTextView);
@@ -81,11 +80,9 @@ public class CheckStoreAppealActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.declarantTextView:
-                    intent.setClass(context,CheckStoreInfo.class);
+                    intent.setClass(context,CheckMemberActivity.class);
                     intent.putExtra(passUserInfo,userInfo);
-                    UserInfo tmp = userInfo;
-                    tmp.putStore(store);
-                    intent.putExtra("storeInfo",tmp);
+                    intent.putExtra(passMemberInfo,member);
                     startActivity(intent);
                     break;
                 case R.id.saveButton:
@@ -165,12 +162,12 @@ public class CheckStoreAppealActivity extends AppCompatActivity {
             }
         }
     }
-    public class GetStore implements Runnable{
+    public class GetMember implements Runnable{
         @Override
         public void run() {
             Database d = new Database();
-            store = d.GetSingleStore(appeal.getDeclarant());
-            if(store == null){
+            member = d.GetSingleMember(appeal.getDeclarant());
+            if(member == null){
                 mainThreadHandler.sendEmptyMessage(GET_FAIL);
                 return;
             }
@@ -181,7 +178,7 @@ public class CheckStoreAppealActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressDialog = ProgressDialog.show(context, "請稍等...", "資料連接中...", true);
-        Thread t = new Thread(new GetStore());
+        Thread t = new Thread(new GetMember());
         t.start();
     }
 }

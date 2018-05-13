@@ -73,7 +73,10 @@
         <activity android:name=".AppealCommentActivity" />
         <activity android:name=".BanedMemberActivity" />
         <activity android:name=".StoreAppealActivity" />
-        <activity android:name=".CheckStoreAppealActivity"></activity>
+        <activity android:name=".CheckStoreAppealActivity" />
+        <activity android:name=".MemberAppealActivity" />
+        <activity android:name=".CheckMemberAppealActivity" />
+        <activity android:name=".CheckAppealCommentActivity"></activity>
     </application>
 
 </manifest>
