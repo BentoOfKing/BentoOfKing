@@ -38,6 +38,7 @@ public class Database {
     private static String adminLoginURL = "http://163.18.104.169/databaseConnect/admin_login.php";
     private static String memberRegisterURL = "http://163.18.104.169/databaseConnect/member_register.php";
     private static String getCommentURL = "http://163.18.104.169/databaseConnect/getComment.php";
+    private static String getSingleCommentURL = "http://163.18.104.169/databaseConnect/getSingleComment.php";
     private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
     private static String getBanedMemberURL = "http://163.18.104.169/databaseConnect/getBanedMember.php";
     private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
@@ -129,6 +130,34 @@ public class Database {
             return retrunComment;
         } catch (Exception e) {
             return new Comment[0];
+        }
+    }
+
+    public Comment GetSingleComment(String ID) {
+        JSONObject json;
+        JSONArray comments = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Comment returnComment;
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("ID", ID));
+            json = jParser.makeHttpRequest(getSingleCommentURL, "GET", params);
+            Log.d("Get A Comment: ", json.toString());
+            comments = json.getJSONArray(TAG_COMMENTS);
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            System.out.println("OK");
+            // looping through All Products
+            JSONObject c = comments.getJSONObject(0);
+            // Storing each json item in variable
+            returnComment = new Comment(c.getString(TAG_ID), c.getString(TAG_Member), c.getString(TAG_Store), c.getString(TAG_Score), c.getString(TAG_StoreContent), c.getString(TAG_Time), c.getString(TAG_Reply), c.getString(TAG_Note));
+            return returnComment;
+        } catch (Exception e) {
+            return null;
         }
     }
 

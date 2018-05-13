@@ -110,7 +110,7 @@ public class AppealCommentActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
                             Intent intent = new Intent();
-                            intent.setClass(context,CheckStoreErrorActivity.class);
+                            intent.setClass(context,CheckAppealCommentActivity.class);
                             intent.putExtra(passUserInfo,userInfo);
                             intent.putExtra(passAppealInfo,appealArrayList.get((int) l));
                             startActivity(intent);

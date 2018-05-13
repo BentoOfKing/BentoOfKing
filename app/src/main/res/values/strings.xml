@@ -250,5 +250,6 @@
     <string name="state">狀態</string>
     <string name="memberAppeal">會員申訴</string>
     <string name="storeAppeal">店家申訴</string>
+    <string name="checkComment">查看評論</string>
 
 </resources>
