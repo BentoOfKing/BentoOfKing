@@ -245,5 +245,7 @@
     <string name="enterDealResult">請輸入處理結果</string>
     <string name="checkStoreError">查看店家錯誤</string>
     <string name="connectError">連線失敗，請檢查網路狀態</string>
-
+    <string name="checkMember">查看會員</string>
+    <string name="point">點數</string>
+    <string name="state">狀態</string>
 </resources>

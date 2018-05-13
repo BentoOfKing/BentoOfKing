@@ -297,7 +297,7 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Point), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
             } else {
                 Member member = new Member();
@@ -748,7 +748,7 @@ public class Database {
             if (success == 1) {
                 JSONArray productObj = json.getJSONArray(TAG_MEMBERS); // JSON Array
                 JSONObject m = productObj.getJSONObject(0);
-                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+                Member member = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Point), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
                 return member;
             } else {
                 return null;
