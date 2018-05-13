@@ -24,164 +24,243 @@
         <!-- The main content view -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#f5c59a">
 
             <RelativeLayout
-                android:id="@+id/content_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="18dp"
-                android:paddingRight="18dp">
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF">
 
-                <TableLayout
-                    android:id="@+id/tableLayout"
+                <LinearLayout
+                    android:id="@+id/contentView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="20dp"
+                    android:weightSum="1">
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <RelativeLayout
+                        android:id="@+id/content_frame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0">
+
 
                         <TextView
                             android:id="@+id/Email"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/passwordCheckTextView"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="20dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/email"
-                            android:textColor="@android:color/black"
+                            android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
 
-                        <EditText
-                            android:id="@+id/emailEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:ems="10"
-                            android:inputType="textEmailAddress" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
                         <TextView
                             android:id="@+id/PasswordTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_alignEnd="@+id/passwordCheckTextView"
+                            android:layout_below="@+id/E-mailTextView"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/password"
-                            android:textColor="@android:color/black"
+                            android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
 
-                        <EditText
-                            android:id="@+id/passwordEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:ems="10"
-                            android:inputType="textPassword"
-                            />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
                         <TextView
                             android:id="@+id/passwordCheckTextView"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/PasswordTextView"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="15dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/passwordCheck"
-                            android:textColor="@android:color/black"
+                            android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
 
-                        <EditText
-                            android:id="@+id/passwordCheckEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:ems="10"
-                            android:inputType="textPassword"
-                            />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
                         <TextView
                             android:id="@+id/Sex"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/passwordCheckTextView"
+                            android:layout_below="@+id/passwordCheckTextView"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginTop="15dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/sex"
-                            android:textColor="@android:color/black"
+                            android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
-
-                        <RadioGroup
-                            android:id="@+id/RadioSex"
-                            android:layout_width="match_parent"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/radio_m"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/man"
-                                />
-
-                            <RadioButton
-                                android:id="@+id/radio_f"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/woman" />
-                        </RadioGroup>
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
                         <TextView
                             android:id="@+id/Nickname"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/passwordCheckTextView"
+                            android:layout_below="@+id/Sex"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="15dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/nickname"
-                            android:textColor="@android:color/black"
+                            android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
 
-                        <EditText
-                            android:id="@+id/nicknameEditText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_weight="2"
-                            android:ems="10"
-                            android:inputType="textPersonName" />
-                    </TableRow>
+                    </RelativeLayout>
 
-                </TableLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:weightSum="5">
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1">
 
-                <Button
+                            <EditText
+                                android:id="@+id/passwordCheckEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="18dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/text_background"
+                                android:ems="10"
+                                android:inputType="textPassword" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1">
+
+                            <EditText
+                                android:id="@+id/passwordEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="12dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/text_background"
+                                android:ems="10"
+                                android:inputType="textPassword" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1">
+
+                            <EditText
+                                android:id="@+id/emailEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="14dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="14dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/text_background"
+                                android:ems="10"
+                                android:inputType="textEmailAddress" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <RadioGroup
+                                android:id="@+id/RadioSex"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="16dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:id="@+id/radio_m"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_weight="1"
+                                    android:gravity="left|center_vertical"
+                                    android:paddingStart="8dp"
+                                    android:text="@string/man"
+                                    android:textColor="#FFFFFF" />
+
+                                <RadioButton
+                                    android:id="@+id/radio_f"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_weight="1"
+                                    android:paddingStart="8dp"
+                                    android:text="@string/woman"
+                                    android:textColor="#FFFFFF" />
+                            </RadioGroup>
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1">
+
+                            <EditText
+                                android:id="@+id/nicknameEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="18dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/text_background"
+                                android:ems="10"
+                                android:inputType="textPersonName" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageButton
                     android:id="@+id/registerButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/tableLayout"
-                    android:layout_weight="1"
-                    android:text="@string/registered" />
+                    android:layout_height="55dp"
+                    android:layout_below="@+id/contentView"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#00FFFFFF"
+                    android:paddingBottom="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/registered" />
+
             </RelativeLayout>
         </ScrollView>
 
