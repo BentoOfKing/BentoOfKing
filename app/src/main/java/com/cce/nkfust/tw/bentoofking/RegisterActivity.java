@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -49,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText nicknameEditText;
     private RadioButton radio_m;
     private RadioButton radio_f;
-    private Button registerButton;
+    private ImageButton registerButton;
 
     private HandlerThread RegisterThread;
     private Handler RegisterThreadHandler;
