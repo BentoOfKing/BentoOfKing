@@ -377,15 +377,6 @@
                             app:srcCompat="@drawable/comment_scroll_up" />
                     </LinearLayout>
 
-                    <ListView
-                        android:id="@+id/commentListView"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_margin="0dp"
-                        android:layout_weight="0"
-                        android:background="#f9eed8"
-                        android:padding="0dp" />
-
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/commentRecyclerView"
                         android:layout_width="match_parent"

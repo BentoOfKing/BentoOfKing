@@ -90,7 +90,6 @@ public class CheckStoreInfo extends AppCompatActivity {
     private TextView storeParkInfo;
     private TextView storeFreeInfo;
     private EditText commentEditText;
-    private ListView commentListView;
     private ImageButton sentCommentButton;
     private UserInfo storeInfoBundle;
     private Toolbar toolbar;
@@ -183,7 +182,7 @@ public class CheckStoreInfo extends AppCompatActivity {
             }
         });
         sentCommentButton.setOnClickListener(new SentComment());
-        commentListView.setOnItemClickListener(new DoSomethingToComment());
+
     }
     private void variableSetup(){
         mainHandler = new MainThreadHandler(Looper.getMainLooper());
@@ -192,7 +191,6 @@ public class CheckStoreInfo extends AppCompatActivity {
         drawer = new Drawer();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         commentArrayList = new ArrayList<Comment>();
-        adapter = new CommentListViewBaseAdapter(commentArrayList,inflater);
         recyclerAdapter = new CommentListViewRecyclerAdapter(commentArrayList,storeInfoBundle.getStore().getStoreName());
         commentMode = SENT_COMMENT;
         databaseForComment = new Database();
@@ -207,7 +205,6 @@ public class CheckStoreInfo extends AppCompatActivity {
     }
     private void UIsetup(){
         context = this;
-        commentListView.setAdapter(adapter);
         commentRecyclerView.setLayoutManager(recyclerManager);
         commentRecyclerView.setHasFixedSize(true);
         commentRecyclerView.setNestedScrollingEnabled(false);
@@ -429,7 +426,6 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.toolbar = findViewById(R.id.toolbar);
         this.drawerListView = findViewById(R.id.drawerListView);
         this.drawerLayout = findViewById(R.id.drawerLayout);
-        this.commentListView = findViewById(R.id.commentListView);
         this.store31Layout = findViewById(R.id.storeInfo31Layout);
         this.storeAddressLayout = findViewById(R.id.storeAddressLayout);
         this.storeBusinessLayout = findViewById(R.id.storeBusinessLayout);
@@ -458,7 +454,6 @@ public class CheckStoreInfo extends AppCompatActivity {
 
 
     private void setLayoutExpandListView(){
-        commentListView.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, 0, LAYOUT_WEIGHT_31+LAYOUT_WEIGHT_ADDRESS+LAYOUT_WEIGHT_BUSINESS+LAYOUT_WEIGHT_LISTVIEW ));
         store31Layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0));
         storeAddressLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0));
         storeBusinessLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,0));
@@ -787,55 +782,6 @@ public class CheckStoreInfo extends AppCompatActivity {
                         commentEditText.setText(selectComment.getReply());
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
-                    }else if(selections.get(which).equals("檢舉")){
-                        LayoutInflater inflater = LayoutInflater.from(context);
-                        View view = inflater.inflate(R.layout.alertdialog_report, null);
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
-                        builder.setTitle(getResources().getString(R.string.appelaComment));
-                        builder.setView(view);
-                        final EditText titleEditText = view.findViewById(R.id.titleEditText);
-                        final EditText contentEditText = view.findViewById(R.id.contentEditText);
-                        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.setPositiveButton(getResources().getString(R.string.check),null);
-                        final AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                            Appeal appeal;
-                            @Override
-                            public void onClick(View view) {
-                                if(titleEditText.getText().toString().equals("")){
-                                    Toast.makeText(context, getResources().getString(R.string.pleaseEnterTitle), Toast.LENGTH_SHORT).show();
-                                }else if(contentEditText.getText().toString().equals("")){
-                                    Toast.makeText(context, getResources().getString(R.string.pleaseEnterContent), Toast.LENGTH_SHORT).show();
-                                }else{
-                                    class AddAppeal implements Runnable{
-                                        @Override
-                                        public void run() {
-                                            Database d = new Database();
-                                            if(d.AddAppeal(appeal).equals("Successful.")){
-                                                mainHandler.sendEmptyMessage(ADD_APPEAL);
-                                            }else{
-                                                mainHandler.sendEmptyMessage(ADD_APPEAL_FAIL);
-                                            }
-                                        }
-                                    }
-                                    appeal = new Appeal();
-                                    appeal.putDeclarant(userInfo.getMember().getEmail());
-                                    appeal.putAppealed(selectComment.getID());
-                                    appeal.putTitle(titleEditText.getText().toString());
-                                    appeal.putContent(contentEditText.getText().toString());
-                                    appeal.putType("3");
-                                    Thread t = new Thread(new AddAppeal());
-                                    t.start();
-                                    alertDialog.dismiss();
-                                }
-                            }
-                        });
                     }
                 }
             });
@@ -897,6 +843,56 @@ public class CheckStoreInfo extends AppCompatActivity {
                         commentEditText.setText(selectComment.getReply());
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                    else if(selections.get(which).equals("檢舉")){
+                        LayoutInflater inflater = LayoutInflater.from(context);
+                        View view = inflater.inflate(R.layout.alertdialog_report, null);
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                        builder.setTitle(getResources().getString(R.string.appelaComment));
+                        builder.setView(view);
+                        final EditText titleEditText = view.findViewById(R.id.titleEditText);
+                        final EditText contentEditText = view.findViewById(R.id.contentEditText);
+                        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setPositiveButton(getResources().getString(R.string.check),null);
+                        final AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                            Appeal appeal;
+                            @Override
+                            public void onClick(View view) {
+                                if(titleEditText.getText().toString().equals("")){
+                                    Toast.makeText(context, getResources().getString(R.string.pleaseEnterTitle), Toast.LENGTH_SHORT).show();
+                                }else if(contentEditText.getText().toString().equals("")){
+                                    Toast.makeText(context, getResources().getString(R.string.pleaseEnterContent), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    class AddAppeal implements Runnable{
+                                        @Override
+                                        public void run() {
+                                            Database d = new Database();
+                                            if(d.AddAppeal(appeal).equals("Successful.")){
+                                                mainHandler.sendEmptyMessage(ADD_APPEAL);
+                                            }else{
+                                                mainHandler.sendEmptyMessage(ADD_APPEAL_FAIL);
+                                            }
+                                        }
+                                    }
+                                    appeal = new Appeal();
+                                    appeal.putDeclarant(userInfo.getMember().getEmail());
+                                    appeal.putAppealed(selectComment.getID());
+                                    appeal.putTitle(titleEditText.getText().toString());
+                                    appeal.putContent(contentEditText.getText().toString());
+                                    appeal.putType("3");
+                                    Thread t = new Thread(new AddAppeal());
+                                    t.start();
+                                    alertDialog.dismiss();
+                                }
+                            }
+                        });
                     }
                 }
             });
