@@ -32,6 +32,7 @@ public class Drawer extends AppCompatActivity{
     private static final int ADD_APPEAL = 3;
     private static final int ADD_APPEAL_FAIL = 4;
     private static String passUserInfo = "USER_INFO";
+    private static String passMemberInfo = "MEMBER_INFO";
     Member member;
     Context context;
     Toolbar toolbar;
@@ -140,6 +141,10 @@ public class Drawer extends AppCompatActivity{
             Intent intent = new Intent();
             switch (i){
                 case 0:
+                    intent.setClass(context,CheckMemberActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    intent.putExtra(passMemberInfo,userInfo.getMember());
+                    context.startActivity(intent);
                     break;
                 case 1:
                     //主頁

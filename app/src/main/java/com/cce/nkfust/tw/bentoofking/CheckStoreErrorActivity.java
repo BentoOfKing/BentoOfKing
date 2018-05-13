@@ -24,6 +24,7 @@ import android.widget.Toast;
 public class CheckStoreErrorActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passAppealInfo = "APPEAL_INFO";
+    private static String passMemberInfo = "MEMBER_INFO";
     private static final int SUCCESSED = 66;
     private static final int FAIL = 69;
     private static final int GET_SUCCESSED = 1;
@@ -83,7 +84,10 @@ public class CheckStoreErrorActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.declarantTextView:
-
+                    intent.setClass(context,CheckMemberActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    intent.putExtra(passMemberInfo,member);
+                    startActivity(intent);
                     break;
                 case R.id.appealedTextView:
                     intent.setClass(context,CheckStoreInfo.class);

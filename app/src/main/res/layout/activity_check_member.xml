@@ -58,6 +58,29 @@
                         android:textSize="@dimen/font_size" />
                 </TableRow>
 
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/Nickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/nickname"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/font_size" />
+
+                    <TextView
+                        android:id="@+id/nicknameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/font_size"/>
+                </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -77,29 +100,12 @@
                         android:id="@+id/sexTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="45dp"
-                        android:layout_weight="2" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/Nickname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
-                        android:text="@string/nickname"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/font_size" />
-
-                    <TextView
-                        android:id="@+id/nicknameTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="45dp"
-                        android:layout_weight="2" />
+                        android:textSize="@dimen/font_size"/>
                 </TableRow>
+
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -119,7 +125,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="45dp"
                         android:layout_weight="2"
-                        android:ems="10" />
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/font_size"/>
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
@@ -140,7 +148,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="45dp"
                         android:layout_weight="2"
-                        android:ems="10" />
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/font_size" />
                 </TableRow>
             </TableLayout>
 
