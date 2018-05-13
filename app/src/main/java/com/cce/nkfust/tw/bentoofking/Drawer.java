@@ -419,6 +419,9 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 4:
                     //檢舉評論
+                    intent.setClass(context,AppealCommentActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 5:
                     //審核推播

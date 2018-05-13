@@ -759,6 +759,40 @@ public class Database {
         }
     }
 
+    public Member[] GetBanedMember() {
+        JSONObject json;
+        JSONArray members = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Member returnMember[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            json = jParser.makeHttpRequest(getAppealURL, "GET", params);
+            Log.d("All Member: ", json.toString());
+            members = json.getJSONArray(TAG_Member);
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            if (members.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = members.length();
+            }
+            returnMember = new Member[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject m = members.getJSONObject(i);
+                returnMember[i] = new Member(m.getString(TAG_Email), m.getString(TAG_Password), m.getString(TAG_Nickname), m.getString(TAG_Sex), m.getString(TAG_Point), m.getString(TAG_Favorite), m.getString(TAG_State), m.getString(TAG_Note));
+            }
+            reviewIndex += reviewRange;
+            return returnMember;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public String addMeal(ArrayList<Meal> meal) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;

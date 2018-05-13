@@ -69,7 +69,9 @@
         <activity android:name=".MyFavoriteStore" />
         <activity android:name=".StoreErrorActivity" />
         <activity android:name=".CheckStoreErrorActivity" />
-        <activity android:name=".CheckMemberActivity"></activity>
+        <activity android:name=".CheckMemberActivity" />
+        <activity android:name=".AppealCommentActivity" />
+        <activity android:name=".BanedMemberActivity"></activity>
     </application>
 
 </manifest>
