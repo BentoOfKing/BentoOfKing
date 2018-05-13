@@ -71,7 +71,9 @@
         <activity android:name=".CheckStoreErrorActivity" />
         <activity android:name=".CheckMemberActivity" />
         <activity android:name=".AppealCommentActivity" />
-        <activity android:name=".BanedMemberActivity"></activity>
+        <activity android:name=".BanedMemberActivity" />
+        <activity android:name=".StoreAppealActivity" />
+        <activity android:name=".CheckStoreAppealActivity"></activity>
     </application>
 
 </manifest>

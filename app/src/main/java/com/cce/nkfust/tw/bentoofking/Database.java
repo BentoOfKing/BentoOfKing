@@ -39,6 +39,7 @@ public class Database {
     private static String memberRegisterURL = "http://163.18.104.169/databaseConnect/member_register.php";
     private static String getCommentURL = "http://163.18.104.169/databaseConnect/getComment.php";
     private static String getSingleMemberURL = "http://163.18.104.169/databaseConnect/getSingleMember.php";
+    private static String getBanedMemberURL = "http://163.18.104.169/databaseConnect/getBanedMember.php";
     private static String addCommentURL = "http://163.18.104.169/databaseConnect/addComment.php";
     private static String deleteCommentURL = "http://163.18.104.169/databaseConnect/deleteComment.php";
     private static String updateCommentURL = "http://163.18.104.169/databaseConnect/updateComment.php";
@@ -769,11 +770,12 @@ public class Database {
         try {
             params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
-            json = jParser.makeHttpRequest(getAppealURL, "GET", params);
+            json = jParser.makeHttpRequest(getBanedMemberURL, "GET", params);
             Log.d("All Member: ", json.toString());
-            members = json.getJSONArray(TAG_Member);
+            members = json.getJSONArray(TAG_MEMBERS);
         } catch (Exception e) {
-            return null;
+            Member[] nullMember = new Member[0];
+            return nullMember;
         }
         try {
             if (members.length() == 10) {

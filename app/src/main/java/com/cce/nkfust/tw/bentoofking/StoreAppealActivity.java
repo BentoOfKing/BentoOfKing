@@ -27,9 +27,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class BanedMemberActivity extends AppCompatActivity {
+public class StoreAppealActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
-    private static String passMemberInfo = "MEMBER_INFO";
+    private static String passAppealInfo = "APPEAL_INFO";
+    private static String passStoreInfo = "STORE_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private static final int MORE_STORE = 39;
@@ -39,13 +40,13 @@ public class BanedMemberActivity extends AppCompatActivity {
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
     private ListView appealListView;
-    private ArrayList<Member> memberArrayList;
+    private ArrayList<Appeal> appealArrayList;
     private Context context;
     private MainThreadHandler mainThreadHandler;
-    private MemberAdapter memberAdapter;
+    private StoreAppealAdapter storeAppealAdapter;
     private Handler_A anotherHandler;
     private HandlerThread anotherThread;
-    private Member[] member;
+    private Appeal[] appeal;
     private Database database;
     private Appeal beUpdateAppeal;
     private ProgressDialog progressDialog;
@@ -53,18 +54,18 @@ public class BanedMemberActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_baned_member);
+        setContentView(R.layout.activity_appeal_comment);
         firstOnResume = true;
         context = this;
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
-        memberArrayList = new ArrayList<Member>();
+        appealArrayList = new ArrayList<Appeal>();
         Drawer drawer = new Drawer();
         drawerListView = findViewById(R.id.drawerListView);
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        toolbar.setTitle(getResources().getString(R.string.banMember));
+        toolbar.setTitle(getResources().getString(R.string.storeAppeal));
         appealListView = findViewById(R.id.appealListView);
         appealListView.setOnScrollListener(new AppealListScrollHandler());
         mainThreadHandler = new MainThreadHandler();
@@ -72,18 +73,18 @@ public class BanedMemberActivity extends AppCompatActivity {
         anotherThread.start();
         database = new Database();
         anotherHandler = new Handler_A(anotherThread.getLooper());
-        Thread thread = new Thread(new GetMember());
+        Thread thread = new Thread(new GetAppeal());
         thread.start();
     }
-    class GetMember implements Runnable{
+    class GetAppeal implements Runnable{
         @Override
         public void run() {
             try {
                 database.refreshStoreIndex();
-                member = database.GetBanedMember();
-                memberArrayList.clear();
-                for(int i=0;i<member.length;i++){
-                    memberArrayList.add(member[i]); //1.ArrayList
+                appeal = database.GetAppeal("1");
+                appealArrayList.clear();
+                for(int i=0;i<appeal.length;i++){
+                    appealArrayList.add(appeal[i]); //1.ArrayList
                 }
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
             }catch (Exception e){
@@ -102,16 +103,15 @@ public class BanedMemberActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SUCCESS:
                     LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    memberAdapter = new MemberAdapter(inflater,memberArrayList);
-                    final String[] item = getResources().getStringArray(R.array.previewStoreArray);
-                    appealListView.setAdapter(memberAdapter);//3.設Adapter
+                    storeAppealAdapter = new StoreAppealAdapter(inflater,appealArrayList);
+                    appealListView.setAdapter(storeAppealAdapter);//3.設Adapter
                     appealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
                             Intent intent = new Intent();
-                            intent.setClass(context,CheckMemberActivity.class);
+                            intent.setClass(context,CheckStoreAppealActivity.class);
                             intent.putExtra(passUserInfo,userInfo);
-                            intent.putExtra(passMemberInfo,memberArrayList.get((int) l));
+                            intent.putExtra(passAppealInfo,appealArrayList.get((int) l));
                             startActivity(intent);
                         }
                     });
@@ -120,7 +120,7 @@ public class BanedMemberActivity extends AppCompatActivity {
                     Toast.makeText(context, getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
                     break;
                 case REFRESH_ACTIVITY:
-                    memberAdapter.notifyDataSetChanged();
+                    storeAppealAdapter.notifyDataSetChanged();
                     break;
             }
             super.handleMessage(msg);
@@ -139,9 +139,9 @@ public class BanedMemberActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MORE_STORE:
-                    member = database.GetBanedMember();
-                    for(int i=0;i<member.length;i++){
-                        memberArrayList.add(member[i]); //1.ArrayList
+                    appeal = database.GetAppeal("1");
+                    for(int i=0;i<appeal.length;i++){
+                        appealArrayList.add(appeal[i]); //1.ArrayList
                     }
                     mainThreadHandler.sendEmptyMessage(REFRESH_ACTIVITY);
                     break;
@@ -167,7 +167,7 @@ public class BanedMemberActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(!firstOnResume){
-            memberArrayList.clear();
+            appealArrayList.clear();
             database = null;
             database = new Database();
             anotherHandler.sendEmptyMessage(MORE_STORE);
@@ -176,32 +176,32 @@ public class BanedMemberActivity extends AppCompatActivity {
     }
 }
 
-class MemberAdapter extends BaseAdapter { //2.建Adapter
-    private ArrayList<Member> member;
+class StoreAppealAdapter extends BaseAdapter { //2.建Adapter
+    private ArrayList<Appeal> appeal;
     private LayoutInflater inflater;
     private ViewHolder viewHolder;
 
 
     public static class ViewHolder {
-        LinearLayout memberLinearLayout;
+        LinearLayout appealLinearLayout;
         TextView titleTextView;
         TextView subtitleTextView;
     }
 
-    public MemberAdapter(LayoutInflater inflater, ArrayList<Member> member) {
-        this.member = member;
+    public StoreAppealAdapter(LayoutInflater inflater, ArrayList<Appeal> appeal) {
+        this.appeal = appeal;
         this.inflater = inflater;
     }
 
 
     @Override
     public int getCount() {
-        return member.size();
+        return appeal.size();
     }
 
     @Override
-    public Member getItem(int i) {
-        return member.get(i);
+    public Appeal getItem(int i) {
+        return appeal.get(i);
     }
 
     @Override
@@ -216,13 +216,13 @@ class MemberAdapter extends BaseAdapter { //2.建Adapter
             view = this.inflater.inflate(R.layout.admin_item, null);
             viewHolder.titleTextView = view.findViewById(R.id.titleTextView);
             viewHolder.subtitleTextView = view.findViewById(R.id.subtitleTextView);
-            viewHolder.memberLinearLayout = view.findViewById(R.id.LinearLayout);
+            viewHolder.appealLinearLayout = view.findViewById(R.id.LinearLayout);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.titleTextView.setText(getItem(position).getEmail());
-        viewHolder.subtitleTextView.setText(getItem(position).getNote());
+        viewHolder.titleTextView.setText(getItem(position).getTitle());
+        viewHolder.subtitleTextView.setText(getItem(position).getContent());
         return view;
     }
 }

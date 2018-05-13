@@ -248,4 +248,7 @@
     <string name="checkMember">查看會員</string>
     <string name="point">點數</string>
     <string name="state">狀態</string>
+    <string name="memberAppeal">會員申訴</string>
+    <string name="storeAppeal">店家申訴</string>
+
 </resources>
