@@ -251,5 +251,6 @@
     <string name="memberAppeal">會員申訴</string>
     <string name="storeAppeal">店家申訴</string>
     <string name="checkComment">查看評論</string>
+    <string name="cannotFindComment">找不到評論，評論可能已被刪除</string>
 
 </resources>

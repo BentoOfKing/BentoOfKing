@@ -62,7 +62,7 @@ public class CheckMemberAppealActivity extends AppCompatActivity {
         titleTextView = findViewById(R.id.titleTextView);
         titleTextView.setText(appeal.getTitle());
         declarantTextView = findViewById(R.id.declarantTextView);
-        contentTextView = findViewById(R.id.contentTextView);
+        contentTextView = findViewById(R.id.memberContentTextView);
         contentTextView.setText(appeal.getContent());
         noteEditText = findViewById(R.id.noteEditText);
         noteEditText.setText(appeal.getNote());

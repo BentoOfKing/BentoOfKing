@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/memberTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:text="會員"
+        android:textColor="@color/wallet_link_text_light"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/memberTextView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:text="（5★）"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/memberTextView"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/scoreTextView"
+        android:text="- YYYY/MM/DD"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/memberContentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scoreTextView"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:singleLine="false"
+        android:text="內容"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/storeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/memberContentTextView"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:text="店家"
+        android:textColor="@color/wallet_link_text_light"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/storeContentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/storeTextView"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:text="內容"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+</RelativeLayout>

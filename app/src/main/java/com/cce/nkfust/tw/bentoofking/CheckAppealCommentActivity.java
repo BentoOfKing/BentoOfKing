@@ -13,13 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +29,13 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
     private static final int FAIL = 69;
     private static final int GET_SUCCESSED = 1;
     private static final int GET_FAIL = 2;
+    private static final int DELETE_SUCCESSED = 3;
+    private static final int COMMENT_FAIL = 4;
     private UserInfo userInfo;
     private Appeal appeal;
     private Comment comment;
-    private Member member;
+    private Member member,commentMember;
+    private Store commentStore;
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
@@ -67,7 +68,7 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
         titleTextView.setText(appeal.getTitle());
         declarantTextView = findViewById(R.id.declarantTextView);
         appealedTextView = findViewById(R.id.appealedTextView);
-        contentTextView = findViewById(R.id.contentTextView);
+        contentTextView = findViewById(R.id.memberContentTextView);
         contentTextView.setText(appeal.getContent());
         noteEditText = findViewById(R.id.noteEditText);
         noteEditText.setText(appeal.getNote());
@@ -97,10 +98,40 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
                     break;
                 case R.id.appealedTextView:
                     inflater = LayoutInflater.from(context);
-                    v = inflater.inflate(R.layout.item_comment_listitem, null);
+                    v = inflater.inflate(R.layout.alertdialog_comment, null);
                     builder = new AlertDialog.Builder(context);
-                    TextView commentMember = v.findViewById(R.id.commentMember);
-
+                    TextView memberTextView = v.findViewById(R.id.memberTextView);
+                    TextView scoreTextView = v.findViewById(R.id.scoreTextView);
+                    TextView dateTextView = v.findViewById(R.id.dateTextView);
+                    TextView memberContentTextView = v.findViewById(R.id.memberContentTextView);
+                    TextView storeTextView = v.findViewById(R.id.storeTextView);
+                    TextView storeContentTextView = v.findViewById(R.id.storeContentTextView);
+                    memberTextView.setText(commentMember.getEmail());
+                    scoreTextView.setText("（"+comment.getScore()+"★）");
+                    dateTextView.setText("- "+comment.getContentTime());
+                    memberContentTextView.setText(comment.getNote());
+                    storeTextView.setText(commentStore.getStoreName());
+                    storeContentTextView.setText(comment.getReply());
+                    memberTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            intent.setClass(context,CheckMemberActivity.class);
+                            intent.putExtra(passUserInfo,userInfo);
+                            intent.putExtra(passMemberInfo,commentMember);
+                            context.startActivity(intent);
+                        }
+                    });
+                    storeTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            intent.setClass(context,CheckStoreInfo.class);
+                            intent.putExtra(passUserInfo,userInfo);
+                            UserInfo tmp = userInfo;
+                            tmp.putStore(commentStore);
+                            intent.putExtra("storeInfo",tmp);
+                            context.startActivity(intent);
+                        }
+                    });
                     builder.setTitle(getResources().getString(R.string.checkComment));
                     builder.setView(v);
                     builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -109,10 +140,12 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     });
-                    builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //缺更新資料
+                            Thread t = new Thread(new DeleteComment());
+                            progressDialog = ProgressDialog.show(context, "請稍等...", "資料連接中...", true);
+                            t.start();
                             dialog.dismiss();
                         }
                     });
@@ -157,6 +190,17 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
             }
         }
     }
+    class DeleteComment implements Runnable{
+        @Override
+        public void run() {
+            Database d = new Database();
+            if(d.deleteComment(comment.getID()).equals("Successful.")){
+                mainThreadHandler.sendEmptyMessage(DELETE_SUCCESSED);
+            }else{
+                mainThreadHandler.sendEmptyMessage(FAIL);
+            }
+        }
+    }
     class UpdateAppeal implements Runnable{
         @Override
         public void run() {
@@ -177,6 +221,15 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
         }
         public void handleMessage(Message msg) {
             switch (msg.what){
+                case COMMENT_FAIL:
+                    appealedTextView.setText(getResources().getString(R.string.cannotFindComment));
+                    appealedTextView.setOnClickListener(null);
+                    break;
+                case DELETE_SUCCESSED:
+                    progressDialog.dismiss();
+                    appealedTextView.setText(getResources().getString(R.string.cannotFindComment));
+                    appealedTextView.setOnClickListener(null);
+                    break;
                 case SUCCESSED:
                     progressDialog.dismiss();
                     finish();
@@ -196,19 +249,29 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
             }
         }
     }
-    public class GetMemberAndComment implements Runnable{
+    public class GetMemberAndStoreAndComment implements Runnable{
         @Override
         public void run() {
             Database d = new Database();
-            comment = d.GetSingleComment(appeal.getAppealed());
-            if(comment == null){
-                mainThreadHandler.sendEmptyMessage(GET_FAIL);
-                return;
-            }
             member = d.GetSingleMember(appeal.getDeclarant());
             if(member == null){
                 mainThreadHandler.sendEmptyMessage(GET_FAIL);
                 return;
+            }
+            comment = d.GetSingleComment(appeal.getAppealed());
+            if(comment == null){
+                mainThreadHandler.sendEmptyMessage(COMMENT_FAIL);
+            }else {
+                commentStore = d.GetSingleStore(comment.getStore());
+                if (commentStore == null) {
+                    mainThreadHandler.sendEmptyMessage(GET_FAIL);
+                    return;
+                }
+                commentMember = d.GetSingleMember(comment.getMember());
+                if (commentMember == null) {
+                    mainThreadHandler.sendEmptyMessage(GET_FAIL);
+                    return;
+                }
             }
             mainThreadHandler.sendEmptyMessage(GET_SUCCESSED);
         }
@@ -217,7 +280,7 @@ public class CheckAppealCommentActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressDialog = ProgressDialog.show(context, "請稍等...", "資料連接中...", true);
-        Thread t = new Thread(new GetMemberAndComment());
+        Thread t = new Thread(new GetMemberAndStoreAndComment());
         t.start();
     }
 }
