@@ -102,7 +102,6 @@ public class CheckStoreInfo extends AppCompatActivity {
     private Database databaseForComment;
     private Comment[] commentlist;
     private ArrayList<Comment> commentArrayList;
-    private CommentListViewBaseAdapter adapter;
     private Thread getArrayList;
     private HandlerThread commentThread;
     private CommentHandler CmtHandler;
@@ -477,7 +476,6 @@ public class CheckStoreInfo extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_COMMENT:
-                    adapter.refresh(commentArrayList);
                     recyclerAdapter.notifyDataSetChanged();
                     break;
                 case UPDATE_UI:
@@ -499,7 +497,6 @@ public class CheckStoreInfo extends AppCompatActivity {
                     storeIcon.setLayoutParams(CheckStoreInfo.this.params);
                     storeIcon.setImageBitmap(storePhotoBitmap);
                     recyclerAdapter.notifyDataSetChanged();
-                    adapter.notifyDataSetChanged();
                     break;
                 case 998:
                     ViewGroup.LayoutParams params = storePictureLayout.getLayoutParams();
@@ -730,66 +727,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         }
     }
 
-    private class DoSomethingToComment implements AdapterView.OnItemClickListener{
-        AlertDialog.Builder askForCommentScore = new AlertDialog.Builder(CheckStoreInfo.this);
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final Comment selectComment = commentArrayList.get(position);
-            final ArrayList<String> selections = new ArrayList<String>();
-            if(userInfo.getIdentity()==3){
-                selections.add("回覆");
-                selections.add("編輯");
-                selections.add("檢舉");
-                selections.add("刪除");
-            }else
-                selections.add("檢舉");
-            if(userInfo.getIdentity()==2&&userInfo.getStore().getID().equals(storeInfoBundle.getStore().getID()))
-                selections.add("回覆");
-            if(userInfo.getIdentity()==1&&userInfo.getMember().getEmail().equals(selectComment.getMember())){
-                selections.add("刪除");
-                selections.add("編輯");
-            }
-            askForCommentScore.setTitle(selectComment.getMemberNickName()+"的評論");
-            askForCommentScore.setItems( selections.toArray(new String[0]), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if(selections.get(which).equals("刪除")){
-                        Message msg = new Message();
-                        msg.what = DELETE_COMMENT;
-                        Bundle bag = new Bundle();
-                        bag.putString("CommentID",selectComment.getID());
-                        msg.setData(bag);
-                        CmtHandler.sendMessage(msg);
-                        CmtHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainHandler.sendEmptyMessage(UPDATE_COMMENT);
-                            }
-                        }, 500);
-                    }else if(selections.get(which).equals("編輯")){
-                        commentMode = EDIT_COMMENT;
-                        editComment = new Comment();
-                        editComment.putID(selectComment.getID());
-                        editComment.putReply(selectComment.getReply());
-                        commentEditText.setText(selectComment.getNote());
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
-                    }else if(selections.get(which).equals("回覆")){
-                        commentMode = EDIT_REPLY;
-                        editComment = new Comment();
-                        editComment.putID(selectComment.getID());
-                        editComment.putNote(selectComment.getNote());
-                        commentEditText.setText(selectComment.getReply());
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
-                    }
-                }
-            });
-            AlertDialog dialog = askForCommentScore.create();
-            dialog.show();
 
-        }
-    }
 
     private class RecyclerListItemHandler implements CommentListViewRecyclerAdapter.OnItemClickListener{
         AlertDialog.Builder askForCommentScore = new AlertDialog.Builder(CheckStoreInfo.this);
