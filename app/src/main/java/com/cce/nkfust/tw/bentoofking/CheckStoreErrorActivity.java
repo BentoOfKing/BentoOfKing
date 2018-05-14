@@ -60,6 +60,7 @@ public class CheckStoreErrorActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
+        drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.checkStoreError));
         titleTextView = findViewById(R.id.titleTextView);
         titleTextView.setText(appeal.getTitle());
