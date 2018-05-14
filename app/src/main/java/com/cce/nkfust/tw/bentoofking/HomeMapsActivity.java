@@ -78,13 +78,14 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private Handler timerHandler;
     private ImageView storeIcon;
     private DownloadWebPicture downloadWebPicture;
-    private boolean isSearch;
+    private boolean isSearch,firstOnResume;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         Search = "%";
+        firstOnResume = true;
         isSearch = false;
         context = this;
         allStore = new ArrayList<Store>();
@@ -173,7 +174,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 TextView storeScore = popWindow.findViewById(R.id.storeScore);
                 TextView storePrice = popWindow.findViewById(R.id.storePrice);
                 TextView storeDistance = popWindow.findViewById(R.id.storeDistance);
-                storeInfoLayout3.setText(marker.getTitle());
+                storeInfoLayout3.setText(clickStore.getStoreName());
                 storeScore.setText("評價："+clickStore.getRank());
                 storePrice.setText("平均價位："+clickStore.getPrice());
                 storeDistance.setText("");
@@ -214,7 +215,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
     }
     public Store findMarkerStore(Marker marker){
         for(int i=0;i<allStore.size();i++){
-            if(Double.toString(marker.getPosition().latitude).equals(allStore.get(i).getLatitude()) && Double.toString(marker.getPosition().longitude).equals(allStore.get(i).getLongitude())){
+            if(marker.getTitle().equals(allStore.get(i).getID())){
                 return allStore.get(i);
             }
         }
@@ -389,7 +390,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 case SUCCESS:
                     for(int i=0;i<stores.length;i++){
                         LatLng storeLocation = new LatLng(Double.parseDouble(stores[i].getLatitude()),Double.parseDouble(stores[i].getLongitude()));
-                        mMap.addMarker(new MarkerOptions().position(storeLocation).title(stores[i].getStoreName()));
+                        mMap.addMarker(new MarkerOptions().position(storeLocation).title(stores[i].getID()));
                         allStore.add(stores[i]);
 
                     }
@@ -400,19 +401,20 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                     if(allStore.size() == 0){
                         Toast toast = Toast.makeText(context,getResources().getString(R.string.cannotSearchStore), Toast.LENGTH_SHORT);
                         toast.show();
-                    }
-                    if(isSearch){
-                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                        for(int i=0;i<allStore.size();i++){
-                            LatLng storeLocation = new LatLng(Double.parseDouble(allStore.get(i).getLatitude()),Double.parseDouble(allStore.get(i).getLongitude()));
-                            builder.include(storeLocation);
+                    }else {
+                        if (isSearch) {
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                            for (int i = 0; i < allStore.size(); i++) {
+                                LatLng storeLocation = new LatLng(Double.parseDouble(allStore.get(i).getLatitude()), Double.parseDouble(allStore.get(i).getLongitude()));
+                                builder.include(storeLocation);
+                            }
+                            LatLngBounds latLngBounds = builder.build();
+                            int width = getResources().getDisplayMetrics().widthPixels;
+                            int height = getResources().getDisplayMetrics().heightPixels;
+                            int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(latLngBounds, width, height, padding);
+                            mMap.animateCamera(cu);
                         }
-                        LatLngBounds latLngBounds = builder.build();
-                        int width = getResources().getDisplayMetrics().widthPixels;
-                        int height = getResources().getDisplayMetrics().heightPixels;
-                        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
-                        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(latLngBounds, width, height, padding);
-                        mMap.animateCamera(cu);
                     }
                     break;
             }
@@ -533,17 +535,19 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onResume() {
         super.onResume();
-        class UpdateMemberInfo implements Runnable{
-            @Override
-            public void run() {
-                Database d = new Database();
-                userInfo.putMember(d.GetSingleMember(userInfo.getMember().getEmail()));
+        if(!firstOnResume) {
+            class UpdateMemberInfo implements Runnable {
+                @Override
+                public void run() {
+                    Database d = new Database();
+                    userInfo.putMember(d.GetSingleMember(userInfo.getMember().getEmail()));
+                }
+            }
+            if (userInfo.getIdentity() == 1) {
+                Thread t = new Thread(new UpdateMemberInfo());
+                t.start();
             }
         }
-        if(userInfo.getIdentity()==1){
-            Thread t = new Thread(new UpdateMemberInfo());
-            t.start();
-        }
-
+        firstOnResume = false;
     }
 }
