@@ -56,7 +56,12 @@ public class Database {
     private static String addAppealURL = "http://163.18.104.169/databaseConnect/addAppeal.php";
     private static String updateAppealURL = "http://163.18.104.169/databaseConnect/updateAppeal.php";
     private static String getAppealURL = "http://163.18.104.169/databaseConnect/getAppeal.php";
+    private static String addPushURL = "http://163.18.104.169/databaseConnect/addPush.php";
+    private static String updatePushURL = "http://163.18.104.169/databaseConnect/updatePush.php";
+    private static String deletePushURL = "http://163.18.104.169/databaseConnect/deletePush.php";
+    private static String getPushURL = "http://163.18.104.169/databaseConnect/getPush.php";
     private static final String TAG_APPEAL = "appeal";
+    private static final String TAG_PUSH = "push";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_STORES = "store";
     private static final String TAG_MEMBERS = "member";
@@ -97,6 +102,7 @@ public class Database {
     private static final String TAG_Title = "Title";
     private static final String TAG_Content = "Content";
     private static final String TAG_Result = "Result";
+
     JSONParser jParser;
     JSONObject json;
 
@@ -189,7 +195,8 @@ public class Database {
         try {
             int success = json.getInt(TAG_SUCCESS);
             if (success == 1) {
-                return "Successful.";
+                String point = json.getString(TAG_Point);
+                return "Successful."+"point";
             } else {
                 return "An error occurred.";
             }
@@ -1068,6 +1075,125 @@ public class Database {
             return returnAppeal;
         } catch (Exception e) {
             return null;
+        }
+    }
+    public String AddPush(Push push) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        try {
+            params.add(new BasicNameValuePair("Store", push.getStore()));
+            params.add(new BasicNameValuePair("Content", new String(push.getContent().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("State", push.getState()));
+            params.add(new BasicNameValuePair("Note", new String(push.getNote().getBytes(), "8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        json = null;
+        json = jParser.makeHttpRequest(addPushURL, "POST", params);
+        Log.d("Add Push.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+    public String UpdatePush(Push push) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        try {
+            params.add(new BasicNameValuePair("ID", push.getID()));
+            params.add(new BasicNameValuePair("Store", push.getStore()));
+            params.add(new BasicNameValuePair("Content", new String(push.getContent().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("State", push.getState()));
+            params.add(new BasicNameValuePair("Note", new String(push.getNote().getBytes(), "8859_1")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        json = null;
+        json = jParser.makeHttpRequest(updatePushURL, "POST", params);
+        Log.d("Add Push.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+    public String DeletePush(String ID) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", ID));
+        json = null;
+        json = jParser.makeHttpRequest(deletePushURL, "POST", params);
+        Log.d("Add Push.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
+    }
+    public Push[] GetPush(String Store, String State) {
+        JSONObject json;
+        JSONArray pushes = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Push returnPush[];
+        try {
+            storesList = new ArrayList<HashMap<String, String>>();
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(index)));
+            params.add(new BasicNameValuePair("Store", Store));
+            params.add(new BasicNameValuePair("State", State));
+            json = jParser.makeHttpRequest(getPushURL, "GET", params);
+            Log.d("All Pushes: ", json.toString());
+            //int success = json.getInt(TAG_SUCCESS);
+            pushes = json.getJSONArray(TAG_PUSH);
+
+        } catch (Exception e) {
+            Push[] nullpush = new Push[0];
+            return nullpush;
+        }
+        try {
+            // looping through All Products
+            if (pushes.length() == 10) {
+                range = 10;
+            } else {
+                range = pushes.length();
+            }
+            returnPush = new Push[range];
+            for (int i = 0; i < range; i++) {
+                JSONObject p = pushes.getJSONObject(i);
+                // Storing each json item in variable
+                returnPush[i] = new Push(p.getString(TAG_ID),p.getString(TAG_Store),p.getString(TAG_Content),p.getString(TAG_State),p.getString(TAG_Note));
+            }
+            index += range;
+            return returnPush;
+        } catch (Exception e) {
+            System.out.println("error");
+            System.out.print(e);
+            Push[] nullpush = new Push[0];
+            return nullpush;
         }
     }
 }

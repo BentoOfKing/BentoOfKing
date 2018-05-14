@@ -13,7 +13,6 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:logo="@drawable/toolbar_logo"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="便當王" />
 

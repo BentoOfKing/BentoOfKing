@@ -129,23 +129,9 @@ public class MyFavoriteStore extends AppCompatActivity {
                 android.R.color.holo_blue_light,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light);
-        setSupportActionBar(toolbar);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.mapItem:
-                        Intent intent = new Intent();
-                        intent.setClass(context, HomeMapsActivity.class);
-                        intent.putExtra(passUserInfo, userInfo);
-                        startActivity(intent);
-                        break;
-                }
-                return false;
-            }
-        });
         Drawer drawer = new Drawer();
         drawer.init(this, toolbar, drawerListView, drawerLayout, userInfo);
+        toolbar.setTitle(getResources().getString(R.string.favorite));
         storelist.setAdapter(adapter);
     }
 
