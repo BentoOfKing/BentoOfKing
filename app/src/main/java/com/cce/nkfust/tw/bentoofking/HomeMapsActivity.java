@@ -78,7 +78,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
     private Handler timerHandler;
     private ImageView storeIcon;
     private DownloadWebPicture downloadWebPicture;
-    private boolean isSearch,firstOnResume;
+    private boolean isSearch = false,firstOnResume;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +86,6 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         Search = "%";
         firstOnResume = true;
-        isSearch = false;
         context = this;
         allStore = new ArrayList<Store>();
         researchButton = findViewById(R.id.researchButton);
