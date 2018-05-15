@@ -13,7 +13,7 @@ public class Push implements Serializable {
         this.ID = ID;
         this.Store = Store;
         this.Content = Content;
-        this.State = State;
+        this.State = State; //0:未審核，1:待審核，2:已審核，3:已發送
         this.Note = Note;
     }
     void putID(String ID){this.ID = ID;}

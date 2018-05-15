@@ -76,7 +76,9 @@
         <activity android:name=".CheckStoreAppealActivity" />
         <activity android:name=".MemberAppealActivity" />
         <activity android:name=".CheckMemberAppealActivity" />
-        <activity android:name=".CheckAppealCommentActivity"></activity>
+        <activity android:name=".CheckAppealCommentActivity" />
+        <activity android:name=".PushManageActivity" />
+        <activity android:name=".ReviewPushActivity"></activity>
     </application>
 
 </manifest>

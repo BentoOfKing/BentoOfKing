@@ -37,7 +37,7 @@
     <string name="storeAddress">店家地址</string>
     <string name="add">新增</string>
     <string name="Previous_page">上一頁</string>
-    <string name="push_manage">推播管理</string>
+    <string name="pushManage">推播管理</string>
     <string name="push_name">推播名稱</string>
     <string name="send_time">發送時間</string>
     <string name="push_content">推播內容</string>
@@ -252,5 +252,22 @@
     <string name="storeAppeal">店家申訴</string>
     <string name="checkComment">查看評論</string>
     <string name="cannotFindComment">找不到評論，評論可能已被刪除</string>
-
+    <string name="editPush">編輯推播</string>
+    <array name="storePushArray0">
+        <item>推播編輯</item>
+        <item>要求審核</item>
+    </array>
+    <array name="storePushArray1">
+        <item>推播編輯</item>
+    </array>
+    <array name="storePushArray2">
+        <item>推播編輯</item>
+        <item>發送編輯</item>
+    </array>
+    <array name="adminPushArray">
+        <item>推播編輯</item>
+        <item>查看店家</item>
+        <item>審核通過</item>
+    </array>
+    <string name="editPushNeedRe">推播審核後若要重新編輯需要在審核一次，您確定嗎？</string>
 </resources>
