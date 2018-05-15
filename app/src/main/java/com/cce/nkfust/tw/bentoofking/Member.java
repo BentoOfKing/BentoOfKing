@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 
 public class Member implements Serializable{
-    String Email,Password,Nickname,Sex,Point,Favorite,State,Note,Longitude,Latitude;
+    String Email,Password,Nickname,Sex,Point,Favorite,State,Note,Longitude,Latitude,Token;
     public Member(){}
     public Member(String Email,String Password,String Nickname,String Sex,String Point,String Favorite,String State,String Note){
         this.Email = Email;
@@ -52,6 +52,9 @@ public class Member implements Serializable{
     void putLatitude(String Latitude){
         this.Latitude = Latitude;
     }
+    void putToken(String Token){
+        this.Token = Token;
+    }
     String getEmail(){
         return Email;
     }
@@ -81,5 +84,8 @@ public class Member implements Serializable{
     }
     String getLatitude(){
         return Latitude;
+    }
+    String getToken(){
+        return Token;
     }
 }

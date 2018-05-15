@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1015539970810",
+    "firebase_url": "https://bentoofking-197315.firebaseio.com",
+    "project_id": "bentoofking-197315",
+    "storage_bucket": "bentoofking-197315.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015539970810:android:3f84ecd9136e3799",
+        "android_client_info": {
+          "package_name": "com.cce.nkfust.tw.bentoofking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015539970810-srcsqqeiq8qr3b0b5i1u8h5v5l2qfepe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cce.nkfust.tw.bentoofking",
+            "certificate_hash": "bfc9a052424c308d7b36ecba0cfa280a74209949"
+          }
+        },
+        {
+          "client_id": "1015539970810-d2rtbccjc09srjee15oq1qirtvkfahom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbH0DvOWR7AcP_hzny1zMSyjZE93TCkU0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015539970810-d2rtbccjc09srjee15oq1qirtvkfahom.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

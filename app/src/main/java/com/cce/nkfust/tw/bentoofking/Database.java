@@ -60,6 +60,9 @@ public class Database {
     private static String updatePushURL = "http://163.18.104.169/databaseConnect/updatePush.php";
     private static String deletePushURL = "http://163.18.104.169/databaseConnect/deletePush.php";
     private static String getPushURL = "http://163.18.104.169/databaseConnect/getPush.php";
+    private static String sendPushURL = "http://163.18.104.169/databaseConnect/sendPush.php";
+    private static String updateTokenURL = "http://163.18.104.169/databaseConnect/updateToken.php";
+    private static String updatePointURL = "http://163.18.104.169/databaseConnect/updatePoint.php";
     private static final String TAG_APPEAL = "appeal";
     private static final String TAG_PUSH = "push";
     private static final String TAG_SUCCESS = "success";
@@ -1195,5 +1198,31 @@ public class Database {
             Push[] nullpush = new Push[0];
             return nullpush;
         }
+    }
+    public void SendPush(Push push) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Content", push.Content));
+        json = null;
+        json = jParser.makeHttpRequest(sendPushURL, "POST", params);
+    }
+    public void UpdateToken(Member member){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Email", member.getEmail()));
+        params.add(new BasicNameValuePair("Token", member.getToken()));
+        json = null;
+        json = jParser.makeHttpRequest(updateTokenURL, "POST", params);
+    }
+    public void UpdatePoint(Store store){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", store.getID()));
+        params.add(new BasicNameValuePair("Point", store.getPoint()));
+        json = null;
+        json = jParser.makeHttpRequest(updatePointURL, "POST", params);
     }
 }

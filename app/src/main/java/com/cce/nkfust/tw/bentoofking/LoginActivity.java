@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Handler LoginThreadHandler;
     private HandlerThread LoginThread;
-
+    private MyInstanceIDService myInstanceIDService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.storeLoginButton1);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         loginButton.setOnClickListener(loginButtonHandler);
-
+        myInstanceIDService = new MyInstanceIDService();
 
 
     }
@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             database = new Database();
             member = database.MemberLogin(emailEditText.getText().toString(),passwordEditText.getText().toString());
             LoginUiHandler.post(loginconfirm);
+
         }
     }
 
@@ -129,6 +130,9 @@ public class LoginActivity extends AppCompatActivity {
                     /////
 
                     progressDialog.dismiss();
+                    myInstanceIDService.onTokenRefresh();
+                    member.putToken(myInstanceIDService.getToken());
+                    database.UpdateToken(member);
                     startActivity(intent);
 
                 }
