@@ -373,11 +373,15 @@ public class CheckStoreInfo extends AppCompatActivity {
         return true;
     }
     private void UIupdate(){
-        CmtHandler.sendEmptyMessage(UPDATE_ARRAYLIST);
         anotherHandler.sendEmptyMessage(GET_BITMAP);
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mainHandler.sendEmptyMessage(UPDATE_COMMENT);
+        CmtHandler.sendEmptyMessage(UPDATE_ARRAYLIST);
+    }
 
     private void updateStoreInfo(){
         String storeFreeinfoBool = storeInfoBundle.getStore().getInformation();
@@ -546,19 +550,6 @@ public class CheckStoreInfo extends AppCompatActivity {
     }
 
 
-    public class ConnectDatabase implements Runnable{
-        @Override
-        public void run() {
-            commentArrayList = new ArrayList<Comment>();
-            commentlist = database.getComment("Store",CheckStoreInfo.this.storeInfoBundle.getStore().getID());
-            for(int i=0;i<commentlist.length;i++){
-                commentArrayList.add(commentlist[i]);
-                Member member = database.GetSingleMember(commentlist[i].getMember());
-                commentArrayList.get(i).setMemberNickName(member.getNickname());
-            }
-        }
-    }
-
     private class SentComment implements View.OnClickListener{
         AlertDialog.Builder askForCommentScore = new AlertDialog.Builder(CheckStoreInfo.this);
         @Override
@@ -686,6 +677,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                         commentArrayList.add(commentlist[i]);
                         Member member = database.GetSingleMember(commentlist[i].getMember());
                         commentArrayList.get(i).setMemberNickName(member.getNickname());
+                        commentArrayList.get(i).putMemberInfo(member);
                     }
                     mainHandler.sendEmptyMessage(UPDATE_COMMENT);
                     break;
@@ -699,42 +691,13 @@ public class CheckStoreInfo extends AppCompatActivity {
 
 
 
-    public class SentCommentToDataBase implements Runnable{
-        @Override
-        public void run() {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-            Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
-            String timeString = formatter.format(curDate);
-            String text = "";
-            text = CheckStoreInfo.this.commentEditText.getText().toString();
-            Comment newComment = new Comment("0",userInfo.getMember().getEmail()/*"john8654john@gmail.com"*/,CheckStoreInfo.this.storeInfoBundle.getStore().getID(),"*****","123",timeString,"", text);
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-            CheckStoreInfo.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    CheckStoreInfo.this.commentEditText.setText("") ;
-                }
-            });
-            databaseForComment = new Database();
-            databaseForComment.addComment(newComment);
-            CmtHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mainHandler.sendEmptyMessage(UPDATE_COMMENT);
-                }
-            }, 500);
-        }
-    }
-
-
-
     private class RecyclerListItemHandler implements CommentListViewRecyclerAdapter.OnItemClickListener{
         AlertDialog.Builder askForCommentScore = new AlertDialog.Builder(CheckStoreInfo.this);
         @Override
         public void onItemClick(View view, int position) {
             final Comment selectComment = commentArrayList.get(position);
             final ArrayList<String> selections = new ArrayList<String>();
+            selections.add("關於"+selectComment.getMemberNickName());
             if(userInfo.getIdentity()==3){
                 selections.add("回覆");
                 selections.add("編輯");
@@ -831,7 +794,14 @@ public class CheckStoreInfo extends AppCompatActivity {
                                 }
                             }
                         });
+                    }else if (selections.get(which).equals("關於"+selectComment.getMemberNickName())){
+                        Intent intent = new Intent();
+                        intent.setClass(CheckStoreInfo.this,CheckMemberActivity.class);
+                        intent.putExtra("MEMBER_INFO",selectComment.getMemberInfo());
+                        intent.putExtra("USER_INFO",userInfo);
+                        startActivity(intent);
                     }
+
                 }
             });
             AlertDialog dialog = askForCommentScore.create();
