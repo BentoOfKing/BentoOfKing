@@ -86,8 +86,12 @@ public class CommentListViewRecyclerAdapter extends RecyclerView.Adapter impleme
         }
 
         int score = Integer.valueOf(elementData.get(position).getScore());
-        for(int i=0;i<score;i++)
-            holder.star[i].setImageResource(R.drawable.star_on);
+        for(int i=0;i<5;i++) {
+            if(i<score)
+                holder.star[i].setImageResource(R.drawable.star_on);
+            else
+                holder.star[i].setImageResource(R.drawable.star_off);
+        }
     }
 
     @Override

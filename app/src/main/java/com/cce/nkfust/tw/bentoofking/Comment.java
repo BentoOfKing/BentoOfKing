@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class Comment implements Serializable{
     private String ID,Member,Store,Score,StoreContent,Time,Reply,Note,MemberNickName;
+    private Member memberInfo;
     public Comment(){}
     public Comment(String ID,String Member,String Store,String Score,String StoreContent,String Time,String Reply,String Note){
         this.ID = ID;
@@ -64,6 +65,10 @@ public class Comment implements Serializable{
     public void putReply(String Reply){
         this.Reply = Reply;
     }
+    public void putMemberInfo( Member member ){
+        this.memberInfo = member;
+    }
+    public Member getMemberInfo() { return this.memberInfo; }
     public void putNote(String Note){
         this.Note = Note;
     }
