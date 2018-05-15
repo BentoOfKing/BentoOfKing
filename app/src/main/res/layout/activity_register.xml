@@ -52,6 +52,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignEnd="@+id/passwordCheckTextView"
+                            android:layout_alignParentTop="true"
                             android:layout_marginBottom="15dp"
                             android:layout_marginTop="20dp"
                             android:layout_weight="1"
@@ -66,7 +67,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignEnd="@+id/passwordCheckTextView"
-                            android:layout_below="@+id/E-mailTextView"
+                            android:layout_below="@+id/Email"
                             android:layout_marginBottom="15dp"
                             android:layout_marginTop="15dp"
                             android:layout_weight="1"
@@ -74,7 +75,6 @@
                             android:text="@string/password"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
-
 
                         <TextView
                             android:id="@+id/passwordCheckTextView"
@@ -134,7 +134,7 @@
                             android:layout_weight="1">
 
                             <EditText
-                                android:id="@+id/passwordCheckEditText"
+                                android:id="@+id/emailEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginBottom="10dp"
@@ -143,7 +143,9 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/text_background"
                                 android:ems="10"
-                                android:inputType="textPassword" />
+                                android:inputType="textEmailAddress"
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -170,7 +172,7 @@
                             android:layout_weight="1">
 
                             <EditText
-                                android:id="@+id/emailEditText"
+                                android:id="@+id/passwordCheckEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginBottom="14dp"
@@ -179,7 +181,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/text_background"
                                 android:ems="10"
-                                android:inputType="textEmailAddress" />
+                                android:inputType="textPassword" />
                         </RelativeLayout>
 
                         <LinearLayout
