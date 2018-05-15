@@ -103,6 +103,7 @@ public class PushManageActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
             String[] item;
+            Thread t;
             switch (pushList.get((int)l).getState()){
                 case "0":
                     item = getResources().getStringArray(R.array.storePushArray0);
@@ -138,11 +139,18 @@ public class PushManageActivity extends AppCompatActivity {
                                             AlertDialog alertDialog = builder.create();
                                             alertDialog.show();
                                             break;
-                                        case 1://要求審核
-                                            editPush = new Push(pushList.get((int)l).getID(),userInfo.getStore().getID(),pushList.get((int)l).getContent().toString(),"1","");
-                                            Thread t = new Thread(new UpdatePush());
+                                        case 1://刪除推播
+                                            editPush = new Push(pushList.get((int)l).getID(),"","","","");
+                                            Thread t1 = new Thread(new DeletePush());
                                             progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
-                                            t.start();
+                                            t1.start();
+                                            dialog.dismiss();
+                                            break;
+                                        case 2://要求審核
+                                            editPush = new Push(pushList.get((int)l).getID(),userInfo.getStore().getID(),pushList.get((int)l).getContent().toString(),"1","");
+                                            Thread t2 = new Thread(new UpdatePush());
+                                            progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                                            t2.start();
                                             dialog.dismiss();
                                             break;
                                     }
@@ -183,6 +191,13 @@ public class PushManageActivity extends AppCompatActivity {
                                             });
                                             AlertDialog alertDialog = builder.create();
                                             alertDialog.show();
+                                            break;
+                                        case 1://刪除推播
+                                            editPush = new Push(pushList.get((int)l).getID(),"","","","");
+                                            Thread t1 = new Thread(new DeletePush());
+                                            progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                                            t1.start();
+                                            dialog.dismiss();
                                             break;
                                     }
                                 }
@@ -238,11 +253,37 @@ public class PushManageActivity extends AppCompatActivity {
                                                     .show();
 
                                             break;
-                                        case 1://發送推播
-                                            editPush = new Push(pushList.get((int)l).getID(),userInfo.getStore().getID(),pushList.get((int)l).getContent().toString(),"2","");
+                                        case 1://刪除推播
+                                            editPush = new Push(pushList.get((int)l).getID(),"","","","");
+                                            Thread t1 = new Thread(new DeletePush());
+                                            progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                                            t1.start();
+                                            dialog.dismiss();
+                                            break;
+                                        case 2://發送推播
+                                            editPush = new Push(pushList.get((int)l).getID(),userInfo.getStore().getID(),pushList.get((int)l).getContent().toString(),"3","");
                                             Thread t = new Thread(new UpdatePush());
                                             progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
                                             t.start();
+                                            dialog.dismiss();
+                                            break;
+                                    }
+                                }
+                            })
+                            .show();
+                    break;
+                case "3":
+                    item = getResources().getStringArray(R.array.storePushArray3);
+                    new AlertDialog.Builder(context)
+                            .setItems(item, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case 0://刪除推播
+                                            editPush = new Push(pushList.get((int)l).getID(),"","","","");
+                                            Thread t1 = new Thread(new DeletePush());
+                                            progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                                            t1.start();
                                             dialog.dismiss();
                                             break;
                                     }
@@ -263,7 +304,17 @@ public class PushManageActivity extends AppCompatActivity {
                 for(int i=0;i<push.length;i++) {
                     pushList.add(push[i]);
                 }
-                mainThreadHandler.sendEmptyMessage(GET_SUCCESS);
+            }
+            mainThreadHandler.sendEmptyMessage(GET_SUCCESS);
+        }
+    }
+    class DeletePush implements Runnable{
+        @Override
+        public void run() {
+            if(database.DeletePush(editPush.getID()).equals("Successful.")){
+                mainThreadHandler.sendEmptyMessage(EDIT_SUCCESS);
+            }else{
+                mainThreadHandler.sendEmptyMessage(ADD_FAIL);
             }
         }
     }

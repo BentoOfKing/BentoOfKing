@@ -254,20 +254,26 @@
     <string name="cannotFindComment">找不到評論，評論可能已被刪除</string>
     <string name="editPush">編輯推播</string>
     <array name="storePushArray0">
-        <item>推播編輯</item>
+        <item>編輯推播</item>
+        <item>刪除推播</item>
         <item>要求審核</item>
     </array>
     <array name="storePushArray1">
-        <item>推播編輯</item>
+        <item>編輯推播</item>
+        <item>刪除推播</item>
     </array>
     <array name="storePushArray2">
-        <item>推播編輯</item>
-        <item>發送編輯</item>
+        <item>編輯推播</item>
+        <item>刪除推播</item>
+        <item>發送推播</item>
+    </array>
+    <array name="storePushArray3">
+        <item>刪除推播</item>
     </array>
     <array name="adminPushArray">
-        <item>推播編輯</item>
+        <item>編輯推播</item>
         <item>查看店家</item>
         <item>審核通過</item>
     </array>
-    <string name="editPushNeedRe">推播審核後若要重新編輯需要在審核一次，您確定嗎？</string>
+    <string name="editPushNeedRe">推播審核後若要重新編輯\n需要再審核一次，您確定嗎？</string>
 </resources>
