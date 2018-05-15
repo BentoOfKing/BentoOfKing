@@ -210,7 +210,7 @@ public class PushManageActivity extends AppCompatActivity {
                             .setItems(item, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    switch (which){
+                                    switch (which) {
                                         case 0://編輯推播
                                             new AlertDialog.Builder(context)
                                                     .setMessage(R.string.editPushNeedRe)
@@ -223,7 +223,7 @@ public class PushManageActivity extends AppCompatActivity {
                                                             builder.setTitle(getResources().getString(R.string.editPush));
                                                             builder.setView(v);
                                                             final EditText editText = v.findViewById(R.id.contentEditText);
-                                                            editText.setText(pushList.get((int)l).getContent());
+                                                            editText.setText(pushList.get((int) l).getContent());
                                                             builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
@@ -233,7 +233,7 @@ public class PushManageActivity extends AppCompatActivity {
                                                             builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
-                                                                    editPush = new Push(pushList.get((int)l).getID(),userInfo.getStore().getID(),editText.getText().toString(),"1","");
+                                                                    editPush = new Push(pushList.get((int) l).getID(), userInfo.getStore().getID(), editText.getText().toString(), "1", "");
                                                                     Thread t = new Thread(new UpdatePush());
                                                                     progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
                                                                     t.start();
@@ -254,17 +254,24 @@ public class PushManageActivity extends AppCompatActivity {
 
                                             break;
                                         case 1://刪除推播
-                                            editPush = new Push(pushList.get((int)l).getID(),"","","","");
+                                            editPush = new Push(pushList.get((int) l).getID(), "", "", "", "");
                                             Thread t1 = new Thread(new DeletePush());
                                             progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
                                             t1.start();
                                             dialog.dismiss();
                                             break;
                                         case 2://發送推播
-                                            editPush = new Push(pushList.get((int)l).getID(),userInfo.getStore().getID(),pushList.get((int)l).getContent().toString(),"3","");
-                                            Thread t = new Thread(new UpdatePush());
-                                            progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
-                                            t.start();
+                                            int point = Integer.parseInt(userInfo.getStore().getPoint());
+                                            if (point < 10) {
+                                                Toast.makeText(context, getResources().getString(R.string.noPoint), Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                editPush = new Push(pushList.get((int) l).getID(), userInfo.getStore().getID(), pushList.get((int) l).getContent().toString(), "3", "");
+                                                Thread t2 = new Thread(new UpdatePush());
+                                                Thread t3 = new Thread(new SendPush());
+                                                progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
+                                                t2.start();
+                                                t3.start();
+                                            }
                                             dialog.dismiss();
                                             break;
                                     }
@@ -326,6 +333,16 @@ public class PushManageActivity extends AppCompatActivity {
             }else{
                 mainThreadHandler.sendEmptyMessage(ADD_FAIL);
             }
+        }
+    }
+
+    class SendPush implements Runnable{
+        @Override
+        public void run() {
+            database.SendPush(editPush);
+            int point = Integer.parseInt(userInfo.getStore().getPoint()) - 10;
+            userInfo.getStore().putPoint(Integer.toString(point));
+            database.UpdatePoint(userInfo.getStore());
         }
     }
     class AddPush implements Runnable{
