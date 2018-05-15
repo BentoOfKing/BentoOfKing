@@ -59,7 +59,7 @@ public class ReviewPushActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        toolbar.setTitle(getResources().getString(R.string.pushManage));
+        toolbar.setTitle(getResources().getString(R.string.pushmanage));
         pushListView = findViewById(R.id.pushListView);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         pushList = new ArrayList<Push>();

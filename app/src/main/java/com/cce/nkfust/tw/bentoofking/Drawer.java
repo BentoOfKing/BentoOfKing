@@ -56,7 +56,7 @@ public class Drawer extends AppCompatActivity{
                 drawerListView.setOnItemClickListener(memberDrawerListener);
                 break;
             case 2:
-                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.editMenu),context.getResources().getString(R.string.editPhoto),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.pushManage),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.appeal),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
+                String[] storeMenuItem ={context.getResources().getString(R.string.mainActivity),context.getResources().getString(R.string.lookStore),context.getResources().getString(R.string.editStore),context.getResources().getString(R.string.editMenu),context.getResources().getString(R.string.editPhoto),context.getResources().getString(R.string.lookOpponent),context.getResources().getString(R.string.pushmanage),context.getResources().getString(R.string.storedPoint),context.getResources().getString(R.string.appeal),context.getResources().getString(R.string.about),context.getResources().getString(R.string.logout)};
                 drawerListView.setAdapter(new ArrayAdapter<String>(context,R.layout.drawer_list_item,storeMenuItem));
                 drawerListView.setOnItemClickListener(storeDrawerListener);
                 break;
@@ -294,7 +294,9 @@ public class Drawer extends AppCompatActivity{
                     context.startActivity(intent);
                     break;
                 case 5://查看對手
-
+                    intent.setClass(context,CheckOpponentList.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 6://新增推播
                     intent.setClass(context,PushManageActivity.class);

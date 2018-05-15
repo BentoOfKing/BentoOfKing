@@ -338,7 +338,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nowLocation, 15));
                 Latitude = Double.toString(location.getLatitude());
                 Longitude = Double.toString(location.getLongitude());
-                timerHandler.postDelayed(runnable, 3000);
+//                timerHandler.postDelayed(runnable, 3000);
                 Thread t =new Thread(new GetStore());
                 t.start();
                 if (userInfo.getIdentity() == 1) {
@@ -391,7 +391,6 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                         LatLng storeLocation = new LatLng(Double.parseDouble(stores[i].getLatitude()),Double.parseDouble(stores[i].getLongitude()));
                         mMap.addMarker(new MarkerOptions().position(storeLocation).title(stores[i].getID()));
                         allStore.add(stores[i]);
-
                     }
                     Thread t = new Thread(new GetStore());
                     t.start();
