@@ -163,7 +163,9 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/text_background"
                                 android:ems="10"
-                                android:inputType="textPassword" />
+                                android:inputType="textPassword"
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -181,7 +183,9 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/text_background"
                                 android:ems="10"
-                                android:inputType="textPassword" />
+                                android:inputType="textPassword"
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp" />
                         </RelativeLayout>
 
                         <LinearLayout
@@ -239,7 +243,9 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/text_background"
                                 android:ems="10"
-                                android:inputType="textPersonName" />
+                                android:inputType="textPersonName"
+                                android:paddingEnd="10dp"
+                                android:paddingStart="10dp" />
                         </RelativeLayout>
 
                     </LinearLayout>
