@@ -1203,7 +1203,11 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        params.add(new BasicNameValuePair("Content", push.Content));
+        try {
+            params.add(new BasicNameValuePair("Content", new String(push.getContent().getBytes(), "8859_1")));
+        }catch (Exception e){
+
+        }
         json = null;
         json = jParser.makeHttpRequest(sendPushURL, "POST", params);
     }
