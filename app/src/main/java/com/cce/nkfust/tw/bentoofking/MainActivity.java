@@ -57,7 +57,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int REFRESH_ACTIVITY = 5278, requestCodeFineLoaction = 1, requestCodeCoarseLocation = 2, MORE_STORE = 5279, REFRESH_STORELIST = 5273, SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER = 5275, SEND_GPS_FILTER = 5276, REFRESHING = 5277;
-    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668,INFO_RESULT = 6669;
+    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668,INFO_RESULT = 6669,UPDATE_USERINFO = 6670;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -183,6 +183,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        drawerListView.setEnabled(false);
+        CDBTHandler.sendEmptyMessage(UPDATE_USERINFO);
+    }
 
     public class ConditionButtonHandler implements View.OnClickListener {
         Spinner distanceSpinner;
@@ -442,8 +448,6 @@ public class MainActivity extends AppCompatActivity {
                     String NumberTemp = LoginRecord.getString("Recordemail","*");
                     String PasswordTemp = LoginRecord.getString("Recordpassword","*");
                     int RecordFlag = LoginRecord.getInt("RecordFlag",0);
-                    database = new Database();
-
                     if(userInfo.getIdentity()==4){
                         LoginRecord.edit()
                                 .putString("Recordemail","*")
@@ -454,7 +458,6 @@ public class MainActivity extends AppCompatActivity {
                          PasswordTemp = LoginRecord.getString("Recordpassword","*");
                         RecordFlag = LoginRecord.getInt("RecordFlag",0);
                         userInfo.setIdentity(0);
-                        userInfo.getIdentity();
 
                     }
 
@@ -475,6 +478,13 @@ public class MainActivity extends AppCompatActivity {
                         userInfo.setIdentity(3);
                     }
                     mainHandler.sendEmptyMessage(CREATE_DRAWER);
+                    break;
+                case UPDATE_USERINFO:
+                    if(userInfo.getIdentity()==1)
+                        userInfo.putMember(database.GetSingleMember(userInfo.getMember().getEmail()));
+                    else if(userInfo.getIdentity()==2)
+                        userInfo.putStore(database.GetSingleStore(userInfo.getStore().getID()));
+                    drawerListView.setEnabled(true);
                     break;
             }
         }
