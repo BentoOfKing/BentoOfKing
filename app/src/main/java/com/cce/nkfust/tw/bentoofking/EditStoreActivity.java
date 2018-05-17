@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -36,7 +37,7 @@ public class EditStoreActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
-    private Button nextButton;
+    private ImageButton nextButton;
     private EditText nameEditText;
     private EditText addressEditText;
     private EditText phoneEditText;
