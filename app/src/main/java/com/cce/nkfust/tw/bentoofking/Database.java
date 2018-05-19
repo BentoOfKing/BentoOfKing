@@ -49,13 +49,17 @@ public class Database {
     private static String addStoreURL = "http://163.18.104.169/databaseConnect/addStore.php";
     private static String addMealURL = "http://163.18.104.169/databaseConnect/addMeal.php";
     private static String getMealURL = "http://163.18.104.169/databaseConnect/getMeal.php";
+    private static String getSingleMealURL = "http://163.18.104.169/databaseConnect/getSingleMeal.php";
     private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
+    private static String getOrderURL = "http://163.18.104.169/databaseConnect/getOrder.php";
     private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
+    private static String getOrderMealURL = "http://163.18.104.169/databaseConnect/getOrderMeal.php";
     private static String addAppealURL = "http://163.18.104.169/databaseConnect/addAppeal.php";
     private static String updateAppealURL = "http://163.18.104.169/databaseConnect/updateAppeal.php";
     private static String getAppealURL = "http://163.18.104.169/databaseConnect/getAppeal.php";
+    private static String getOneStoreAppealURL = "http://163.18.104.169/databaseConnect/getOneStoreAppeal.php";
     private static String addPushURL = "http://163.18.104.169/databaseConnect/addPush.php";
     private static String updatePushURL = "http://163.18.104.169/databaseConnect/updatePush.php";
     private static String deletePushURL = "http://163.18.104.169/databaseConnect/deletePush.php";
@@ -105,6 +109,7 @@ public class Database {
     private static final String TAG_Title = "Title";
     private static final String TAG_Content = "Content";
     private static final String TAG_Result = "Result";
+    private static final String TAG_OrderIncludeMeal = "order_include_meal";
 
     JSONParser jParser;
     JSONObject json;
@@ -868,6 +873,26 @@ public class Database {
         return "Successful.";
     }
 
+    public Meal getSingleMeal(String ID) {
+        JSONArray meals = null;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", ID));
+        json = null;
+        json = jParser.makeHttpRequest(getSingleMealURL, "GET", params);
+        Log.d("Get meal.", json.toString());
+        try {
+            meals = json.getJSONArray(TAG_Meal);
+            JSONObject m = meals.getJSONObject(0);
+            Meal meal = new Meal(m.getString(TAG_ID), m.getString(TAG_Store), m.getString(TAG_Name), m.getString(TAG_Price), m.getString(TAG_Sequence));
+            return meal;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ArrayList<Meal> getMeal(String storeID) {
         JSONArray meals = null;
         ArrayList<Meal> meal = new ArrayList<Meal>();
@@ -943,7 +968,42 @@ public class Database {
         }
         return "Successful.";
     }
-
+    public MemberOrder[] GetOrder(String Member) {
+        JSONObject json;
+        JSONArray orders = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        MemberOrder returnOrder[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            params.add(new BasicNameValuePair("Member", Member));
+            json = jParser.makeHttpRequest(getOrderURL, "GET", params);
+            Log.d("All Order: ", json.toString());
+            orders = json.getJSONArray(TAG_MEMBERS);
+        } catch (Exception e) {
+            MemberOrder[] nullOrder = new MemberOrder[0];
+            return nullOrder;
+        }
+        try {
+            if (orders.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = orders.length();
+            }
+            returnOrder = new MemberOrder[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject m = orders.getJSONObject(i);
+                returnOrder[i] = new MemberOrder(m.getString(TAG_ID), m.getString(TAG_Member), m.getString(TAG_Time));
+            }
+            reviewIndex += reviewRange;
+            return returnOrder;
+        } catch (Exception e) {
+            MemberOrder[] nullOrder = new MemberOrder[0];
+            return nullOrder;
+        }
+    }
     public String AddOrder(MemberOrder memberOrder) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
@@ -965,6 +1025,33 @@ public class Database {
             e.printStackTrace();
             return "Fail.";
         }
+    }
+
+    public ArrayList<OrderIncludeMeal> getOrderMeal(String OrderID) {
+        List<NameValuePair> params;
+        JSONArray orderMeals = null;
+        jParser = null;
+        jParser = new JSONParser();
+        params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("OrderID", OrderID));
+        json = null;
+        json = jParser.makeHttpRequest(getOrderMealURL, "GET", params);
+        Log.d("Get order meal.", json.toString());
+        try {
+            orderMeals = json.getJSONArray(TAG_APPEAL);
+        }catch (Exception e) {
+            return null;
+        }
+        try {
+            ArrayList<OrderIncludeMeal> returnOrderIncludeMeal = new ArrayList<OrderIncludeMeal>();
+            for (int i = 0; i < orderMeals.length(); i++) {
+                JSONObject c = orderMeals.getJSONObject(i);
+                returnOrderIncludeMeal.add(new OrderIncludeMeal(c.getString("OrderID"), null, c.getString("Count")));
+             }
+            return returnOrderIncludeMeal;
+        } catch (Exception e) {
+        return null;
+    }
     }
 
     public String AddOrderMeal(ArrayList<OrderIncludeMeal> order) {
@@ -1058,6 +1145,41 @@ public class Database {
             params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
             params.add(new BasicNameValuePair("Type", type));
             json = jParser.makeHttpRequest(getAppealURL, "GET", params);
+            Log.d("All Appeal: ", json.toString());
+            appeals = json.getJSONArray(TAG_APPEAL);
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            if (appeals.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = appeals.length();
+            }
+            returnAppeal = new Appeal[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject c = appeals.getJSONObject(i);
+                returnAppeal[i] = new Appeal(c.getString(TAG_ID), c.getString(TAG_Declarant), c.getString(TAG_Appealed), c.getString(TAG_Type), c.getString(TAG_Title), c.getString(TAG_Content), c.getString(TAG_Result), c.getString(TAG_Note));
+            }
+            reviewIndex += reviewRange;
+            return returnAppeal;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public Appeal[] GetOneStoreAppeal(String type,String ID) {
+        JSONObject json;
+        JSONArray appeals = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Appeal returnAppeal[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            params.add(new BasicNameValuePair("Type", type));
+            params.add(new BasicNameValuePair("ID", ID));
+            json = jParser.makeHttpRequest(getOneStoreAppealURL, "GET", params);
             Log.d("All Appeal: ", json.toString());
             appeals = json.getJSONArray(TAG_APPEAL);
         } catch (Exception e) {

@@ -122,6 +122,7 @@ public class CheckMemberActivity extends AppCompatActivity {
         MenuItem item1 = menu.findItem(R.id.item1);
         MenuItem item2 = menu.findItem(R.id.item2);
         MenuItem item3 = menu.findItem(R.id.item3);
+        MenuItem item4 = menu.findItem(R.id.item4);
         if(userInfo.getIdentity()==3){
             if(member.getState().equals("")){
                 item1.setTitle(getResources().getString(R.string.ban));
@@ -130,10 +131,12 @@ public class CheckMemberActivity extends AppCompatActivity {
             }
             item2.setTitle(getResources().getString(R.string.note));
             item3.setVisible(false);
+            item4.setVisible(false);
         }else{
             item1.setVisible(false);
             item2.setVisible(false);
             item3.setVisible(false);
+            item4.setVisible(false);
         }
         return true;
     }
