@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class CheckOpponentList extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int REFRESH_ACTIVITY = 5278, requestCodeFineLoaction = 1, requestCodeCoarseLocation = 2, MORE_STORE = 5279, REFRESH_STORELIST = 5273, SEND_FILTER_REFRESH = 5274, SEND_LAST_FILTER = 5275, SEND_GPS_FILTER = 5276, REFRESHING = 5277;
-    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668,INFO_RESULT = 6669;
+    private static final int GET_USERINFO = 6667,CREATE_DRAWER = 6668;
     private MainThreadHandler mainHandler;
     private HandlerThread CDBThread;
     private Handler_A CDBTHandler;
@@ -220,13 +220,13 @@ public class CheckOpponentList extends AppCompatActivity {
     private class StoreListClickHandler implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(CheckOpponentList.this, CheckStoreInfo.class);
+            Intent intent = new Intent(CheckOpponentList.this, CheckOpponent.class);
             UserInfo storeInfoBundle = new UserInfo();
             storeInfoBundle.setIdentity(2);
             storeInfoBundle.putStore(CheckOpponentList.this.storeLists.get(position).getStoreInfo());
             intent.putExtra("storeInfo", storeInfoBundle);
             intent.putExtra(CheckOpponentList.passUserInfo, CheckOpponentList.this.userInfo);
-            startActivityForResult(intent,INFO_RESULT);
+            startActivity(intent);
         }
     }
 

@@ -50,6 +50,8 @@ public class CheckOpponent extends AppCompatActivity {
     private static String passStoreInfo = "STORE_INFO";
     private static final int GET_BITMAP = 69, UPDATE_UI = 70;
     private ImageView storeIcon;
+    private TextView opponentName;
+    private HandlerThread anotherThread;
     private UserInfo storeInfoBundle;
     private Toolbar toolbar;
     private ListView drawerListView;
@@ -58,22 +60,19 @@ public class CheckOpponent extends AppCompatActivity {
     private UserInfo userInfo;
     private Intent intent;
     private Database database;
-    private HandlerThread commentThread;
     private MainThreadHandler mainHandler;
-    private ImageView storeInfo1;
-    private ImageView storeInfo2;
-    private ImageView storeInfo3;
-    private ImageView storeInfo4;
-    private ImageView storeInfo5;
-    private ImageView storeInfo6;
-    private ImageView storeInfo7;
-    private ImageView[] starArray;
-    private TextView storeAveragePrice;
-    private TextView storeBusiness;
+    private ImageView[] yourInfo;
+    private ImageView[] opponentInfo;
+    private TextView yourScore;
+    private TextView opponentScore;
+    private TextView yourPrice;
+    private TextView yourBusiness1;
+    private TextView yourBusiness2;
+    private TextView opponentPrice;
+    private TextView opponentBusiness1;
+    private TextView opponentBusiness2;
     private Bitmap storePhotoBitmap;
     private Handler_A anotherHandler;
-
-    ;
     private Context context;
 
 
@@ -81,7 +80,7 @@ public class CheckOpponent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        setContentView(R.layout.activity_2_check_storeinfonew);
+        setContentView(R.layout.check_opponent);
         InfoReceive();
         variableSetup();
         UIconnect();
@@ -109,9 +108,11 @@ public class CheckOpponent extends AppCompatActivity {
         mainHandler = new MainThreadHandler(Looper.getMainLooper());
         database = new Database();
         drawer = new Drawer();
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        CheckOpponent.this.anotherHandler = new Handler_A(CheckOpponent.this.commentThread.getLooper());
+        yourInfo = new ImageView[7];
+        opponentInfo = new ImageView[7];
+        anotherThread = new HandlerThread("anotherThread");
+        anotherThread.start();
+        CheckOpponent.this.anotherHandler = new Handler_A(CheckOpponent.this.anotherThread.getLooper());
     }
     private void UIsetup(){
         context = this;
@@ -134,35 +135,57 @@ public class CheckOpponent extends AppCompatActivity {
 
     private void updateStoreInfo(){
         String storeFreeinfoBool = storeInfoBundle.getStore().getInformation();
+        String yourFreeInfoBool = userInfo.getStore().getInformation();
         if(storeFreeinfoBool.charAt(0)=='1')
-            storeInfo1.setImageResource(R.drawable.store_info1_on);
+            this.opponentInfo[0].setImageResource(R.drawable.store_info1_off);
         if(storeFreeinfoBool.charAt(1)=='1')
-            storeInfo2.setImageResource(R.drawable.store_info2_on);
+            this.opponentInfo[1].setImageResource(R.drawable.store_info2_off);
         if(storeFreeinfoBool.charAt(2)=='1')
-            storeInfo3.setImageResource(R.drawable.store_info3_on);
+            this.opponentInfo[2].setImageResource(R.drawable.store_info3_off);
         if(storeFreeinfoBool.charAt(3)=='1')
-            storeInfo4.setImageResource(R.drawable.store_info4_on);
+            this.opponentInfo[3].setImageResource(R.drawable.store_info4_off);
         if(storeFreeinfoBool.charAt(4)=='1')
-            storeInfo5.setImageResource(R.drawable.store_info5_on);
+            this.opponentInfo[4].setImageResource(R.drawable.store_info5_off);
         if(storeFreeinfoBool.charAt(5)=='1')
-            storeInfo6.setImageResource(R.drawable.store_info6_on);
+            this.opponentInfo[5].setImageResource(R.drawable.store_info6_off);
         if(storeFreeinfoBool.charAt(6)=='1')
-            storeInfo7.setImageResource(R.drawable.store_info7_on);
+            this.opponentInfo[6].setImageResource(R.drawable.store_info7_off);
+        if(yourFreeInfoBool.charAt(0)=='1')
+            this.yourInfo[0].setImageResource(R.drawable.store_info1_off);
+        if(yourFreeInfoBool.charAt(1)=='1')
+            this.yourInfo[1].setImageResource(R.drawable.store_info2_off);
+        if(yourFreeInfoBool.charAt(2)=='1')
+            this.yourInfo[2].setImageResource(R.drawable.store_info3_off);
+        if(yourFreeInfoBool.charAt(3)=='1')
+            this.yourInfo[3].setImageResource(R.drawable.store_info4_off);
+        if(yourFreeInfoBool.charAt(4)=='1')
+            this.yourInfo[4].setImageResource(R.drawable.store_info5_off);
+        if(yourFreeInfoBool.charAt(5)=='1')
+            this.yourInfo[5].setImageResource(R.drawable.store_info6_off);
+        if(yourFreeInfoBool.charAt(6)=='1')
+            this.yourInfo[6].setImageResource(R.drawable.store_info7_off);
     }
 
     private void updateStoreScore(){
         double storeScoreDouble = Double.valueOf(storeInfoBundle.getStore().getRank());
         int storeScoreInt = (int)storeScoreDouble;
+        opponentScore.setText(String.valueOf(storeScoreInt));
+        storeScoreDouble = Double.valueOf(userInfo.getStore().getRank());
+        storeScoreInt = (int)storeScoreDouble;
+        yourScore.setText(String.valueOf(storeScoreInt));
     }
 
-    private String getStoreBusiness(){
+    private void getStoreBusiness(){
         String storeBusinessTime = storeInfoBundle.getStore().getBusinessHours();
-        String returnString = "";
-        if(storeBusinessTime.length()>=8)
-            returnString+=String.format("%s:%s ~ %s:%s     ",storeBusinessTime.substring(0,2),storeBusinessTime.substring(2,4),storeBusinessTime.substring(4,6),storeBusinessTime.substring(6,8));
-        if(storeBusinessTime.length()>=16)
-            returnString+=String.format("%s:%s ~ %s:%s",storeBusinessTime.substring(8,10),storeBusinessTime.substring(10,12),storeBusinessTime.substring(12,14),storeBusinessTime.substring(14,16));
-        return returnString;
+        String yourBusinessTime = userInfo.getStore().getBusinessHours();
+        String printString = String.format("%s:%s~%s:%s",storeBusinessTime.substring(0,2),storeBusinessTime.substring(2,4),storeBusinessTime.substring(4,6),storeBusinessTime.substring(6,8));
+        this.opponentBusiness1.setText(printString);
+        printString = String.format("%s:%s~%s:%s",storeBusinessTime.substring(8,10),storeBusinessTime.substring(10,12),storeBusinessTime.substring(12,14),storeBusinessTime.substring(14,16));
+        this.opponentBusiness2.setText(printString);
+        printString = String.format("%s:%s~%s:%s",yourBusinessTime.substring(0,2),yourBusinessTime.substring(2,4),yourBusinessTime.substring(4,6),yourBusinessTime.substring(6,8));
+        this.yourBusiness1.setText(printString);
+        printString = String.format("%s:%s~%s:%s",yourBusinessTime.substring(8,10),yourBusinessTime.substring(10,12),yourBusinessTime.substring(12,14),yourBusinessTime.substring(14,16));
+        this.yourBusiness2.setText(printString);
     }
 
 
@@ -171,19 +194,29 @@ public class CheckOpponent extends AppCompatActivity {
         this.toolbar = findViewById(R.id.toolbar);
         this.drawerListView = findViewById(R.id.drawerListView);
         this.drawerLayout = findViewById(R.id.drawerLayout);
-        this.storeInfo1 = findViewById(R.id.storeInfo1);
-        this.storeInfo2 = findViewById(R.id.storeInfo2);
-        this.storeInfo3 = findViewById(R.id.storeInfo3);
-        this.storeInfo4 = findViewById(R.id.storeInfo4);
-        this.storeInfo5 = findViewById(R.id.storeInfo5);
-        this.storeInfo6 = findViewById(R.id.storeInfo6);
-        this.starArray[0] = findViewById(R.id.storeScore1);
-        this.starArray[1] = findViewById(R.id.storeScore2);
-        this.starArray[2] = findViewById(R.id.storeScore3);
-        this.starArray[3] = findViewById(R.id.storeScore4);
-        this.starArray[4] = findViewById(R.id.storeScore5);
-        this.storeAveragePrice = findViewById(R.id.storeAveragePrice);
-        this.storeBusiness = findViewById(R.id.storeBusiness);
+        this.opponentName = findViewById(R.id.opponentName);
+        this.yourScore = findViewById(R.id.yourScore);
+        this.opponentScore = findViewById(R.id.opponentScore);
+        this.yourPrice = findViewById(R.id.yourPrice);
+        this.opponentPrice = findViewById(R.id.opponentPrice);
+        this.yourInfo[0] = findViewById(R.id.yourInfo1);
+        this.yourInfo[1] = findViewById(R.id.yourInfo2);
+        this.yourInfo[2] = findViewById(R.id.yourInfo3);
+        this.yourInfo[3] = findViewById(R.id.yourInfo4);
+        this.yourInfo[4] = findViewById(R.id.yourInfo5);
+        this.yourInfo[5] = findViewById(R.id.yourInfo6);
+        this.yourInfo[6] = findViewById(R.id.yourInfo7);
+        this.opponentInfo[0] = findViewById(R.id.opponentInfo1);
+        this.opponentInfo[1] = findViewById(R.id.opponentInfo2);
+        this.opponentInfo[2] = findViewById(R.id.opponentInfo3);
+        this.opponentInfo[3] = findViewById(R.id.opponentInfo4);
+        this.opponentInfo[4] = findViewById(R.id.opponentInfo5);
+        this.opponentInfo[5] = findViewById(R.id.opponentInfo6);
+        this.opponentInfo[6] = findViewById(R.id.opponentInfo7);
+        this.yourBusiness1 = findViewById(R.id.yourBussiness1);
+        this.yourBusiness2 = findViewById(R.id.yourBussiness2);
+        this.opponentBusiness1 = findViewById(R.id.opponentBussiness1);
+        this.opponentBusiness2 = findViewById(R.id.opponentBussiness2);
     }
 
     public void onBackPressed() {
@@ -204,9 +237,11 @@ public class CheckOpponent extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_UI:
-                    CheckOpponent.this.toolbar.setTitle(storeInfoBundle.getStore().getStoreName());
-                    CheckOpponent.this.storeAveragePrice.setText(storeInfoBundle.getStore().getPrice());
-                    CheckOpponent.this.storeBusiness.setText(getStoreBusiness());
+                    CheckOpponent.this.toolbar.setTitle("對手比較");
+                    CheckOpponent.this.opponentName.setText(storeInfoBundle.getStore().getStoreName());
+                    CheckOpponent.this.opponentPrice.setText(storeInfoBundle.getStore().getPrice());
+                    CheckOpponent.this.yourPrice.setText(userInfo.getStore().getPrice());
+                    getStoreBusiness();
                     updateStoreInfo();
                     updateStoreScore();
                     storeIcon.setImageBitmap(storePhotoBitmap);
@@ -255,13 +290,4 @@ public class CheckOpponent extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void finish() {
-        Intent intent = new Intent();
-        Bundle bag = new Bundle();
-        bag.putSerializable("USER_INFO",userInfo);
-        intent.putExtras(bag);
-        CheckOpponent.this.setResult(RESULT_OK,intent);
-        super.finish();
-    }
 }
