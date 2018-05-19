@@ -220,7 +220,7 @@ public class CheckOpponentList extends AppCompatActivity {
     private class StoreListClickHandler implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(CheckOpponentList.this, CheckStoreInfo.class);
+            Intent intent = new Intent(CheckOpponentList.this, CheckOpponent.class);
             UserInfo storeInfoBundle = new UserInfo();
             storeInfoBundle.setIdentity(2);
             storeInfoBundle.putStore(CheckOpponentList.this.storeLists.get(position).getStoreInfo());

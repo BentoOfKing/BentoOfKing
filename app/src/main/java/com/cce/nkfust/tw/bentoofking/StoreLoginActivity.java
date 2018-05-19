@@ -25,7 +25,6 @@ public class StoreLoginActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private TextView loginPrompt;
     private Button storeLoginButton;
     private Database database;
     private Database initial;
@@ -51,7 +50,6 @@ public class StoreLoginActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.storeLogin));
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        loginPrompt = findViewById(R.id.loginPrompt);
         storeLoginButton = findViewById(R.id.storeLoginButton1);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         storeLoginButton.setOnClickListener(loginButtonHandler);
@@ -172,7 +170,6 @@ public class StoreLoginActivity extends AppCompatActivity {
                                 .commit();
                         progressDialog.dismiss();
                     } else {
-                        loginPrompt.setText("登入資料錯誤");
 
                     }
                 }

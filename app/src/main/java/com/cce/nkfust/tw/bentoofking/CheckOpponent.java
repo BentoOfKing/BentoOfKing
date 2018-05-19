@@ -80,7 +80,7 @@ public class CheckOpponent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        setContentView(R.layout.activity_2_check_storeinfonew);
+        setContentView(R.layout.check_opponent);
         InfoReceive();
         variableSetup();
         UIconnect();
@@ -111,6 +111,7 @@ public class CheckOpponent extends AppCompatActivity {
         yourInfo = new ImageView[7];
         opponentInfo = new ImageView[7];
         anotherThread = new HandlerThread("anotherThread");
+        anotherThread.start();
         CheckOpponent.this.anotherHandler = new Handler_A(CheckOpponent.this.anotherThread.getLooper());
     }
     private void UIsetup(){

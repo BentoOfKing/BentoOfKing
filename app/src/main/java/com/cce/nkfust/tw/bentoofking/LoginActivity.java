@@ -25,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private TextView loginPrompt;
     private Button loginButton;
     private Database database;
     private Member member;
@@ -50,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.memberLogin));
         emailEditText =  findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        loginPrompt = findViewById(R.id.loginPrompt);
         loginButton = findViewById(R.id.storeLoginButton1);
         LoginButtonHandler loginButtonHandler = new LoginButtonHandler();
         loginButton.setOnClickListener(loginButtonHandler);

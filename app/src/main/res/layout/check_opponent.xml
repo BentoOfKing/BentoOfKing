@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
+        android:background="#3399cc"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/lookOpponent" />
@@ -37,15 +37,15 @@
                 android:layout_height="0dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginEnd="68dp"
-                android:layout_marginStart="68dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="18dp"
                 android:padding="10dp"
                 app:layout_constraintDimensionRatio="16:9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:color/holo_orange_dark" />
+                app:srcCompat="@drawable/sakura" />
 
             <TextView
                 android:id="@+id/opponentName"
@@ -212,7 +212,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="120"
                         android:textColor="#59493f"
                         android:textSize="20sp" />
 
@@ -233,7 +232,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="150"
                         android:textColor="#59493f"
                         android:textSize="20sp" />
 
@@ -397,6 +395,7 @@
 
                             <ImageView
                                 android:id="@+id/opponentInfo4"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
@@ -473,7 +472,6 @@
                             android:gravity="center"
                             android:maxEms="11"
                             android:singleLine="false"
-                            android:text="12:00~18:00"
                             android:textColor="#59493f"
                             android:textSize="20sp" />
 
@@ -511,7 +509,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="88:88~88:88"
                             android:textColor="#59493f"
                             android:textSize="20sp" />
 
@@ -521,7 +518,6 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="8"
                             android:textColor="#59493f"
                             android:textSize="20sp" />
                     </LinearLayout>
