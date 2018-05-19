@@ -18,102 +18,519 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/lookOpponent" />
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <RelativeLayout
-            android:id="@+id/content_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="18dp"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp">
-
-            <ImageView
-                android:id="@+id/storeImageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:color/holo_orange_dark" />
-
-            <TableLayout
-                android:id="@+id/tableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/storeImageView">
-
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView37"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_below="@+id/storeImageView"
-                        android:layout_weight="2"
-                        android:gravity="center_vertical"
-                        android:text="高雄科大活動中心"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/font_size"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/storeImageView" />
-
-                </TableRow>
-
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="對手資訊"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/font_size"
-                        app:layout_constraintEnd_toStartOf="@+id/textView22"
-                        app:layout_constraintTop_toBottomOf="@+id/storeAddress" />
-
-                    <TextView
-                        android:id="@+id/textView25"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="你的資訊"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/font_size"
-                        app:layout_constraintStart_toEndOf="@+id/loginPrompt"
-                        app:layout_constraintTop_toBottomOf="@+id/storeAddress" />
-                </TableRow>
-            </TableLayout>
-
-
-        </RelativeLayout>
-
-
-    </android.support.constraint.ConstraintLayout>
-
     <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!-- The main content view -->
         <!-- The navigation drawer -->
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#def5fc">
+
+
+            <ImageView
+                android:id="@+id/storePicture"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="68dp"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="18dp"
+                android:padding="10dp"
+                app:layout_constraintDimensionRatio="16:9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:color/holo_orange_dark" />
+
+            <TextView
+                android:id="@+id/opponentName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="對手名稱"
+                android:textColor="#59493f"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/storePicture" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical"
+                android:weightSum="17"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/opponentName">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/yourInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="#7eb5dc"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="35dp"
+                        android:paddingStart="35dp"
+                        android:paddingTop="8dp"
+                        android:text="你的資訊"
+                        android:textColor="#59493f"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/space"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/opponentInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="#f29c9f"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="35dp"
+                        android:paddingStart="35dp"
+                        android:paddingTop="8dp"
+                        android:text="對手資訊"
+                        android:textColor="#59493f"
+                        android:textSize="22sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="3.5"
+                    android:background="#9ee0f5"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="11">
+
+                        <TextView
+                            android:id="@+id/yourScore"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:gravity="center_vertical|end"
+                            android:text="5"
+                            android:textColor="#59493f"
+                            android:textSize="22sp" />
+
+                        <ImageView
+                            android:id="@+id/star1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:paddingBottom="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="8dp"
+                            android:scaleType="fitStart"
+                            app:srcCompat="@drawable/star_on" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/Score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:text="評價"
+                        android:textSize="22sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="11">
+
+                        <TextView
+                            android:id="@+id/opponentScore"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:gravity="center_vertical|end"
+                            android:text="5"
+                            android:textColor="#59493f"
+                            android:textSize="22sp" />
+
+                        <ImageView
+                            android:id="@+id/star2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:paddingBottom="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="8dp"
+                            android:scaleType="fitStart"
+                            app:srcCompat="@drawable/star_on" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="3.5"
+                    android:background="#7ecef4"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/yourPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="120"
+                        android:textColor="#59493f"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:text="價位"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/opponentPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="150"
+                        android:textColor="#59493f"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="5"
+                    android:background="#9ee0f5"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingEnd="4dp"
+                        android:paddingStart="4dp"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <ImageView
+                                android:id="@+id/yourInfo1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info1_on" />
+
+                            <ImageView
+                                android:id="@+id/yourInfo2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info2_on" />
+
+                            <ImageView
+                                android:id="@+id/yourInfo3"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info3_on" />
+
+                            <ImageView
+                                android:id="@+id/yourInfo4"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info4_on" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <TextView
+                                android:id="@+id/space1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
+
+                            <ImageView
+                                android:id="@+id/yourInfo5"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info5_on" />
+
+                            <ImageView
+                                android:id="@+id/yourInfo6"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info6_on" />
+
+                            <ImageView
+                                android:id="@+id/yourInfo7"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info7_on" />
+
+                            <TextView
+                                android:id="@+id/space2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/Price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:maxEms="2"
+                        android:text="店家資訊"
+                        android:textSize="22sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingEnd="4dp"
+                        android:paddingStart="4dp"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <ImageView
+                                android:id="@+id/opponentInfo1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info1_on" />
+
+                            <ImageView
+                                android:id="@+id/opponentInfo2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info2_on" />
+
+                            <ImageView
+                                android:id="@+id/opponentInfo3"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info3_on" />
+
+                            <ImageView
+                                android:id="@+id/opponentInfo4"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info4_on" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <TextView
+                                android:id="@+id/space3"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
+
+                            <ImageView
+                                android:id="@+id/opponentInfo5"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info5_on" />
+
+                            <ImageView
+                                android:id="@+id/opponentInfo6"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info6_on" />
+
+                            <ImageView
+                                android:id="@+id/opponentInfo7"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:padding="4dp"
+                                app:srcCompat="@drawable/store_info7_on" />
+
+                            <TextView
+                                android:id="@+id/space4"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="5"
+                    android:background="#7ecef4"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:id="@+id/yourBussiness1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:maxEms="11"
+                            android:singleLine="false"
+                            android:text="12:00~18:00"
+                            android:textColor="#59493f"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/yourBussiness2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="#59493f"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/Bussiness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_weight="0"
+                        android:ems="2"
+                        android:gravity="center"
+                        android:text="營業時間"
+                        android:textSize="22sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/opponentBussiness1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="88:88~88:88"
+                            android:textColor="#59493f"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/opponentBussiness2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="8"
+                            android:textColor="#59493f"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
 
         <ListView
             android:id="@+id/drawerListView"
