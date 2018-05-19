@@ -326,6 +326,47 @@ public class CheckStoreInfo extends AppCompatActivity {
                             startActivity(intent);
                         }
                         break;
+                    case R.id.item4:
+                        if (userInfo.getIdentity() == 3) {//儲值點數
+                            LayoutInflater inflater = LayoutInflater.from(context);
+                            View view = inflater.inflate(R.layout.alertdialog_stored_point, null);
+                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                            builder.setTitle(getResources().getString(R.string.storedPoint));
+                            builder.setView(view);
+                            final EditText pointEditText = view.findViewById(R.id.pointEditText);
+                            builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.setPositiveButton(getResources().getString(R.string.check),null);
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if(pointEditText.getText().toString().equals("")){
+                                        Toast.makeText(context, getResources().getString(R.string.pleaseEnterPoint), Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        class AddPoint implements Runnable{
+                                            @Override
+                                            public void run() {
+                                                Database d = new Database();
+                                                int point = Integer.parseInt(storeInfoBundle.getStore().getPoint());
+                                                point += Integer.parseInt(pointEditText.getText().toString());
+                                                storeInfoBundle.getStore().putPoint(Integer.toString(point));
+                                                d.UpdatePoint(storeInfoBundle.getStore());
+                                            }
+                                        }
+                                        Thread t = new Thread(new AddPoint());
+                                        t.start();
+                                        alertDialog.dismiss();
+                                    }
+                                }
+                            });
+                        }
+                        break;
                 }
                 return false;
             }
@@ -353,6 +394,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         MenuItem item1 = menu.findItem(R.id.item1);
         MenuItem item2 = menu.findItem(R.id.item2);
         MenuItem item3 = menu.findItem(R.id.item3);
+        MenuItem item4 = menu.findItem(R.id.item4);
         if(userInfo.getIdentity()==1){
             if(isFavorite){
                 item1.setTitle(getResources().getString(R.string.removeFavorite));
@@ -361,14 +403,17 @@ public class CheckStoreInfo extends AppCompatActivity {
             }
             item2.setTitle(getResources().getString(R.string.errorReport));
             item3.setVisible(false);
+            item4.setVisible(false);
         }else if(userInfo.getIdentity()==2 || userInfo.getIdentity()==0 || userInfo.getIdentity()==4){
             item1.setVisible(false);
             item2.setVisible(false);
             item3.setVisible(false);
+            item4.setVisible(false);
         }else if(userInfo.getIdentity()==3){
             item1.setTitle(getResources().getString(R.string.editStore));
             item2.setTitle(getResources().getString(R.string.editMenu));
             item3.setTitle(getResources().getString(R.string.editPhoto));
+            item4.setTitle(getResources().getString(R.string.storedPoint));
         }
         return true;
     }

@@ -277,4 +277,5 @@
     </array>
     <string name="editPushNeedRe">推播審核後若要重新編輯\n需要再審核一次，您確定嗎？</string>
     <string name="noPoint">點數不足，無法推播</string>
+    <string name="pleaseEnterPoint">請輸入點數</string>
 </resources>
