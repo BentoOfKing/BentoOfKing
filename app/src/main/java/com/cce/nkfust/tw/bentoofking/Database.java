@@ -49,7 +49,7 @@ public class Database {
     private static String addStoreURL = "http://163.18.104.169/databaseConnect/addStore.php";
     private static String addMealURL = "http://163.18.104.169/databaseConnect/addMeal.php";
     private static String getMealURL = "http://163.18.104.169/databaseConnect/getMeal.php";
-    private static String getSingleMealURL = "http://163.18.104.169/databaseConnect/getSingleMeal.php";
+    private static String getOrderStoreCostURL = "http://163.18.104.169/databaseConnect/getOrderStoreCost.php";
     private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
@@ -873,20 +873,28 @@ public class Database {
         return "Successful.";
     }
 
-    public Meal getSingleMeal(String ID) {
+    public ArrayList<OrderIncludeMeal> GetOrderMeal(String ID) {
+        JSONArray orderIncludeMeals = null;
         JSONArray meals = null;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        params.add(new BasicNameValuePair("ID", ID));
+        params.add(new BasicNameValuePair("OrderID", ID));
         json = null;
-        json = jParser.makeHttpRequest(getSingleMealURL, "GET", params);
+        json = jParser.makeHttpRequest(getOrderMealURL, "GET", params);
         Log.d("Get meal.", json.toString());
         try {
+            orderIncludeMeals = json.getJSONArray(TAG_OrderIncludeMeal);
             meals = json.getJSONArray(TAG_Meal);
-            JSONObject m = meals.getJSONObject(0);
-            Meal meal = new Meal(m.getString(TAG_ID), m.getString(TAG_Store), m.getString(TAG_Name), m.getString(TAG_Price), m.getString(TAG_Sequence));
-            return meal;
+            ArrayList<OrderIncludeMeal> returnOrderIncludeMeal = new ArrayList<OrderIncludeMeal>();
+            for(int i=0;i<meals.length();i++) {
+                JSONObject m = meals.getJSONObject(i);
+                JSONObject o = orderIncludeMeals.getJSONObject(i);
+                Meal meal = new Meal(m.getString(TAG_ID), m.getString(TAG_Store), m.getString(TAG_Name), m.getString(TAG_Price), m.getString(TAG_Sequence));
+                OrderIncludeMeal orderIncludeMeal = new OrderIncludeMeal(o.getString("OrderID"), meal, o.getString("Count"));
+                returnOrderIncludeMeal.add(orderIncludeMeal);
+            }
+            return returnOrderIncludeMeal;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -981,7 +989,7 @@ public class Database {
             params.add(new BasicNameValuePair("Member", Member));
             json = jParser.makeHttpRequest(getOrderURL, "GET", params);
             Log.d("All Order: ", json.toString());
-            orders = json.getJSONArray(TAG_MEMBERS);
+            orders = json.getJSONArray("order");
         } catch (Exception e) {
             MemberOrder[] nullOrder = new MemberOrder[0];
             return nullOrder;
@@ -1000,8 +1008,7 @@ public class Database {
             reviewIndex += reviewRange;
             return returnOrder;
         } catch (Exception e) {
-            MemberOrder[] nullOrder = new MemberOrder[0];
-            return nullOrder;
+            return null;
         }
     }
     public String AddOrder(MemberOrder memberOrder) {
@@ -1027,31 +1034,26 @@ public class Database {
         }
     }
 
-    public ArrayList<OrderIncludeMeal> getOrderMeal(String OrderID) {
+    public String GetOrderStoreCost(String ID) {
         List<NameValuePair> params;
-        JSONArray orderMeals = null;
         jParser = null;
         jParser = new JSONParser();
         params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("OrderID", OrderID));
+        params.add(new BasicNameValuePair("ID", ID));
         json = null;
-        json = jParser.makeHttpRequest(getOrderMealURL, "GET", params);
-        Log.d("Get order meal.", json.toString());
-        try {
-            orderMeals = json.getJSONArray(TAG_APPEAL);
-        }catch (Exception e) {
-            return null;
-        }
-        try {
-            ArrayList<OrderIncludeMeal> returnOrderIncludeMeal = new ArrayList<OrderIncludeMeal>();
-            for (int i = 0; i < orderMeals.length(); i++) {
-                JSONObject c = orderMeals.getJSONObject(i);
-                returnOrderIncludeMeal.add(new OrderIncludeMeal(c.getString("OrderID"), null, c.getString("Count")));
-             }
-            return returnOrderIncludeMeal;
-        } catch (Exception e) {
-        return null;
-    }
+        json = jParser.makeHttpRequest(getOrderStoreCostURL, "GET", params);
+            Log.d("Get Meal Store Cost.", json.toString());
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                if (success != 1) {
+                    return null;
+                }else {
+                    return json.getString(TAG_Message);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
     }
 
     public String AddOrderMeal(ArrayList<OrderIncludeMeal> order) {

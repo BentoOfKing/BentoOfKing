@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -77,16 +78,22 @@
         <activity android:name=".CheckMemberAppealActivity" />
         <activity android:name=".CheckAppealCommentActivity" />
         <activity android:name=".PushManageActivity" />
-        <activity android:name=".CheckOpponentList"
-            android:theme="@style/AppOpponentTheme"/>
-        <activity android:name=".CheckOpponent"
-            android:theme="@style/AppOpponentTheme"/>
-        <activity android:name=".ReviewPushActivity"></activity>
+        <activity
+            android:name=".CheckOpponentList"
+            android:theme="@style/AppOpponentTheme" />
+        <activity
+            android:name=".CheckOpponent"
+            android:theme="@style/AppOpponentTheme" />
+        <activity android:name=".ReviewPushActivity" />
+
         <service android:name=".MyInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".OrderListActivity" />
+        <activity android:name=".CheckOrderActivity"></activity>
     </application>
 
 </manifest>
