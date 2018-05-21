@@ -32,7 +32,7 @@
     <string name="decorating">店內照片</string>
     <string name="menu">菜單照片</string>
     <string name="update">上傳</string>
-    <string name="registered">註冊</string>
+    <string name="registered">會員註冊</string>
     <string name="storeName">店家名稱</string>
     <string name="storeAddress">店家地址</string>
     <string name="add">新增</string>
@@ -44,7 +44,7 @@
     <string name="addpush">新增推播</string>
     <string name="nickname">暱稱</string>
     <string name="login">登入</string>
-    <string name="register">註冊</string>
+    <string name="register">會員註冊</string>
     <string name="becomeStore">成為店家</string>
     <string name="about">關於</string>
     <string name="title_activity_register">RegisterActivity</string>
@@ -278,4 +278,5 @@
     <string name="editPushNeedRe">推播審核後若要重新編輯\n需要再審核一次，您確定嗎？</string>
     <string name="noPoint">點數不足，無法推播</string>
     <string name="pleaseEnterPoint">請輸入點數</string>
+    <string name="checkError">查看錯誤</string>
 </resources>

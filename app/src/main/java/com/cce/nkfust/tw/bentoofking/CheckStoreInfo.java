@@ -748,13 +748,15 @@ public class CheckStoreInfo extends AppCompatActivity {
                 selections.add("編輯");
                 selections.add("檢舉");
                 selections.add("刪除");
-            }else
-                selections.add("檢舉");
+            }
             if(userInfo.getIdentity()==2&&userInfo.getStore().getID().equals(storeInfoBundle.getStore().getID()))
                 selections.add("回覆");
             if(userInfo.getIdentity()==1&&userInfo.getMember().getEmail().equals(selectComment.getMember())){
                 selections.add("刪除");
                 selections.add("編輯");
+            }
+            if(userInfo.getIdentity()==1){
+                selections.add("檢舉");
             }
             askForCommentScore.setTitle(selectComment.getMemberNickName()+"的評論");
             askForCommentScore.setItems( selections.toArray(new String[0]), new DialogInterface.OnClickListener() {

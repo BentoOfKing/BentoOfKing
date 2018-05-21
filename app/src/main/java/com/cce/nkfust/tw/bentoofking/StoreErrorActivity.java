@@ -81,7 +81,11 @@ public class StoreErrorActivity extends AppCompatActivity {
         public void run() {
             try {
                 database.refreshStoreIndex();
-                appeal = database.GetAppeal("2");
+                if(userInfo.getIdentity() == 3) {
+                    appeal = database.GetAppeal("2");
+                }else{
+                    appeal = database.GetOneStoreAppeal("2",userInfo.getStore().getID());
+                }
                 appealArrayList.clear();
                 for(int i=0;i<appeal.length;i++){
                     appealArrayList.add(appeal[i]); //1.ArrayList
@@ -140,7 +144,11 @@ public class StoreErrorActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MORE_STORE:
-                    appeal = database.GetAppeal("2");
+                    if(userInfo.getIdentity() == 3) {
+                        appeal = database.GetAppeal("2");
+                    }else{
+                        appeal = database.GetOneStoreAppeal("2",userInfo.getStore().getID());
+                    }
                     for(int i=0;i<appeal.length;i++){
                         appealArrayList.add(appeal[i]); //1.ArrayList
                     }
