@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:background="#fcb960"
+                android:background="#7eb5dc"
                 android:orientation="horizontal">
 
                 <Button
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/linearLayout"
-                    android:background="#f9eed8"
+                    android:background="#def5fc"
                     android:fadingEdge="horizontal|vertical"
                     tools:layout_editor_absoluteY="48dp" />
             </android.support.v4.widget.SwipeRefreshLayout>
