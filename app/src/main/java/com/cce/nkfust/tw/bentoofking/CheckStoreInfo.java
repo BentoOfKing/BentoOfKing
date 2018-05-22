@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -209,6 +210,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         commentRecyclerView.setNestedScrollingEnabled(false);
         commentRecyclerView.setAdapter(recyclerAdapter);
         commentRecyclerView.setFocusable(false);
+        commentRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerAdapter.setOnItemClickListener(new RecyclerListItemHandler());
         storeScroll.setOnClickListener(new View.OnClickListener() {
             @Override
