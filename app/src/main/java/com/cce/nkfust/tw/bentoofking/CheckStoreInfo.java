@@ -458,9 +458,9 @@ public class CheckStoreInfo extends AppCompatActivity {
     private String getStoreBusiness(){
         String storeBusinessTime = storeInfoBundle.getStore().getBusinessHours();
         String returnString = "";
-        if(storeBusinessTime.length()>=8)
+        if(!storeBusinessTime.substring(0,8).equals("00000000"))
             returnString+=String.format("%s:%s ~ %s:%s     ",storeBusinessTime.substring(0,2),storeBusinessTime.substring(2,4),storeBusinessTime.substring(4,6),storeBusinessTime.substring(6,8));
-        if(storeBusinessTime.length()>=16)
+        if(!storeBusinessTime.substring(8,16).equals("00000000"))
             returnString+=String.format("%s:%s ~ %s:%s",storeBusinessTime.substring(8,10),storeBusinessTime.substring(10,12),storeBusinessTime.substring(12,14),storeBusinessTime.substring(14,16));
         return returnString;
     }

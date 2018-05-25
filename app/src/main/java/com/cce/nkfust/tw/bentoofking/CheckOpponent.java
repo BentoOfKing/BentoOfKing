@@ -137,33 +137,33 @@ public class CheckOpponent extends AppCompatActivity {
         String storeFreeinfoBool = storeInfoBundle.getStore().getInformation();
         String yourFreeInfoBool = userInfo.getStore().getInformation();
         if(storeFreeinfoBool.charAt(0)=='1')
-            this.opponentInfo[0].setImageResource(R.drawable.store_info1_off);
+            this.opponentInfo[0].setImageResource(R.drawable.store_cmp1_on);
         if(storeFreeinfoBool.charAt(1)=='1')
-            this.opponentInfo[1].setImageResource(R.drawable.store_info2_off);
+            this.opponentInfo[1].setImageResource(R.drawable.store_cmp2_on);
         if(storeFreeinfoBool.charAt(2)=='1')
-            this.opponentInfo[2].setImageResource(R.drawable.store_info3_off);
+            this.opponentInfo[2].setImageResource(R.drawable.store_cmp3_on);
         if(storeFreeinfoBool.charAt(3)=='1')
-            this.opponentInfo[3].setImageResource(R.drawable.store_info4_off);
+            this.opponentInfo[3].setImageResource(R.drawable.store_cmp4_on);
         if(storeFreeinfoBool.charAt(4)=='1')
-            this.opponentInfo[4].setImageResource(R.drawable.store_info5_off);
+            this.opponentInfo[4].setImageResource(R.drawable.store_cmp5_on);
         if(storeFreeinfoBool.charAt(5)=='1')
-            this.opponentInfo[5].setImageResource(R.drawable.store_info6_off);
+            this.opponentInfo[5].setImageResource(R.drawable.store_cmp6_on);
         if(storeFreeinfoBool.charAt(6)=='1')
-            this.opponentInfo[6].setImageResource(R.drawable.store_info7_off);
+            this.opponentInfo[6].setImageResource(R.drawable.store_cmp7_on);
         if(yourFreeInfoBool.charAt(0)=='1')
-            this.yourInfo[0].setImageResource(R.drawable.store_info1_off);
+            this.yourInfo[0].setImageResource(R.drawable.store_cmp1_on);
         if(yourFreeInfoBool.charAt(1)=='1')
-            this.yourInfo[1].setImageResource(R.drawable.store_info2_off);
+            this.yourInfo[1].setImageResource(R.drawable.store_cmp2_on);
         if(yourFreeInfoBool.charAt(2)=='1')
-            this.yourInfo[2].setImageResource(R.drawable.store_info3_off);
+            this.yourInfo[2].setImageResource(R.drawable.store_cmp3_on);
         if(yourFreeInfoBool.charAt(3)=='1')
-            this.yourInfo[3].setImageResource(R.drawable.store_info4_off);
+            this.yourInfo[3].setImageResource(R.drawable.store_cmp4_on);
         if(yourFreeInfoBool.charAt(4)=='1')
-            this.yourInfo[4].setImageResource(R.drawable.store_info5_off);
+            this.yourInfo[4].setImageResource(R.drawable.store_cmp5_on);
         if(yourFreeInfoBool.charAt(5)=='1')
-            this.yourInfo[5].setImageResource(R.drawable.store_info6_off);
+            this.yourInfo[5].setImageResource(R.drawable.store_cmp6_on);
         if(yourFreeInfoBool.charAt(6)=='1')
-            this.yourInfo[6].setImageResource(R.drawable.store_info7_off);
+            this.yourInfo[6].setImageResource(R.drawable.store_cmp7_on);
     }
 
     private void updateStoreScore(){
@@ -178,14 +178,27 @@ public class CheckOpponent extends AppCompatActivity {
     private void getStoreBusiness(){
         String storeBusinessTime = storeInfoBundle.getStore().getBusinessHours();
         String yourBusinessTime = userInfo.getStore().getBusinessHours();
-        String printString = String.format("%s:%s~%s:%s",storeBusinessTime.substring(0,2),storeBusinessTime.substring(2,4),storeBusinessTime.substring(4,6),storeBusinessTime.substring(6,8));
-        this.opponentBusiness1.setText(printString);
-        printString = String.format("%s:%s~%s:%s",storeBusinessTime.substring(8,10),storeBusinessTime.substring(10,12),storeBusinessTime.substring(12,14),storeBusinessTime.substring(14,16));
-        this.opponentBusiness2.setText(printString);
-        printString = String.format("%s:%s~%s:%s",yourBusinessTime.substring(0,2),yourBusinessTime.substring(2,4),yourBusinessTime.substring(4,6),yourBusinessTime.substring(6,8));
-        this.yourBusiness1.setText(printString);
-        printString = String.format("%s:%s~%s:%s",yourBusinessTime.substring(8,10),yourBusinessTime.substring(10,12),yourBusinessTime.substring(12,14),yourBusinessTime.substring(14,16));
-        this.yourBusiness2.setText(printString);
+        String printString;
+        if(!storeBusinessTime.substring(0,8).equals("00000000")) {
+            printString = String.format("%s:%s~%s:%s", storeBusinessTime.substring(0, 2), storeBusinessTime.substring(2, 4), storeBusinessTime.substring(4, 6), storeBusinessTime.substring(6, 8));
+            this.opponentBusiness1.setText(printString);
+        }else
+            this.opponentBusiness1.setText("");
+        if(!storeBusinessTime.substring(8,16).equals("00000000")) {
+            printString = String.format("%s:%s~%s:%s", storeBusinessTime.substring(8, 10), storeBusinessTime.substring(10, 12), storeBusinessTime.substring(12, 14), storeBusinessTime.substring(14, 16));
+            this.opponentBusiness2.setText(printString);
+        }else
+            this.opponentBusiness2.setText("");
+        if(!yourBusinessTime.substring(0,8).equals("00000000")) {
+            printString = String.format("%s:%s~%s:%s", yourBusinessTime.substring(0, 2), yourBusinessTime.substring(2, 4), yourBusinessTime.substring(4, 6), yourBusinessTime.substring(6, 8));
+            this.yourBusiness1.setText(printString);
+        }else
+            this.yourBusiness1.setText("");
+        if(!yourBusinessTime.substring(8,16).equals("00000000")) {
+            printString = String.format("%s:%s~%s:%s", yourBusinessTime.substring(8, 10), yourBusinessTime.substring(10, 12), yourBusinessTime.substring(12, 14), yourBusinessTime.substring(14, 16));
+            this.yourBusiness2.setText(printString);
+        }else
+            this.yourBusiness2.setText("");
     }
 
 

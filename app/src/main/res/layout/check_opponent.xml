@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="#3399cc"
@@ -269,7 +269,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info1_on" />
+                                app:srcCompat="@drawable/store_cmp1_off" />
 
                             <ImageView
                                 android:id="@+id/yourInfo2"
@@ -277,7 +277,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info2_on" />
+                                app:srcCompat="@drawable/store_cmp2_off" />
 
                             <ImageView
                                 android:id="@+id/yourInfo3"
@@ -285,7 +285,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info3_on" />
+                                app:srcCompat="@drawable/store_cmp3_off" />
 
                             <ImageView
                                 android:id="@+id/yourInfo4"
@@ -293,7 +293,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info4_on" />
+                                app:srcCompat="@drawable/store_cmp4_off" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -315,7 +315,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info5_on" />
+                                app:srcCompat="@drawable/store_cmp5_off" />
 
                             <ImageView
                                 android:id="@+id/yourInfo6"
@@ -323,7 +323,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info6_on" />
+                                app:srcCompat="@drawable/store_cmp6_off" />
 
                             <ImageView
                                 android:id="@+id/yourInfo7"
@@ -331,7 +331,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info7_on" />
+                                app:srcCompat="@drawable/store_cmp7_off" />
 
                             <TextView
                                 android:id="@+id/space2"
@@ -375,7 +375,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info1_on" />
+                                app:srcCompat="@drawable/store_cmp1_off" />
 
                             <ImageView
                                 android:id="@+id/opponentInfo2"
@@ -383,7 +383,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info2_on" />
+                                app:srcCompat="@drawable/store_cmp2_off" />
 
                             <ImageView
                                 android:id="@+id/opponentInfo3"
@@ -391,7 +391,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info3_on" />
+                                app:srcCompat="@drawable/store_cmp3_off" />
 
                             <ImageView
                                 android:id="@+id/opponentInfo4"
@@ -399,7 +399,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info4_on" />
+                                app:srcCompat="@drawable/store_cmp4_off" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -421,7 +421,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info5_on" />
+                                app:srcCompat="@drawable/store_cmp5_off" />
 
                             <ImageView
                                 android:id="@+id/opponentInfo6"
@@ -429,7 +429,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info6_on" />
+                                app:srcCompat="@drawable/store_cmp6_off" />
 
                             <ImageView
                                 android:id="@+id/opponentInfo7"
@@ -437,7 +437,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:padding="4dp"
-                                app:srcCompat="@drawable/store_info7_on" />
+                                app:srcCompat="@drawable/store_cmp7_off" />
 
                             <TextView
                                 android:id="@+id/space4"
