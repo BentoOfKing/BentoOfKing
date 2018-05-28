@@ -279,4 +279,5 @@
     <string name="noPoint">點數不足，無法推播</string>
     <string name="pleaseEnterPoint">請輸入點數</string>
     <string name="checkError">查看錯誤</string>
+    <string name="payPoint">支付點數</string>
 </resources>

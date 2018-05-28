@@ -1,7 +1,5 @@
 package com.cce.nkfust.tw.bentoofking;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
@@ -9,14 +7,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1328,7 +1321,7 @@ public class Database {
         jParser = null;
         jParser = new JSONParser();
         try {
-            params.add(new BasicNameValuePair("Content", new String(push.getContent().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("ID",push.getID()));
         }catch (Exception e){
 
         }
