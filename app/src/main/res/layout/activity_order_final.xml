@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.cce.nkfust.tw.bentoofking.OrderActivity">
+    tools:context="com.cce.nkfust.tw.bentoofking.OrderFinalActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -54,24 +54,18 @@
                         android:layout_height="wrap_content"
                         android:layout_columnSpan="2"
                         android:layout_columnWeight="2"
-                        android:layout_marginLeft="14dp"
+                        android:layout_margin="10dp"
                         android:text="共 0 個便當，0 元"
+                        android:textAlignment="center"
                         android:textColor="@android:color/black"
                         android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/clearButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnSpan="1"
-                        android:text="@string/clear" />
 
                     <Button
                         android:id="@+id/orderButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_columnSpan="3"
-                        android:text="確認餐點" />
+                        android:text="@string/orderNow" />
 
                 </GridLayout>
 

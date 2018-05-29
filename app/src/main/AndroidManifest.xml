@@ -93,7 +93,8 @@
         </service>
 
         <activity android:name=".OrderListActivity" />
-        <activity android:name=".CheckOrderActivity"></activity>
+        <activity android:name=".CheckOrderActivity" />
+        <activity android:name=".OrderFinalActivity"></activity>
     </application>
 
 </manifest>

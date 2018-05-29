@@ -200,7 +200,7 @@
     <string name="editSuc">編輯成功</string>
     <string name="complete">完成</string>
     <string name="hint">小提示</string>
-    <string name="callHint">電話播出後將視窗切回便當王，就可以一邊看統計資訊一邊訂購唷！</string>
+    <string name="callHint">電話播出後開啟擴音，再將視窗切回便當王就可以一邊看統計資訊一邊訂購唷！</string>
     <string name="imageUpdateSuc">照片更新成功</string>
     <string name="imageUpdateFail">照片更新失敗，請檢查網路狀態</string>
     <string name="previewStoreInfo">審核店家資訊</string>

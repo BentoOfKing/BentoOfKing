@@ -606,6 +606,8 @@ public class MainActivity extends AppCompatActivity {
                     Thread thread = new Thread(updateUserLocation);
                     thread.start();
                 }
+                mLocation.removeUpdates(mLocationListener);
+
             }
         }
 

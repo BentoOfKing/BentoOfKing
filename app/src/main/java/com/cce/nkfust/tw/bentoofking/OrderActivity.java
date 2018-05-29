@@ -38,9 +38,10 @@ import java.util.Date;
 public class OrderActivity extends AppCompatActivity {
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
-    public static final int REQUEST_CALL_PHONE = 9;
+
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
+    private static String passOrderInfo = "ORDER_INFO";
     private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView,mealListView;
@@ -176,39 +177,22 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            getCallPermission();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-            Date curDate = new Date(System.currentTimeMillis()) ;
-            String str = formatter.format(curDate);
-            memberOrder = new MemberOrder();
-            memberOrder.putMember(userInfo.getMember().getEmail());
-            memberOrder.putTime(str);
             passOrder = new ArrayList<OrderIncludeMeal>();
             for(int i=0;i<order.size();i++){
                 if(!order.get(i).getCount().equals("0")){
                     passOrder.add(order.get(i));
                 }
             }
-            Thread thread = new Thread(new Order());
-            thread.start();
+            Intent intent = new Intent();
+            intent.setClass(context,OrderFinalActivity.class);
+            intent.putExtra(passUserInfo,userInfo);
+            intent.putExtra(passStoreInfo,store);
+            intent.putExtra(passOrderInfo,passOrder);
+            startActivity(intent);
         }
     }
 
-    class Order implements Runnable{
-        @Override
-        public void run() {
-            try {
-                Database database = new Database();
-                String ID = database.AddOrder(memberOrder);
-                for(int i=0;i<passOrder.size();i++){
-                    passOrder.get(i).putOrderID(ID);
-                }
-                database.AddOrderMeal(passOrder);
-            }catch (Exception e){
 
-            }
-        }
-    }
     public class ClearButtonHandler implements View.OnClickListener {
 
         @Override
@@ -220,38 +204,5 @@ public class OrderActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
-    public void getCallPermission(){
-        int permission = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[] {android.Manifest.permission.CALL_PHONE},REQUEST_CALL_PHONE);
-            return ;
-        }else{
-            new AlertDialog.Builder(context)
-                    .setTitle(R.string.hint)
-                    .setMessage(R.string.callHint)
-                    .setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.getPhone()));
-                            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
-                                startActivity(myIntentDial);
-                        }
-                    })
-                    .show();
-        }
-    }
 
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_CALL_PHONE:
-                if (grantResults.length > 0) {
-                    if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(context, getResources().getString(R.string.errorPermission), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-            default: super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
 }

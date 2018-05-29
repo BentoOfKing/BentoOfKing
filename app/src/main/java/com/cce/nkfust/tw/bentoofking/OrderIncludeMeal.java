@@ -1,10 +1,12 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
+
 /**
  * Created by John on 2018/5/5.
  */
 
-public class OrderIncludeMeal {
+public class OrderIncludeMeal implements Serializable {
     private String OrderID,Count;
     private Meal meal;
     public OrderIncludeMeal(){}
