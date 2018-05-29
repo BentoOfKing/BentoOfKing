@@ -176,7 +176,8 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 storeInfoLayout3.setText(clickStore.getStoreName());
                 storeScore.setText("評價："+clickStore.getRank());
                 storePrice.setText("平均價位："+clickStore.getPrice());
-                storeDistance.setText("");
+                storeDistance.setText("距離："+clickStore.getDistance().substring(0,3)+" 公里");
+                storeDistance.setVisibility(View.VISIBLE);
                 if(setDoBusiness(clickStore.getBusinessHours())){
                     storeStatus.setImageDrawable(getResources().getDrawable(R.drawable.store_open));
                 }else{
@@ -338,7 +339,7 @@ public class HomeMapsActivity extends AppCompatActivity implements OnMapReadyCal
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(nowLocation, 15));
                 Latitude = Double.toString(location.getLatitude());
                 Longitude = Double.toString(location.getLongitude());
-//                timerHandler.postDelayed(runnable, 3000);
+                timerHandler.postDelayed(runnable, 3000);
                 Thread t =new Thread(new GetStore());
                 t.start();
                 if (userInfo.getIdentity() == 1) {
