@@ -41,6 +41,7 @@ public class Database {
     private static String updateStoreURL = "http://163.18.104.169/databaseConnect/updateStore.php";
     private static String addStoreURL = "http://163.18.104.169/databaseConnect/addStore.php";
     private static String addMealURL = "http://163.18.104.169/databaseConnect/addMeal.php";
+    private static String addMealClassURL = "http://163.18.104.169/databaseConnect/addMealClass.php";
     private static String getMealURL = "http://163.18.104.169/databaseConnect/getMeal.php";
     private static String getOrderStoreCostURL = "http://163.18.104.169/databaseConnect/getOrderStoreCost.php";
     private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
@@ -832,35 +833,58 @@ public class Database {
         }
     }
 
-    public String addMeal(ArrayList<Meal> meal) {
+    public String addMeal(ArrayList<MealClass> mealClass) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        for (int i = 0; i < meal.size(); i++) {
+        String ID;
+        for (int i = 0; i < mealClass.size(); i++) {
             try {
                 params = null;
                 params = new ArrayList<NameValuePair>();
-                //params.add(new BasicNameValuePair("Store", meal.get(i).getStore()));
-                params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
-                params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
-                params.add(new BasicNameValuePair("Sequence", meal.get(i).getSequence()));
+                params.add(new BasicNameValuePair("Store", mealClass.get(i).getStore()));
+                params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getName().getBytes(), "8859_1")));
+                params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getSequence()));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             json = null;
-            json = jParser.makeHttpRequest(addMealURL, "POST", params);
+            json = jParser.makeHttpRequest(addMealClassURL, "POST", params);
             Log.d("Add meal.", json.toString());
             try {
                 int success = json.getInt(TAG_SUCCESS);
                 if (success != 1) {
                     return "An error occurred.";
-                }
-                if(meal.size()==1){
-                    return json.getString(TAG_ID);
+                }else{
+                    ID = json.getString(TAG_ID);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
                 return "Fail.";
+            }
+            for(int j=0;j<mealClass.get(i).getMeal().size();j++){
+                try {
+                    params = null;
+                    params = new ArrayList<NameValuePair>();
+                    params.add(new BasicNameValuePair("Class", ID));
+                    params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getMeal().get(j).getName().getBytes(), "8859_1")));
+                    params.add(new BasicNameValuePair("Price", mealClass.get(i).getMeal().get(j).getPrice()));
+                    params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getMeal().get(j).getSequence()));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                json = null;
+                json = jParser.makeHttpRequest(addMealURL, "POST", params);
+                Log.d("Add meal.", json.toString());
+                try {
+                    int success = json.getInt(TAG_SUCCESS);
+                    if (success != 1) {
+                        return "An error occurred.";
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return "Fail.";
+                }
             }
         }
         return "Successful.";

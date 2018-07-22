@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Meal implements Serializable {
     private String ID,MealClass,Name,Price,Sequence;
     public Meal(){};
-    public Meal(String ID,String Class,String Name,String Price,String Sequence){
+    public Meal(String ID,String MealClass,String Name,String Price,String Sequence){
         this.ID = ID;
         this.MealClass = MealClass;
         this.Name = Name;

@@ -246,7 +246,7 @@ public class EditExistedMenuActivity extends AppCompatActivity {
             Database database = new Database();
             ArrayList<Meal> m = new ArrayList<Meal>();
             m.add(addMeal);
-            result = database.addMeal(m);
+            //result = database.addMeal(m);
         }
     }
     class DeleteMeal implements Runnable {

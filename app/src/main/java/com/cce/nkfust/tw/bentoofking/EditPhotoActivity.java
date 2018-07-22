@@ -50,7 +50,7 @@ public class EditPhotoActivity extends AppCompatActivity{
     private ListView drawerListView;
     private DrawerLayout drawerLayout;
     private Store store;
-    private ArrayList<Meal> meal;
+    private ArrayList<MealClass> mealClass;
     private Context context;
     private ImageView mainImageView,requestImageView;
     private ImageView[] otherImageView;
@@ -74,7 +74,7 @@ public class EditPhotoActivity extends AppCompatActivity{
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         store =(Store) intent.getSerializableExtra(passStoreInfo);
-        meal = (ArrayList<Meal>) intent.getSerializableExtra(passmenuInfo);
+        mealClass = (ArrayList<MealClass>) intent.getSerializableExtra(passmenuInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -142,11 +142,14 @@ public class EditPhotoActivity extends AppCompatActivity{
                 }else {
                     store.putNote("");
                 }
-                int price = 0;
-                for(int i=0;i<meal.size();i++){
-                    price += Integer.parseInt(meal.get(i).getPrice());
+                int price = 0,mealCount = 0;
+                for(int i=0;i<mealClass.size();i++){
+                    for(int j=0;j<mealClass.get(i).getMeal().size();j++) {
+                        price += Integer.parseInt(mealClass.get(i).getMeal().get(j).getPrice());
+                        mealCount++;
+                    }
                 }
-                price /= meal.size();
+                price /= mealCount;
                 store.putPrice(Integer.toString(price));
                 store.putID(database.addStore(store));
                 String photoString = store.getID() + ".jpg";
@@ -157,10 +160,10 @@ public class EditPhotoActivity extends AppCompatActivity{
                 }
                 store.putPhoto(photoString);
                 database.UpdateStore(store);
-                for(int i=0;i<meal.size();i++){
-                    //meal.get(i).putStore(store.getID());
+                for(int i=0;i<mealClass.size();i++){
+                    mealClass.get(i).putStore(store.getID());
                 }
-                database.addMeal(meal);
+                database.addMeal(mealClass);
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
 
             }catch (Exception e){

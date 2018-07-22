@@ -78,7 +78,7 @@ public class EditMenuActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            /*if(meal.size()==0){
+            if(mealClass.size()==0){
                 Toast.makeText(context,getResources().getString(R.string.pleaseInputOneMeal), Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -86,8 +86,8 @@ public class EditMenuActivity extends AppCompatActivity {
             intent.setClass(context,EditPhotoActivity.class);
             intent.putExtra(passUserInfo,userInfo);
             intent.putExtra(passStoreInfo,store);
-            intent.putExtra(passmenuInfo,meal);
-            context.startActivity(intent);*/
+            intent.putExtra(passmenuInfo,mealClass);
+            context.startActivity(intent);
         }
     }
     private void getData() {
@@ -156,7 +156,13 @@ public class EditMenuActivity extends AppCompatActivity {
                                     mealClass.get(classIndex).putSequence(Integer.toString(nowSequence-1));
                                     sequence--;
                                     nowSequence--;
-                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    if(sequence>0){
+                                        sequenceTextView.setText("位置：往下 "+sequence+" 個");
+                                    }else if(sequence==0){
+                                        sequenceTextView.setText("位置：");
+                                    }else{
+                                        sequenceTextView.setText("位置：往上 "+-sequence+" 個");
+                                    }
                                     break;
                                 }
                             }
@@ -175,7 +181,13 @@ public class EditMenuActivity extends AppCompatActivity {
                                     mealClass.get(classIndex).putSequence(Integer.toString(nowSequence+1));
                                     sequence++;
                                     nowSequence++;
-                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    if(sequence>0){
+                                        sequenceTextView.setText("位置：往下 "+sequence+" 個");
+                                    }else if(sequence==0){
+                                        sequenceTextView.setText("位置：");
+                                    }else{
+                                        sequenceTextView.setText("位置：往上 "+-sequence+" 個");
+                                    }
                                     break;
                                 }
                             }
@@ -218,7 +230,13 @@ public class EditMenuActivity extends AppCompatActivity {
                                     mealClass.get(classIndex).getMeal().get(mealIndex).putSequence(Integer.toString(nowSequence-1));
                                     sequence--;
                                     nowSequence--;
-                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    if(sequence>0){
+                                        sequenceTextView.setText("位置：往下 "+sequence+" 個");
+                                    }else if(sequence==0){
+                                        sequenceTextView.setText("位置：");
+                                    }else{
+                                        sequenceTextView.setText("位置：往上 "+-sequence+" 個");
+                                    }
                                     break;
                                 }
                             }
@@ -237,7 +255,13 @@ public class EditMenuActivity extends AppCompatActivity {
                                     mealClass.get(classIndex).getMeal().get(mealIndex).putSequence(Integer.toString(nowSequence+1));
                                     nowSequence++;
                                     sequence++;
-                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    if(sequence>0){
+                                        sequenceTextView.setText("位置：往下 "+sequence+" 個");
+                                    }else if(sequence==0){
+                                        sequenceTextView.setText("位置：");
+                                    }else{
+                                        sequenceTextView.setText("位置：往上 "+-sequence+" 個");
+                                    }
                                     break;
                                 }
                             }
@@ -258,12 +282,25 @@ public class EditMenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if(mealIndex == -1){
-
+                        int nowSequence = Integer.parseInt(mealClass.get(classIndex).getSequence());
+                        mealClass.remove(classIndex);
+                        for(int i=0;i<mealClass.size();i++){
+                            int loopSequence = Integer.parseInt(mealClass.get(i).getSequence());
+                            if(loopSequence > nowSequence){
+                                mealClass.get(i).putSequence(Integer.toString(loopSequence-1));
+                            }
+                        }
                     }else{
+                        int nowSequence = Integer.parseInt(mealClass.get(classIndex).getMeal().get(mealIndex).getSequence());
+                        mealClass.get(classIndex).getMeal().remove(mealIndex);
+                        for(int i=0;i<mealClass.get(classIndex).getMeal().size();i++){
+                            int loopSequence = Integer.parseInt(mealClass.get(classIndex).getMeal().get(i).getSequence());
+                            if(loopSequence > nowSequence){
+                                mealClass.get(classIndex).getMeal().get(mealIndex).putSequence(Integer.toString(loopSequence-1));
+                            }
+                        }
 
                     }
-
-
                     getData();
                     editMealAdapter.notifyDataSetChanged();
                     dialog.dismiss();

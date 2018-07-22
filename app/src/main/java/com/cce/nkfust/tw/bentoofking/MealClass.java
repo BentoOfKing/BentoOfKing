@@ -1,12 +1,13 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by John on 2018/7/22.
  */
 
-public class MealClass {
+public class MealClass implements Serializable {
     private String ID,Store,Name,Sequence;
     private ArrayList<Meal> meal;
     public MealClass(){
