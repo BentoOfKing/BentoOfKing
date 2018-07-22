@@ -167,7 +167,7 @@
     <string name="addSequence">新增在</string>
     <string name="addMeal">新增餐點</string>
     <string name="editMeal">編輯餐點</string>
-    <string name="pleaseInputMealName">請輸入餐點名稱</string>
+    <string name="pleaseInputMealName">請輸入名稱</string>
     <string name="pleaseInputMealPrice">請輸入餐點價格</string>
     <string name="pleaseInputOneMeal">請至少加入一個餐點</string>
     <string name="first">第一個</string>

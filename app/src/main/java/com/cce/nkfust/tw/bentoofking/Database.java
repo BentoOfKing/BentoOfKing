@@ -840,7 +840,7 @@ public class Database {
             try {
                 params = null;
                 params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("Store", meal.get(i).getStore()));
+                //params.add(new BasicNameValuePair("Store", meal.get(i).getStore()));
                 params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
                 params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
                 params.add(new BasicNameValuePair("Sequence", meal.get(i).getSequence()));

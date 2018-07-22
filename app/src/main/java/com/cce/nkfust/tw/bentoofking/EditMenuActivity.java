@@ -10,11 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,9 +36,9 @@ public class EditMenuActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Store store;
     private FloatingActionButton floatingActionButton;
-    private ArrayList<Meal> meal;
-    private ArrayList<String> list = new ArrayList<String>();
-    ArrayAdapter<String> adapter;
+    private ArrayList<MealClass> mealClass;
+    private ArrayList<MenuItem> menuItem;
+    private EditMealAdapter editMealAdapter;
     private Context context;
     private Button nextButton;
     @Override
@@ -47,10 +51,12 @@ public class EditMenuActivity extends AppCompatActivity {
         store =(Store) intent.getSerializableExtra(passStoreInfo);
         toolbar = findViewById(R.id.toolbar);
         mealListView = findViewById(R.id.mealListView);
-        meal = new ArrayList<Meal>();
+        mealClass = new ArrayList<MealClass>();
+        menuItem = new ArrayList<MenuItem>();
         getData();
-        adapter = new ArrayAdapter<String>(this,R.layout.edit_menu_item,list);
-        mealListView.setAdapter(adapter);
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        editMealAdapter = new EditMealAdapter(inflater,menuItem);
+        mealListView.setAdapter(editMealAdapter);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
@@ -72,7 +78,7 @@ public class EditMenuActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            if(meal.size()==0){
+            /*if(meal.size()==0){
                 Toast.makeText(context,getResources().getString(R.string.pleaseInputOneMeal), Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -81,53 +87,164 @@ public class EditMenuActivity extends AppCompatActivity {
             intent.putExtra(passUserInfo,userInfo);
             intent.putExtra(passStoreInfo,store);
             intent.putExtra(passmenuInfo,meal);
-            context.startActivity(intent);
+            context.startActivity(intent);*/
         }
     }
     private void getData() {
-        list.clear();
-        for(int i=0;i<meal.size();i++){
-            for(int j=0;j<meal.size();j++){
-                if(Integer.toString(i).equals(meal.get(j).getSequence())){
-                    list.add(meal.get(j).getName()+"，"+getResources().getString(R.string.price)+" "+meal.get(j).getPrice()+" 元");
+        menuItem.clear();
+        for(int i=0;i<mealClass.size();i++){
+            for(int j=0;j<mealClass.size();j++){
+                if(Integer.toString(i).equals(mealClass.get(j).getSequence())){
+                    menuItem.add(new MenuItem(mealClass.get(j).getName(),"-1"));
+                    for(int ii=0;ii<mealClass.get(j).getMeal().size();ii++){
+                        for(int jj=0;jj<mealClass.get(j).getMeal().size();jj++){
+                            if(Integer.toString(ii).equals(mealClass.get(j).getMeal().get(jj).getSequence())){
+                                menuItem.add(new MenuItem(mealClass.get(j).getMeal().get(jj).getName(),mealClass.get(j).getMeal().get(jj).getPrice()));
+                                break;
+                            }
+                        }
+                    }
                     break;
                 }
             }
         }
     }
+
     public class OnItemClickHandler implements AdapterView.OnItemClickListener{
+        TextView mealNameTextView;
+        TextView priceTextView;
+        TextView sequenceTextView;
         EditText mealNameEditText;
         EditText priceEditText;
-        TextView sequenceTextView;
-        Spinner sequenceSpinner;
-        int mealIndex,nowIndex;
+        Button upButton;
+        Button downButton;
+        int classIndex,mealIndex,sequence,nowSequence;
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-            for(int i=0;i<meal.size();i++){
-                if(meal.get(i).getSequence().equals(Integer.toString((int) id))){
-                    mealIndex = i;
-                    nowIndex = (int) id;
-                    break;
-                }
-            }
+            mealIndex=-1;
+            sequence = 0;
             LayoutInflater inflater = LayoutInflater.from(context);
-            view = inflater.inflate(R.layout.alertdialog_add_meal,null);
-            mealNameEditText = view.findViewById(R.id.mealNameEditText);
-            mealNameEditText.setText(meal.get(mealIndex).getName());
-            priceEditText = view.findViewById(R.id.priceEditText);
-            priceEditText.setText(meal.get(mealIndex).getPrice());
-            sequenceSpinner = view.findViewById(R.id.sequenceSpinner);
+            view = inflater.inflate(R.layout.alertdialog_edit_meal,null);
+            mealNameTextView = view.findViewById(R.id.mealNameTextView);
+            priceTextView = view.findViewById(R.id.priceTextView);
             sequenceTextView = view.findViewById(R.id.sequenceTextView);
-            sequenceTextView.setText(getResources().getString(R.string.moveTo));
-            ArrayAdapter<CharSequence> mealName = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
-            for(int i=0;i<meal.size();i++){
-                for(int j=0;j<meal.size();j++){
-                    if(Integer.toString(i).equals(meal.get(j).getSequence()))
-                        mealName.add(meal.get(j).getName()+" "+getResources().getString(R.string.someonePosition));
+            mealNameEditText = view.findViewById(R.id.mealNameEditText);
+            priceEditText = view.findViewById(R.id.priceEditText);
+            upButton = view.findViewById(R.id.upButton);
+            downButton = view.findViewById(R.id.downButton);
+            if(menuItem.get((int)id).Price.equals("-1")){
+                for(int i=0;i<mealClass.size();i++){
+                    if(menuItem.get((int)id).Name.equals(mealClass.get(i).getName())){
+                        classIndex = i;
+                        break;
+                    }
                 }
+                mealNameTextView.setText("類別名稱");
+                mealNameEditText.setText(mealClass.get(classIndex).getName());
+                priceTextView.setVisibility(View.GONE);
+                priceEditText.setVisibility(View.GONE);
+                nowSequence = Integer.parseInt(mealClass.get(classIndex).getSequence());
+                upButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(nowSequence == 0){
+                            return;
+                        }else{
+                            for(int i=0;i<mealClass.size();i++){
+                                if(mealClass.get(i).getSequence().equals(Integer.toString(nowSequence-1))){
+                                    mealClass.get(i).putSequence(Integer.toString(nowSequence));
+                                    mealClass.get(classIndex).putSequence(Integer.toString(nowSequence-1));
+                                    sequence--;
+                                    nowSequence--;
+                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+                downButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(nowSequence == mealClass.size()){
+                            return;
+                        }else{
+                            for(int i=0;i<mealClass.size();i++){
+                                if(mealClass.get(i).getSequence().equals(Integer.toString(nowSequence+1))){
+                                    mealClass.get(i).putSequence(Integer.toString(nowSequence));
+                                    mealClass.get(classIndex).putSequence(Integer.toString(nowSequence+1));
+                                    sequence++;
+                                    nowSequence++;
+                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+            }else{
+                for(int i=(int)id;i>=0;i--){
+                    if(menuItem.get(i).getPrice().equals("-1")){
+                        for(int j=0;j<mealClass.size();j++){
+                            if(mealClass.get(j).getName().equals(menuItem.get(i).getName())){
+                                classIndex = j;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                for(int i=0;i<mealClass.get(classIndex).getMeal().size();i++){
+                    if(menuItem.get((int)id).getName().equals(mealClass.get(classIndex).getMeal().get(i).getName())){
+                        mealIndex = i;
+                        break;
+                    }
+                }
+                mealNameTextView.setText("餐點名稱");
+                mealNameEditText.setText(mealClass.get(classIndex).getMeal().get(mealIndex).getName());
+                priceTextView.setVisibility(View.VISIBLE);
+                priceEditText.setVisibility(View.VISIBLE);
+                priceEditText.setText(mealClass.get(classIndex).getMeal().get(mealIndex).getPrice());
+                nowSequence = Integer.parseInt(mealClass.get(classIndex).getMeal().get(mealIndex).getSequence());
+                upButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(nowSequence == 0){
+                            return;
+                        }else{
+                            for(int i=0;i<mealClass.get(classIndex).getMeal().size();i++){
+                                if(mealClass.get(classIndex).getMeal().get(i).getSequence().equals(Integer.toString(nowSequence-1))){
+                                    mealClass.get(classIndex).getMeal().get(i).putSequence(Integer.toString(nowSequence));
+                                    mealClass.get(classIndex).getMeal().get(mealIndex).putSequence(Integer.toString(nowSequence-1));
+                                    sequence--;
+                                    nowSequence--;
+                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+                downButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(nowSequence == mealClass.get(classIndex).getMeal().size()){
+                            return;
+                        }else{
+                            for(int i=0;i<mealClass.get(classIndex).getMeal().size();i++){
+                                if(mealClass.get(classIndex).getMeal().get(i).getSequence().equals(Integer.toString(nowSequence+1))){
+                                    mealClass.get(classIndex).getMeal().get(i).putSequence(Integer.toString(nowSequence));
+                                    mealClass.get(classIndex).getMeal().get(mealIndex).putSequence(Integer.toString(nowSequence+1));
+                                    nowSequence++;
+                                    sequence++;
+                                    sequenceTextView.setText("位置：距離原本 "+sequence);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
             }
-            sequenceSpinner.setAdapter(mealName);
-            sequenceSpinner.setSelection(nowIndex);
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(getResources().getString(R.string.editMeal));
             builder.setView(view);
@@ -140,15 +257,15 @@ public class EditMenuActivity extends AppCompatActivity {
             builder.setNeutralButton(getResources().getString(R.string.delete),new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    meal.remove(mealIndex);
-                    for(int i=0;i<meal.size();i++){
-                        int meals=Integer.parseInt(meal.get(i).getSequence());
-                        if(meals >= nowIndex){
-                            meal.get(i).putSequence(Integer.toString(meals-1));
-                        }
+                    if(mealIndex == -1){
+
+                    }else{
+
                     }
+
+
                     getData();
-                    adapter.notifyDataSetChanged();
+                    editMealAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 }
             });
@@ -163,31 +280,18 @@ public class EditMenuActivity extends AppCompatActivity {
                             if(mealNameEditText.getText().toString().equals("")) {
                                 Toast.makeText(context,getResources().getString(R.string.pleaseInputMealName), Toast.LENGTH_SHORT).show();
                                 return;
-                            }else if(priceEditText.getText().toString().equals("")) {
+                            }else if(priceEditText.getText().toString().equals("") && mealIndex != -1) {
                                 Toast.makeText(context,getResources().getString(R.string.pleaseInputMealPrice), Toast.LENGTH_SHORT).show();
                                 return;
                             }else {
-                                int selectIndex = (int) sequenceSpinner.getSelectedItemId();
-                                if(selectIndex > nowIndex){
-                                    for(int i=0;i<meal.size();i++){
-                                        int meals=Integer.parseInt(meal.get(i).getSequence());
-                                        if(meals <= selectIndex && meals > nowIndex){
-                                            meal.get(i).putSequence(Integer.toString(meals-1));
-                                        }
-                                    }
-                                }else if(selectIndex < nowIndex){
-                                    for(int i=0;i<meal.size();i++){
-                                        int meals=Integer.parseInt(meal.get(i).getSequence());
-                                        if(meals >= selectIndex && meals < nowIndex){
-                                            meal.get(i).putSequence(Integer.toString(meals+1));
-                                        }
-                                    }
+                                if(mealIndex == -1){
+                                    mealClass.get(classIndex).putName(mealNameEditText.getText().toString());
+                                }else{
+                                    mealClass.get(classIndex).getMeal().get(mealIndex).putName(mealNameEditText.getText().toString());
+                                    mealClass.get(classIndex).getMeal().get(mealIndex).putPrice(priceEditText.getText().toString());
                                 }
-                                meal.get(mealIndex).putName(mealNameEditText.getText().toString());
-                                meal.get(mealIndex).putPrice(priceEditText.getText().toString());
-                                meal.get(mealIndex).putSequence(Integer.toString(selectIndex));
                                 getData();
-                                adapter.notifyDataSetChanged();
+                                editMealAdapter.notifyDataSetChanged();
                                 alertDialog.dismiss();
                             }
 
@@ -197,28 +301,66 @@ public class EditMenuActivity extends AppCompatActivity {
     }
 
     public class FloatingActionButtonHanbler implements View.OnClickListener{
+        TextView mealNameTextView;
+        TextView priceTextView;
+        TextView sequenceTextView;
         EditText mealNameEditText;
         EditText priceEditText;
-        Spinner sequenceSpinner;
+        Spinner classSpinner;
+        Spinner addTypeSpinner;
         @Override
         public void onClick(View view) {
             LayoutInflater inflater = LayoutInflater.from(context);
             view = inflater.inflate(R.layout.alertdialog_add_meal,null);
+            mealNameTextView = view.findViewById(R.id.mealNameTextView);
+            priceTextView = view.findViewById(R.id.priceTextView);
+            sequenceTextView = view.findViewById(R.id.sequenceTextView);
             mealNameEditText = view.findViewById(R.id.mealNameEditText);
             priceEditText = view.findViewById(R.id.priceEditText);
-            sequenceSpinner = view.findViewById(R.id.sequenceSpinner);
-            sequenceSpinner.setSelection(0);
-            ArrayAdapter<CharSequence> mealName = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
-            for(int i=0;i<meal.size();i++){
-                for(int j=0;j<meal.size();j++){
-                    if(Integer.toString(i).equals(meal.get(j).getSequence()))
-                    mealName.add(meal.get(j).getName()+" "+getResources().getString(R.string.someonePosition));
+            classSpinner = view.findViewById(R.id.classSpinner);
+            addTypeSpinner = view.findViewById(R.id.addTypeSpinner);
+            classSpinner.setSelection(0);
+            ArrayAdapter<CharSequence> mealAddType = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
+            mealAddType.add("新增類別");
+            mealAddType.add("新增餐點");
+            addTypeSpinner.setAdapter(mealAddType);
+            if(mealClass.size() == 0){
+                addTypeSpinner.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        return true;
+                    }
+                });
+            }
+            addTypeSpinner.setSelection(0);
+            addTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int ii, long l) {
+                    if((int)l == 0){
+                        mealNameTextView.setText("類別名稱");
+                        priceTextView.setVisibility(View.GONE);
+                        sequenceTextView.setVisibility(View.GONE);
+                        priceEditText.setVisibility(View.GONE);
+                        classSpinner.setVisibility(View.GONE);
+                    }else{
+                        mealNameTextView.setText("餐點名稱");
+                        priceTextView.setVisibility(View.VISIBLE);
+                        sequenceTextView.setVisibility(View.VISIBLE);
+                        priceEditText.setVisibility(View.VISIBLE);
+                        classSpinner.setVisibility(View.VISIBLE);
+                        ArrayAdapter<CharSequence> mealClassName = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
+                        for(int i=0;i<mealClass.size();i++){
+                            for(int j=0;j<mealClass.size();j++){
+                                if(Integer.toString(i).equals(mealClass.get(j).getSequence()))
+                                    mealClassName.add(mealClass.get(j).getName());
+                            }
+                        }
+                        classSpinner.setAdapter(mealClassName);
+                    }
                 }
-            }
-            if(meal.size() ==0 ){
-                mealName.add(getResources().getString(R.string.first));
-            }
-            sequenceSpinner.setAdapter(mealName);
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {}
+            });
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(getResources().getString(R.string.addMeal));
             builder.setView(view);
@@ -237,27 +379,33 @@ public class EditMenuActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             if(mealNameEditText.getText().toString().equals("")) {
-                                Toast.makeText(context,getResources().getString(R.string.pleaseInputMealName), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, getResources().getString(R.string.pleaseInputMealName), Toast.LENGTH_SHORT).show();
                                 return;
-                            }else if(priceEditText.getText().toString().equals("")) {
-                                Toast.makeText(context,getResources().getString(R.string.pleaseInputMealPrice), Toast.LENGTH_SHORT).show();
-                                return;
-                            }else {
-                                Meal addMeal = new Meal();
-                                addMeal.putName(mealNameEditText.getText().toString());
-                                addMeal.putPrice(priceEditText.getText().toString());
-                                addMeal.putSequence(Integer.toString((int) sequenceSpinner.getSelectedItemId()));
-                                for(int i=0;i<meal.size();i++){
-                                    int meals=Integer.parseInt(meal.get(i).getSequence());
-                                    if(meals >= (int) sequenceSpinner.getSelectedItemId()){
-                                        meal.get(i).putSequence(Integer.toString(meals+1));
+                            }
+                            if((int)addTypeSpinner.getSelectedItemId() == 0){
+                                MealClass thismealClass = new MealClass();
+                                thismealClass.putName(mealNameEditText.getText().toString());
+                                thismealClass.putSequence(Integer.toString(mealClass.size()));
+                                mealClass.add(thismealClass);
+                            }else{
+                                if(priceEditText.getText().toString().equals("")) {
+                                    Toast.makeText(context, getResources().getString(R.string.pleaseInputMealPrice), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                for(int i=0;i<mealClass.size();i++){
+                                    if(Integer.toString((int)classSpinner.getSelectedItemId()).equals(mealClass.get(i).getSequence())){
+                                        Meal thismeal = new Meal();
+                                        thismeal.putName(mealNameEditText.getText().toString());
+                                        thismeal.putPrice(priceEditText.getText().toString());
+                                        thismeal.putMealClass(Integer.toString((int)classSpinner.getSelectedItemId()));
+                                        thismeal.putSequence(Integer.toString(mealClass.get(i).getMeal().size()));
+                                        mealClass.get(i).getMeal().add(thismeal);
                                     }
                                 }
-                                meal.add(addMeal);
-                                getData();
-                                adapter.notifyDataSetChanged();
-                                alertDialog.dismiss();
                             }
+                            getData();
+                            editMealAdapter.notifyDataSetChanged();
+                            alertDialog.dismiss();
 
                         }
                     });
@@ -271,3 +419,4 @@ public class EditMenuActivity extends AppCompatActivity {
             super.onBackPressed();
     }
 }
+

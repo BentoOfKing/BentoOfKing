@@ -7,22 +7,22 @@ import java.io.Serializable;
  */
 
 public class Meal implements Serializable {
-    private String ID,Store,Name,Price,Sequence;
+    private String ID,MealClass,Name,Price,Sequence;
     public Meal(){};
-    public Meal(String ID,String Store,String Name,String Price,String Sequence){
+    public Meal(String ID,String Class,String Name,String Price,String Sequence){
         this.ID = ID;
-        this.Store = Store;
+        this.MealClass = MealClass;
         this.Name = Name;
         this.Price = Price;
         this.Sequence = Sequence;
     };
     public String getID(){return ID;}
-    public String getStore(){return Store;}
+    public String getMealClass(){return MealClass;}
     public String getName(){return Name;}
     public String getPrice(){return Price;}
     public String getSequence(){return Sequence;}
     public void putID(String ID){this.ID = ID;}
-    public void putStore(String Store){this.Store = Store;}
+    public void putMealClass(String MealClass){this.MealClass = MealClass;}
     public void putName(String Name){this.Name = Name;}
     public void putPrice(String Price){this.Price = Price;}
     public void putSequence(String Sequence){this.Sequence = Sequence;}

@@ -106,7 +106,7 @@ public class EditExistedMenuActivity extends AppCompatActivity {
             mealNameEditText.setText(meal.get(mealIndex).getName());
             priceEditText = view.findViewById(R.id.priceEditText);
             priceEditText.setText(meal.get(mealIndex).getPrice());
-            sequenceSpinner = view.findViewById(R.id.sequenceSpinner);
+            //sequenceSpinner = view.findViewById(R.id.sequenceSpinner);
             sequenceTextView = view.findViewById(R.id.sequenceTextView);
             sequenceTextView.setText(getResources().getString(R.string.moveTo));
             ArrayAdapter<CharSequence> mealName = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
@@ -285,7 +285,7 @@ public class EditExistedMenuActivity extends AppCompatActivity {
             view = inflater.inflate(R.layout.alertdialog_add_meal,null);
             mealNameEditText = view.findViewById(R.id.mealNameEditText);
             priceEditText = view.findViewById(R.id.priceEditText);
-            sequenceSpinner = view.findViewById(R.id.sequenceSpinner);
+            //sequenceSpinner = view.findViewById(R.id.sequenceSpinner);
             sequenceSpinner.setSelection(0);
             ArrayAdapter<CharSequence> mealName = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
             for(int i=0;i<meal.size();i++){
@@ -324,7 +324,7 @@ public class EditExistedMenuActivity extends AppCompatActivity {
                             }else {
                                 progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
                                 addMeal = new Meal();
-                                addMeal.putStore(userInfo.getStore().getID());
+                                //addMeal.putStore(userInfo.getStore().getID());
                                 addMeal.putName(mealNameEditText.getText().toString());
                                 addMeal.putPrice(priceEditText.getText().toString());
                                 addMeal.putSequence(Integer.toString((int) sequenceSpinner.getSelectedItemId()));

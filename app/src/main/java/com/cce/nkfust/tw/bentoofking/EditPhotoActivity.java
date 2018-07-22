@@ -158,7 +158,7 @@ public class EditPhotoActivity extends AppCompatActivity{
                 store.putPhoto(photoString);
                 database.UpdateStore(store);
                 for(int i=0;i<meal.size();i++){
-                    meal.get(i).putStore(store.getID());
+                    //meal.get(i).putStore(store.getID());
                 }
                 database.addMeal(meal);
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
