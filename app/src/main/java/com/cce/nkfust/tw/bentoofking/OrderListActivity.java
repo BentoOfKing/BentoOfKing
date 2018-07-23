@@ -33,7 +33,7 @@ public class OrderListActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Database database;
     private ArrayList<MemberOrder> orders;
-    private ArrayList<String> store,orderCost;
+    private ArrayList<String> store,orderCost,state;
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private OrderListAdapter orderListAdapter;
@@ -54,6 +54,7 @@ public class OrderListActivity extends AppCompatActivity {
         orders = new ArrayList<MemberOrder>();
         store = new ArrayList<String>();
         orderCost = new ArrayList<String>();
+        state = new ArrayList<String>();
         database = new Database();
         mainThreadHandler = new MainThreadHandler();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -86,6 +87,7 @@ public class OrderListActivity extends AppCompatActivity {
                     store.add(token[0]);
                     orderCost.add(token[1]);
                     orders.add(order[i]);
+
                 }
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
             }else{
@@ -183,7 +185,25 @@ class OrderListAdapter extends BaseAdapter {
         String hour = time.substring(8,10);
         String min = time.substring(10,12);
         viewHolder.dateTextView.setText(year+"年"+month+"月"+day+" "+hour+":"+min);
-        viewHolder.costTextView.setText("花費"+orderCost.get(position)+"元");
+        switch (order.get(position).getState()){
+            case "0":
+                viewHolder.costTextView.setText("花費"+orderCost.get(position)+"元，待確認");
+                break;
+            case "1":
+                viewHolder.costTextView.setText("花費"+orderCost.get(position)+"元，需確認");
+                break;
+            case "2":
+                viewHolder.costTextView.setText("花費"+orderCost.get(position)+"元，已確認");
+                break;
+            case "3":
+                viewHolder.costTextView.setText("花費"+orderCost.get(position)+"元，送餐中");
+                break;
+            case "4":
+                viewHolder.costTextView.setText("花費"+orderCost.get(position)+"元，已完成");
+                break;
+
+        }
+
         return view;
     }
 }

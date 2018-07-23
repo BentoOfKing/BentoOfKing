@@ -11,6 +11,7 @@ public class MemberOrder {
         this.ID = ID;
         this.Member = Member;
         this.Time = Time;
+        this.State = State;
     }
     public String getID(){return this.ID;}
     public String getMember(){return this.Member;}

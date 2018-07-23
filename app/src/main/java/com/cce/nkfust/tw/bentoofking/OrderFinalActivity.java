@@ -87,7 +87,7 @@ public class OrderFinalActivity extends AppCompatActivity {
             if(store.getState().equals("1")){
                 memberOrder.putState("0");
             }else {
-                memberOrder.putState("3");
+                memberOrder.putState("4");
             }
             Thread thread = new Thread(new Order());
             thread.start();

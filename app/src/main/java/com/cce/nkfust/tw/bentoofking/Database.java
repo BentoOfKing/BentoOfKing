@@ -1094,7 +1094,7 @@ public class Database {
             returnOrder = new MemberOrder[reviewRange];
             for (int i = 0; i < reviewRange; i++) {
                 JSONObject m = orders.getJSONObject(i);
-                //returnOrder[i] = new MemberOrder(m.getString(TAG_ID), m.getString(TAG_Member), m.getString(TAG_Time));
+                returnOrder[i] = new MemberOrder(m.getString(TAG_ID), m.getString(TAG_Member), m.getString(TAG_Time), m.getString(TAG_State));
             }
             reviewIndex += reviewRange;
             return returnOrder;
