@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,10 +35,12 @@ public class OrderFinalActivity extends AppCompatActivity {
     private Context context;
     private Store store;
     private Button orderButton;
-    private ArrayList<OrderIncludeMeal> orders;
+    private ArrayList<OrderMenuItem> passOrder;
     private MemberOrder memberOrder;
     private OrderMealAdapter adapter;
     private TextView orderStatisticsTextView;
+    private ProgressDialog progressDialog;
+    String ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class OrderFinalActivity extends AppCompatActivity {
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         store =(Store) intent.getSerializableExtra(passStoreInfo);
-        orders = (ArrayList<OrderIncludeMeal>) intent.getSerializableExtra(passOrderInfo);
+        passOrder = (ArrayList<OrderMenuItem>) intent.getSerializableExtra(passOrderInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -57,14 +60,14 @@ public class OrderFinalActivity extends AppCompatActivity {
         orderButton = findViewById(R.id.orderButton);
         mealListView = findViewById(R.id.mealListView);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        adapter = new OrderMealAdapter(inflater,orders);
+        adapter = new OrderMealAdapter(inflater,passOrder);
         mealListView.setAdapter(adapter);
         orderButton.setOnClickListener(new OrderButtonHandler());
         orderStatisticsTextView = findViewById(R.id.orderStatisticsTextView);
         int count=0,total=0;
-        for(int i=0;i<orders.size();i++){
-            count += Integer.parseInt(orders.get(i).getCount());
-            total += Integer.parseInt(orders.get(i).getCount())*Integer.parseInt(orders.get(i).getMeal().getPrice());
+        for(int i=0;i<passOrder.size();i++){
+            count += Integer.parseInt(passOrder.get(i).getCount());
+            total += Integer.parseInt(passOrder.get(i).getCount())*Integer.parseInt(passOrder.get(i).getPrice());
         }
         orderStatisticsTextView.setText("共 "+count+" 個便當，"+total+" 元");
 
@@ -75,16 +78,29 @@ public class OrderFinalActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            getCallPermission();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
             Date curDate = new Date(System.currentTimeMillis()) ;
             String str = formatter.format(curDate);
             memberOrder = new MemberOrder();
             memberOrder.putMember(userInfo.getMember().getEmail());
             memberOrder.putTime(str);
-
+            if(store.getState().equals("1")){
+                memberOrder.putState("0");
+            }else {
+                memberOrder.putState("3");
+            }
             Thread thread = new Thread(new Order());
             thread.start();
+            progressDialog = ProgressDialog.show(context, "請稍等...", "訂單傳送中...", true);
+            try {
+                thread.join();
+                getCallPermission();
+                progressDialog.dismiss();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+                Toast.makeText(context, "訂單傳送失敗，請確認網路狀態！", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -93,13 +109,9 @@ public class OrderFinalActivity extends AppCompatActivity {
         public void run() {
             try {
                 Database database = new Database();
-                String ID = database.AddOrder(memberOrder);
-                for(int i=0;i<orders.size();i++){
-                    orders.get(i).putOrderID(ID);
-                }
-                database.AddOrderMeal(orders);
+                ID = database.AddOrder(memberOrder);
+                database.AddOrderMeal(ID,passOrder);
             }catch (Exception e){
-
             }
         }
     }
@@ -110,18 +122,34 @@ public class OrderFinalActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,new String[] {android.Manifest.permission.CALL_PHONE},REQUEST_CALL_PHONE);
             return ;
         }else{
-            new AlertDialog.Builder(context)
-                    .setTitle(R.string.hint)
-                    .setMessage(R.string.callHint)
-                    .setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.getPhone()));
-                            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
-                                startActivity(myIntentDial);
-                        }
-                    })
-                    .show();
+            if(store.getState().equals("1")){
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.hint)
+                        .setMessage("您的訂單編號為 "+ID+"，訂單已發送給店家，直接告知店家訂單編號即可！")
+                        .setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.getPhone()));
+                                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
+                                    startActivity(myIntentDial);
+                            }
+                        })
+                        .show();
+                 }else {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.hint)
+                        .setMessage(R.string.callHint)
+                        .setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.getPhone()));
+                                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
+                                    startActivity(myIntentDial);
+                            }
+                        })
+                        .show();
+            }
+
         }
     }
 

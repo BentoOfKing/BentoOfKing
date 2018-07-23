@@ -38,7 +38,6 @@ import java.util.Date;
 public class OrderActivity extends AppCompatActivity {
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
-
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static String passOrderInfo = "ORDER_INFO";
@@ -47,8 +46,8 @@ public class OrderActivity extends AppCompatActivity {
     private ListView drawerListView,mealListView;
     private DrawerLayout drawerLayout;
     private Store store;
-    private ArrayList<Meal> meal;
-    private ArrayList<OrderIncludeMeal> order,passOrder;
+    private ArrayList<MealClass> mealClass;
+    private ArrayList<OrderMenuItem> orderMenuItem,passOrder;
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private Button orderButton,clearButton;
@@ -77,7 +76,7 @@ public class OrderActivity extends AppCompatActivity {
         drawer.setToolbarNavigation();
         toolbar.setTitle(getResources().getString(R.string.order));
         mealListView = findViewById(R.id.mealListView);
-        meal = new ArrayList<Meal>();
+        mealClass = new ArrayList<MealClass>();
         GetMeal getMeal = new GetMeal();
         mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
         progressDialog = ProgressDialog.show(context, "請稍等...", "資料載入中...", true);
@@ -91,7 +90,7 @@ public class OrderActivity extends AppCompatActivity {
         public void run() {
             try {
                 Database database = new Database();
-                //meal = database.getMeal(store.getID());
+                mealClass = database.getMeal(store.getID());
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
             }catch (Exception e){
                 mainThreadHandler.sendEmptyMessage(FAIL);
@@ -109,15 +108,24 @@ public class OrderActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SUCCESS:
                     LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    order = new ArrayList<OrderIncludeMeal>();
-                    for(int i=0;i<meal.size();i++) {
-                        for (int j = 0; j < meal.size(); j++) {
-                            if (meal.get(j).getSequence().equals(Integer.toString(i))) {
-                                order.add(new OrderIncludeMeal("",meal.get(j),"0"));
+                    orderMenuItem = new ArrayList<OrderMenuItem>();
+                    for(int i=0;i<mealClass.size();i++){
+                        for(int j=0;j<mealClass.size();j++){
+                            if(Integer.toString(i).equals(mealClass.get(j).getSequence())){
+                                orderMenuItem.add(new OrderMenuItem(mealClass.get(j).getName(),"-1","0",""));
+                                for(int ii=0;ii<mealClass.get(j).getMeal().size();ii++){
+                                    for(int jj=0;jj<mealClass.get(j).getMeal().size();jj++){
+                                        if(Integer.toString(ii).equals(mealClass.get(j).getMeal().get(jj).getSequence())){
+                                            orderMenuItem.add(new OrderMenuItem(mealClass.get(j).getMeal().get(jj).getName(),mealClass.get(j).getMeal().get(jj).getPrice(),"0",mealClass.get(j).getMeal().get(jj).getID()));
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
                             }
                         }
                     }
-                    adapter = new OrderMealAdapter(inflater, order);
+                    adapter = new OrderMealAdapter(inflater, orderMenuItem);
                     mealListView.setAdapter(adapter);
                     mealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         LayoutInflater inflater;
@@ -125,6 +133,9 @@ public class OrderActivity extends AppCompatActivity {
                         AlertDialog alertDialog;
                         @Override
                         public void onItemClick(AdapterView arg0, View arg1, int arg2,final long arg3) {
+                            if(orderMenuItem.get((int)arg3).getPrice().equals("-1")){
+                                return;
+                            }
                             inflater = LayoutInflater.from(OrderActivity.this);
                             View view = inflater.inflate(R.layout.alertdialog_order,null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
@@ -133,7 +144,7 @@ public class OrderActivity extends AppCompatActivity {
                             numberPicker = view.findViewById(R.id.numberPicker);
                             numberPicker.setMinValue(0);
                             numberPicker.setMaxValue(1000);
-                            numberPicker.setValue(Integer.parseInt(order.get((int)arg3).getCount()));
+                            numberPicker.setValue(Integer.parseInt(orderMenuItem.get((int)arg3).getCount()));
                             builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -143,12 +154,14 @@ public class OrderActivity extends AppCompatActivity {
                             builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    order.get((int)arg3).putCount(Integer.toString(numberPicker.getValue()));
+                                    orderMenuItem.get((int)arg3).putCount(Integer.toString(numberPicker.getValue()));
                                     adapter.notifyDataSetChanged();
                                     int totalCount = 0,totalPrice = 0;
-                                    for(int i=0;i<order.size();i++){
-                                        totalCount += Integer.parseInt(order.get(i).getCount());
-                                        totalPrice += Integer.parseInt(order.get(i).getCount())*Integer.parseInt(order.get(i).getMeal().getPrice());
+                                    for(int i=0;i<orderMenuItem.size();i++){
+                                        if(!orderMenuItem.get(i).getPrice().equals("-1")) {
+                                            totalCount += Integer.parseInt(orderMenuItem.get(i).getCount());
+                                        }
+                                        totalPrice += Integer.parseInt(orderMenuItem.get(i).getCount())*Integer.parseInt(orderMenuItem.get(i).getPrice());
                                     }
                                     orderStatisticsTextView.setText("共 "+totalCount+" 個便當，"+totalPrice+" 元");
                                     dialog.dismiss();
@@ -157,6 +170,7 @@ public class OrderActivity extends AppCompatActivity {
                             });
                             alertDialog = builder.create();
                             alertDialog.show();
+
 
                         }
                     });
@@ -177,10 +191,11 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            passOrder = new ArrayList<OrderIncludeMeal>();
-            for(int i=0;i<order.size();i++){
-                if(!order.get(i).getCount().equals("0")){
-                    passOrder.add(order.get(i));
+
+            passOrder = new ArrayList<OrderMenuItem>();
+            for(int i=0;i<orderMenuItem.size();i++){
+                if(!orderMenuItem.get(i).getCount().equals("0")){
+                    passOrder.add(orderMenuItem.get(i));
                 }
             }
             Intent intent = new Intent();
@@ -189,6 +204,7 @@ public class OrderActivity extends AppCompatActivity {
             intent.putExtra(passStoreInfo,store);
             intent.putExtra(passOrderInfo,passOrder);
             startActivity(intent);
+
         }
     }
 
@@ -197,11 +213,12 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            for(int i=0;i<order.size();i++){
-                order.get(i).putCount("0");
+            for(int i=0;i<orderMenuItem.size();i++){
+                orderMenuItem.get(i).putCount("0");
             }
             orderStatisticsTextView.setText("共 0 個便當，0 元");
             adapter.notifyDataSetChanged();
+
         }
     }
 

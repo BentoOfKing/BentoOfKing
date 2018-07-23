@@ -499,7 +499,7 @@ public class Database {
                 JSONObject c = stores.getJSONObject(i);
 
                 // Storing each json item in variable
-                returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+                returnStore[i] = new Store(c.getString(TAG_ID), "", c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
             }
             index += range;
             return returnStore;
@@ -1094,7 +1094,7 @@ public class Database {
             returnOrder = new MemberOrder[reviewRange];
             for (int i = 0; i < reviewRange; i++) {
                 JSONObject m = orders.getJSONObject(i);
-                returnOrder[i] = new MemberOrder(m.getString(TAG_ID), m.getString(TAG_Member), m.getString(TAG_Time));
+                //returnOrder[i] = new MemberOrder(m.getString(TAG_ID), m.getString(TAG_Member), m.getString(TAG_Time));
             }
             reviewIndex += reviewRange;
             return returnOrder;
@@ -1108,6 +1108,7 @@ public class Database {
         jParser = new JSONParser();
         params.add(new BasicNameValuePair("Member", memberOrder.getMember()));
         params.add(new BasicNameValuePair("Time", memberOrder.getTime()));
+        params.add(new BasicNameValuePair("State", memberOrder.getState()));
         json = null;
         json = jParser.makeHttpRequest(addOrderURL, "POST", params);
         Log.d("Add order.", json.toString());
@@ -1147,14 +1148,14 @@ public class Database {
             }
     }
 
-    public String AddOrderMeal(ArrayList<OrderIncludeMeal> order) {
+    public String AddOrderMeal(String ID,ArrayList<OrderMenuItem> order) {
         List<NameValuePair> params;
         jParser = null;
         jParser = new JSONParser();
         for (int i = 0; i < order.size(); i++) {
             params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("OrderID", order.get(i).getOrderID()));
-            params.add(new BasicNameValuePair("MealID", order.get(i).getMeal().getID()));
+            params.add(new BasicNameValuePair("OrderID", ID));
+            params.add(new BasicNameValuePair("MealID", order.get(i).getID()));
             params.add(new BasicNameValuePair("Count", order.get(i).getCount()));
             json = null;
             json = jParser.makeHttpRequest(addOrderMealURL, "POST", params);

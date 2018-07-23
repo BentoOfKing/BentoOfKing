@@ -1,6 +1,7 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ import java.util.HashMap;
  */
 
 public class OrderMealAdapter extends BaseAdapter {
-    private ArrayList<OrderIncludeMeal> meal;
+    private ArrayList<OrderMenuItem> orderMenuItem;
     private LayoutInflater inflater;
     private ViewHolder viewHolder;
 
@@ -33,21 +34,31 @@ public class OrderMealAdapter extends BaseAdapter {
         TextView countTextView;
     }
 
-    public OrderMealAdapter(LayoutInflater inflater, ArrayList<OrderIncludeMeal> meal){
-        this.meal = meal;
-        //this.context = context;
+    public OrderMealAdapter(LayoutInflater inflater, ArrayList<OrderMenuItem> orderMenuItem){
+        this.orderMenuItem = orderMenuItem;
         this.inflater = inflater;
     }
-
+    @Override
+    public int getItemViewType(int position) {
+        if(orderMenuItem.get(position).Price.equals("-1")){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
 
     @Override
     public int getCount() {
-        return meal.size();
+        return orderMenuItem.size();
     }
 
     @Override
-    public OrderIncludeMeal getItem(int i) {
-        return meal.get(i);
+    public OrderMenuItem getItem(int i) {
+        return orderMenuItem.get(i);
     }
 
     @Override
@@ -65,17 +76,26 @@ public class OrderMealAdapter extends BaseAdapter {
             viewHolder.priceTextView = view.findViewById(R.id.priceTextView);
             viewHolder.countTextView = view.findViewById(R.id.countTextView);
             viewHolder.mealListViewLayout = view.findViewById(R.id.border);
-            if(!meal.get(position).getCount().equals("0")){
-
-            }
             view.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder)view.getTag();
         }
-        viewHolder.countTextView.setText(meal.get(position).getCount()+" 個");
-        viewHolder.nameTextView.setText(getItem(position).getMeal().getName()+"，售價 "+getItem(position).getMeal().getPrice()+" 元");
-
-        viewHolder.priceTextView.setText("小計 "+Integer.parseInt(getItem(position).getMeal().getPrice())*Integer.parseInt(getItem(position).getCount())+" 元");
+        switch (getItemViewType(position)) {
+            case 0:
+                viewHolder.countTextView.setVisibility(View.GONE);
+                viewHolder.priceTextView.setVisibility(View.GONE);
+                viewHolder.nameTextView.setText(getItem(position).getName());
+                viewHolder.nameTextView.setTypeface(viewHolder.nameTextView.getTypeface(), Typeface.BOLD);
+                break;
+            case 1:
+                viewHolder.countTextView.setVisibility(View.VISIBLE);
+                viewHolder.priceTextView.setVisibility(View.VISIBLE);
+                viewHolder.nameTextView.setText(getItem(position).getName()+"，售價 "+getItem(position).getPrice()+" 元");
+                viewHolder.nameTextView.setTypeface(viewHolder.nameTextView.getTypeface(), Typeface.NORMAL);
+                viewHolder.countTextView.setText(getItem(position).getCount()+" 個");
+                viewHolder.priceTextView.setText("小計 "+Integer.parseInt(getItem(position).getPrice())*Integer.parseInt(getItem(position).getCount())+" 元");
+                break;
+        }
         return view;
     }
 

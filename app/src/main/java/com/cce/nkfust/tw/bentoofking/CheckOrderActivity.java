@@ -52,7 +52,7 @@ public class CheckOrderActivity extends AppCompatActivity {
         database = new Database();
         mainThreadHandler = new MainThreadHandler();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        orderMealAdapter = new OrderMealAdapter(inflater,orderIncludeMeals);
+        //orderMealAdapter = new OrderMealAdapter(inflater,orderIncludeMeals);
         mealListView.setAdapter(orderMealAdapter);
         Thread t = new Thread(new GetMeal());
         t.start();
