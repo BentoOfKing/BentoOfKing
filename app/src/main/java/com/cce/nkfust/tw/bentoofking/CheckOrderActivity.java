@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 public class CheckOrderActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passOrderID = "ORDER_ID";
+    private static String passStoreInfo = "STORE_INFO";
+    private static String passOrderInfo = "ORDER_INFO";
     private UserInfo userInfo;
     private String orderID;
     private static final int SUCCESS = 66;
@@ -27,11 +31,13 @@ public class CheckOrderActivity extends AppCompatActivity {
     private ListView drawerListView,mealListView;
     private DrawerLayout drawerLayout;
     private Database database;
-    private ArrayList<OrderIncludeMeal> orderIncludeMeals;
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private TextView costTextView;
     private OrderMealAdapter orderMealAdapter;
+    private ArrayList<OrderMenuItem> orderMenuItem;
+    private Button checkButton;
+    private Button copyButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +54,43 @@ public class CheckOrderActivity extends AppCompatActivity {
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.findOrders));
         mealListView = findViewById(R.id.mealListView);
-        orderIncludeMeals = new ArrayList<OrderIncludeMeal>();
         database = new Database();
+        checkButton = findViewById(R.id.checkButton);
+        copyButton = findViewById(R.id.copyButton);
+        if(orderID.charAt(orderID.length()-1) == '*'){
+            orderID = orderID.substring(0,orderID.length()-1);
+            checkButton.setVisibility(View.GONE);
+        }
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                class CheckOrder implements Runnable{
+                    @Override
+                    public void run() {
+                        database.CheckOrder(orderID);
+                    }
+                }
+                Thread CheckT = new Thread(new CheckOrder());
+                CheckT.start();
+                Toast.makeText(context, "訂單已確認", Toast.LENGTH_SHORT).show();
+                checkButton.setVisibility(View.GONE);
+            }
+        });
+        copyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(CheckOrderActivity.this,OrderActivity.class);
+                intent.putExtra(passStoreInfo,userInfo.getStore());
+                intent.putExtra(passUserInfo,userInfo);
+                intent.putExtra(passOrderInfo,orderMenuItem);
+                startActivity(intent);
+            }
+        });
         mainThreadHandler = new MainThreadHandler();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //orderMealAdapter = new OrderMealAdapter(inflater,orderIncludeMeals);
+        orderMenuItem = new ArrayList<OrderMenuItem>();
+        orderMealAdapter = new OrderMealAdapter(inflater,orderMenuItem);
         mealListView.setAdapter(orderMealAdapter);
         Thread t = new Thread(new GetMeal());
         t.start();
@@ -62,9 +100,14 @@ public class CheckOrderActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                ArrayList<OrderIncludeMeal> tmp = database.GetOrderMeal(orderID);
-                for(int i=0;i<tmp.size();i++) {
-                    orderIncludeMeals.add(tmp.get(i));
+                ArrayList<OrderMenuItem> tmp = database.GetOrderMeal(orderID);
+                Store store = new Store();
+                store.putID(tmp.get(0).getID());
+                store.putPhone(tmp.get(0).getName());
+                store.putState(tmp.get(0).getPrice());
+                userInfo.putStore(store);
+                for(int i=1;i<tmp.size();i++) {
+                    orderMenuItem.add(tmp.get(i));
                 }
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
             }catch (Exception e){
@@ -85,9 +128,9 @@ public class CheckOrderActivity extends AppCompatActivity {
                 case SUCCESS:
                     orderMealAdapter.notifyDataSetChanged();
                     int total = 0;
-                    for(int i=0;i<orderIncludeMeals.size();i++){
-                        int price = Integer.parseInt(orderIncludeMeals.get(i).getMeal().getPrice());
-                        int count = Integer.parseInt(orderIncludeMeals.get(i).getCount());
+                    for(int i=0;i<orderMenuItem.size();i++){
+                        int price = Integer.parseInt(orderMenuItem.get(i).getPrice());
+                        int count = Integer.parseInt(orderMenuItem.get(i).getCount());
                         total += price*count;
                     }
                     costTextView.setText("一共花了 "+total+" 元");

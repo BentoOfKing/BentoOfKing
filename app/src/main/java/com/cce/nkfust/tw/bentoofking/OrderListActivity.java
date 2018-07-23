@@ -33,7 +33,7 @@ public class OrderListActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Database database;
     private ArrayList<MemberOrder> orders;
-    private ArrayList<String> store,orderCost,state;
+    private ArrayList<String> store,orderCost;
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private OrderListAdapter orderListAdapter;
@@ -54,7 +54,6 @@ public class OrderListActivity extends AppCompatActivity {
         orders = new ArrayList<MemberOrder>();
         store = new ArrayList<String>();
         orderCost = new ArrayList<String>();
-        state = new ArrayList<String>();
         database = new Database();
         mainThreadHandler = new MainThreadHandler();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -66,7 +65,11 @@ public class OrderListActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(context,CheckOrderActivity.class);
                 intent.putExtra(passUserInfo,userInfo);
-                intent.putExtra(passOrderID,orders.get((int) l).getID());
+                if(orders.get((int)l).getState().equals("1")){
+                    intent.putExtra(passOrderID,orders.get((int) l).getID()+"*");
+                }else{
+                    intent.putExtra(passOrderID,orders.get((int) l).getID());
+                }
                 startActivity(intent);
             }
         });

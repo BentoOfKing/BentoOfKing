@@ -64,6 +64,7 @@ public class Database {
     private static String sendPushURL = "http://163.18.104.169/databaseConnect/sendPush.php";
     private static String updateTokenURL = "http://163.18.104.169/databaseConnect/updateToken.php";
     private static String updatePointURL = "http://163.18.104.169/databaseConnect/updatePoint.php";
+    private static String checkOrderURL = "http://163.18.104.169/databaseConnect/checkOrder.php";
     private static final String TAG_APPEAL = "appeal";
     private static final String TAG_PUSH = "push";
     private static final String TAG_SUCCESS = "success";
@@ -108,7 +109,7 @@ public class Database {
     private static final String TAG_Title = "Title";
     private static final String TAG_Content = "Content";
     private static final String TAG_Result = "Result";
-    private static final String TAG_OrderIncludeMeal = "order_include_meal";
+    private static final String TAG_Count = "Count";
 
     JSONParser jParser;
     JSONObject json;
@@ -895,8 +896,7 @@ public class Database {
         return "Successful.";
     }
 
-    public ArrayList<OrderIncludeMeal> GetOrderMeal(String ID) {
-        JSONArray orderIncludeMeals = null;
+    public ArrayList<OrderMenuItem> GetOrderMeal(String ID) {
         JSONArray meals = null;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
@@ -906,17 +906,15 @@ public class Database {
         json = jParser.makeHttpRequest(getOrderMealURL, "GET", params);
         Log.d("Get meal.", json.toString());
         try {
-            orderIncludeMeals = json.getJSONArray(TAG_OrderIncludeMeal);
             meals = json.getJSONArray(TAG_Meal);
-            ArrayList<OrderIncludeMeal> returnOrderIncludeMeal = new ArrayList<OrderIncludeMeal>();
+            ArrayList<OrderMenuItem> returnOrderMenuItem = new ArrayList<OrderMenuItem>();
+            returnOrderMenuItem.add(new OrderMenuItem(json.getString(TAG_Phone),json.getString(TAG_State),"",json.getString(TAG_Store)));
             for(int i=0;i<meals.length();i++) {
                 JSONObject m = meals.getJSONObject(i);
-                JSONObject o = orderIncludeMeals.getJSONObject(i);
-                Meal meal = new Meal(m.getString(TAG_ID), m.getString(TAG_Store), m.getString(TAG_Name), m.getString(TAG_Price), m.getString(TAG_Sequence));
-                OrderIncludeMeal orderIncludeMeal = new OrderIncludeMeal(o.getString("OrderID"), meal, o.getString("Count"));
-                returnOrderIncludeMeal.add(orderIncludeMeal);
+                OrderMenuItem orderMenuItem = new OrderMenuItem(m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Count),m.getString(TAG_ID));
+                returnOrderMenuItem.add(orderMenuItem);
             }
-            return returnOrderIncludeMeal;
+            return returnOrderMenuItem;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -1444,5 +1442,13 @@ public class Database {
         params.add(new BasicNameValuePair("Point", store.getPoint()));
         json = null;
         json = jParser.makeHttpRequest(updatePointURL, "POST", params);
+    }
+    public void CheckOrder(String ID){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", ID));
+        json = null;
+        json = jParser.makeHttpRequest(checkOrderURL, "POST", params);
     }
 }

@@ -41,19 +41,19 @@ public class OrderActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static String passOrderInfo = "ORDER_INFO";
+
     private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView,mealListView;
     private DrawerLayout drawerLayout;
     private Store store;
     private ArrayList<MealClass> mealClass;
-    private ArrayList<OrderMenuItem> orderMenuItem,passOrder;
+    private ArrayList<OrderMenuItem> orderMenuItem,passOrder,inputOrder;
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private Button orderButton,clearButton;
     private TextView orderStatisticsTextView;
     private OrderMealAdapter adapter;
-    private MemberOrder memberOrder;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,11 @@ public class OrderActivity extends AppCompatActivity {
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         store =(Store) intent.getSerializableExtra(passStoreInfo);
+        try {
+            inputOrder = (ArrayList<OrderMenuItem>) intent.getSerializableExtra(passOrderInfo);
+        }catch(Exception e){
+            inputOrder = null;
+        }
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -125,6 +130,20 @@ public class OrderActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    int totalCount=0,totalPrice=0;
+                    if(inputOrder!=null){
+                        for(int i=0;i<orderMenuItem.size();i++){
+                            for(int j=0;j<inputOrder.size();j++){
+                                if(orderMenuItem.get(i).getID().equals(inputOrder.get(j).getID())){
+                                    totalCount += Integer.parseInt(inputOrder.get(j).getCount());
+                                    totalPrice += Integer.parseInt(inputOrder.get(j).getCount())*Integer.parseInt(inputOrder.get(j).getPrice());
+                                    orderMenuItem.get(i).putCount(inputOrder.get(j).getCount());
+                                    inputOrder.remove(j);
+                                }
+                            }
+                        }
+                    }
+                    orderStatisticsTextView.setText("共 "+totalCount+" 個便當，"+totalPrice+" 元");
                     adapter = new OrderMealAdapter(inflater, orderMenuItem);
                     mealListView.setAdapter(adapter);
                     mealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
