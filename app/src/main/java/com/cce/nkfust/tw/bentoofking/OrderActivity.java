@@ -91,7 +91,7 @@ public class OrderActivity extends AppCompatActivity {
         public void run() {
             try {
                 Database database = new Database();
-                meal = database.getMeal(store.getID());
+                //meal = database.getMeal(store.getID());
                 mainThreadHandler.sendEmptyMessage(SUCCESS);
             }catch (Exception e){
                 mainThreadHandler.sendEmptyMessage(FAIL);

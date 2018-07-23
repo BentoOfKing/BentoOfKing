@@ -43,9 +43,12 @@ public class Database {
     private static String addMealURL = "http://163.18.104.169/databaseConnect/addMeal.php";
     private static String addMealClassURL = "http://163.18.104.169/databaseConnect/addMealClass.php";
     private static String getMealURL = "http://163.18.104.169/databaseConnect/getMeal.php";
+    private static String getMealClassURL = "http://163.18.104.169/databaseConnect/getMealClass.php";
     private static String getOrderStoreCostURL = "http://163.18.104.169/databaseConnect/getOrderStoreCost.php";
     private static String deleteMealURL = "http://163.18.104.169/databaseConnect/deleteMeal.php";
+    private static String deleteMealClassURL = "http://163.18.104.169/databaseConnect/deleteMealClass.php";
     private static String updateMealURL = "http://163.18.104.169/databaseConnect/updateMeal.php";
+    private static String updateMealClassURL = "http://163.18.104.169/databaseConnect/updateMealClass.php";
     private static String addOrderURL = "http://163.18.104.169/databaseConnect/addOrder.php";
     private static String getOrderURL = "http://163.18.104.169/databaseConnect/getOrder.php";
     private static String addOrderMealURL = "http://163.18.104.169/databaseConnect/addOrderMeal.php";
@@ -96,6 +99,8 @@ public class Database {
     private static final String TAG_Price = "Price";
     private static final String TAG_Distance = "Distance";
     private static final String TAG_Meal = "Meal";
+    private static final String TAG_MealClass = "MealClass";
+    private static final String TAG_Class = "Class";
     private static final String TAG_Sequence = "Sequence";
     private static final String TAG_Declarant = "Declarant";
     private static final String TAG_Appealed = "Appealed";
@@ -918,69 +923,88 @@ public class Database {
         }
     }
 
-    public ArrayList<Meal> getMeal(String storeID) {
-        JSONArray meals = null;
-        ArrayList<Meal> meal = new ArrayList<Meal>();
+    public ArrayList<MealClass> getMeal(String storeID) {
+        JSONArray mealClasses = null;
+        ArrayList<MealClass> mealClass = new ArrayList<MealClass>();
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
         params.add(new BasicNameValuePair("ID", storeID));
         json = null;
-        json = jParser.makeHttpRequest(getMealURL, "GET", params);
-        Log.d("Get meal.", json.toString());
+        json = jParser.makeHttpRequest(getMealClassURL, "GET", params);
+        Log.d("Get mealClass.", json.toString());
         try {
-            meals = json.getJSONArray(TAG_Meal);
-            for (int i = 0; i < meals.length(); i++) {
-                JSONObject m = meals.getJSONObject(i);
-                meal.add(new Meal(m.getString(TAG_ID), storeID, m.getString(TAG_Name), m.getString(TAG_Price), m.getString(TAG_Sequence)));
+            mealClasses = json.getJSONArray(TAG_MealClass);
+            for (int i = 0; i < mealClasses.length(); i++) {
+                JSONObject mc = mealClasses.getJSONObject(i);
+                JSONArray meals = null;
+                ArrayList<Meal> meal = new ArrayList<Meal>();
+                params = null;
+                params = new ArrayList<NameValuePair>();
+                jParser = null;
+                jParser = new JSONParser();
+                params.add(new BasicNameValuePair("Class", mc.getString(TAG_ID)));
+                json = null;
+                json = jParser.makeHttpRequest(getMealURL, "GET", params);
+                Log.d("Get meal.", json.toString());
+                meals = json.getJSONArray(TAG_Meal);
+                for(int j=0;j<meals.length();j++){
+                    JSONObject m = meals.getJSONObject(j);
+                    meal.add(new Meal(m.getString(TAG_ID),mc.getString(TAG_ID),m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Sequence)));
+                }
+                mealClass.add(new MealClass(mc.getString(TAG_ID), storeID, mc.getString(TAG_Name), mc.getString(TAG_Sequence),meal));
             }
-            return meal;
+            return mealClass;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public String deleteMeal(String id) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        jParser = null;
-        jParser = new JSONParser();
-        params.add(new BasicNameValuePair("ID", id));
-        json = null;
-        json = jParser.makeHttpRequest(deleteMealURL, "POST", params);
-        Log.d("Delete meal.", json.toString());
-        try {
-            int success = json.getInt(TAG_SUCCESS);
-            if (success == 1) {
-                return "Successful.";
-            } else {
-                return "An error occurred.";
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return "Fail.";
-
+    public void deleteMeal(ArrayList<String> deleteClass,ArrayList<String> deleteMeal) {
+        for(int i=0;i<deleteClass.size();i++){
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            jParser = null;
+            jParser = new JSONParser();
+            params.add(new BasicNameValuePair("ID", deleteClass.get(i)));
+            json = null;
+            json = jParser.makeHttpRequest(deleteMealClassURL, "POST", params);
+            Log.d("Delete mealClass.", json.toString());
         }
+        for(int i=0;i<deleteMeal.size();i++){
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            jParser = null;
+            jParser = new JSONParser();
+            params.add(new BasicNameValuePair("ID", deleteMeal.get(i)));
+            json = null;
+            json = jParser.makeHttpRequest(deleteMealURL, "POST", params);
+            Log.d("Delete mealClass.", json.toString());
+        }
+
     }
 
-    public String updateMeal(ArrayList<Meal> meal) {
+    public String updateMeal(ArrayList<MealClass> mealClass) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        for (int i = 0; i < meal.size(); i++) {
+        ArrayList<MealClass> newClass = new ArrayList<MealClass>();
+        for (int i = 0; i < mealClass.size(); i++) {
+            if(mealClass.get(i).getID().equals("")){
+                newClass.add(mealClass.get(i));
+                continue;
+            }
             try {
                 params = null;
                 params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("ID", meal.get(i).getID()));
-                params.add(new BasicNameValuePair("Name", new String(meal.get(i).getName().getBytes(), "8859_1")));
-                params.add(new BasicNameValuePair("Price", meal.get(i).getPrice()));
-                params.add(new BasicNameValuePair("Sequence", meal.get(i).getSequence()));
+                params.add(new BasicNameValuePair("ID", mealClass.get(i).getID()));
+                params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getName().getBytes(), "8859_1")));
+                params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getSequence()));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             json = null;
-            json = jParser.makeHttpRequest(updateMealURL, "POST", params);
-            Log.d("Update meal.", json.toString());
+            json = jParser.makeHttpRequest(updateMealClassURL, "POST", params);
+            Log.d("Update mealClass.", json.toString());
             try {
                 int success = json.getInt(TAG_SUCCESS);
                 if (success != 1) {
@@ -990,7 +1014,57 @@ public class Database {
                 e.printStackTrace();
                 return "Fail.";
             }
+            for(int j=0;j<mealClass.get(i).getMeal().size();j++){
+                if(mealClass.get(i).getMeal().get(j).getID().equals("")){
+                    try {
+                        params = null;
+                        params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("Class", mealClass.get(i).getID()));
+                        params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getMeal().get(j).getName().getBytes(), "8859_1")));
+                        params.add(new BasicNameValuePair("Price", mealClass.get(i).getMeal().get(j).getPrice()));
+                        params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getMeal().get(j).getSequence()));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    json = null;
+                    json = jParser.makeHttpRequest(addMealURL, "POST", params);
+                    Log.d("Add meal.", json.toString());
+                    try {
+                        int success = json.getInt(TAG_SUCCESS);
+                        if (success != 1) {
+                            return "An error occurred.";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return "Fail.";
+                    }
+                }else{
+                    try {
+                        params = null;
+                        params = new ArrayList<NameValuePair>();
+                        params.add(new BasicNameValuePair("ID", mealClass.get(i).getMeal().get(j).getID()));
+                        params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getMeal().get(j).getName().getBytes(), "8859_1")));
+                        params.add(new BasicNameValuePair("Price", mealClass.get(i).getMeal().get(j).getPrice()));
+                        params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getMeal().get(j).getSequence()));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    json = null;
+                    json = jParser.makeHttpRequest(updateMealURL, "POST", params);
+                    Log.d("Update meal.", json.toString());
+                    try {
+                        int success = json.getInt(TAG_SUCCESS);
+                        if (success != 1) {
+                            return "An error occurred.";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return "Fail.";
+                    }
+                }
+            }
         }
+        addMeal(newClass);
         return "Successful.";
     }
     public MemberOrder[] GetOrder(String Member) {

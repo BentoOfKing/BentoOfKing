@@ -296,7 +296,7 @@ public class EditMenuActivity extends AppCompatActivity {
                         for(int i=0;i<mealClass.get(classIndex).getMeal().size();i++){
                             int loopSequence = Integer.parseInt(mealClass.get(classIndex).getMeal().get(i).getSequence());
                             if(loopSequence > nowSequence){
-                                mealClass.get(classIndex).getMeal().get(mealIndex).putSequence(Integer.toString(loopSequence-1));
+                                mealClass.get(classIndex).getMeal().get(i).putSequence(Integer.toString(loopSequence-1));
                             }
                         }
 
