@@ -715,7 +715,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         public void handleMessage(Message msg){
             switch (msg.what){
                 case SENT_COMMENT:
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
                     Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
                     String timeString = formatter.format(curDate);
                     Comment newComment = new Comment(msg.getData().getString("CommentID"),userInfo.getMember().getEmail()/*"john8654john@gmail.com"*/,CheckStoreInfo.this.storeInfoBundle.getStore().getID(), msg.getData().getString("Score"),"123",timeString,"", msg.getData().getString("Note"));

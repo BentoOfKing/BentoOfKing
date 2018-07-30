@@ -139,7 +139,8 @@ public class Database {
             commentIndex += comments.length();
             for (int i = 0; i < comments.length(); i++) {
                 JSONObject c = comments.getJSONObject(i);
-                retrunComment[i] = new Comment(c.getString(TAG_ID), c.getString(TAG_Member), c.getString(TAG_Store), c.getString(TAG_Score), c.getString(TAG_StoreContent), c.getString(TAG_Time), c.getString(TAG_Reply), c.getString(TAG_Note));
+                retrunComment[i] = new Comment(c.getString(TAG_ID), c.getString(TAG_Member), c.getString(TAG_Store), c.getString(TAG_Score), c.getString(TAG_StoreContent), "", c.getString(TAG_Reply), c.getString(TAG_Note));
+                retrunComment[i].putContentTime(c.getString(TAG_Time).substring(0,4)+"/"+c.getString(TAG_Time).substring(4,6)+"/"+c.getString(TAG_Time).substring(6,8));
             }
             return retrunComment;
         } catch (Exception e) {
