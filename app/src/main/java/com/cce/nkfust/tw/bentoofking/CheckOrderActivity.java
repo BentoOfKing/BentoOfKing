@@ -59,6 +59,8 @@ public class CheckOrderActivity extends AppCompatActivity {
         copyButton = findViewById(R.id.copyButton);
         if(orderID.charAt(orderID.length()-1) == '*'){
             orderID = orderID.substring(0,orderID.length()-1);
+            checkButton.setVisibility(View.VISIBLE);
+        }else{
             checkButton.setVisibility(View.GONE);
         }
         checkButton.setOnClickListener(new View.OnClickListener() {

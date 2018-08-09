@@ -1080,11 +1080,6 @@ public class Database {
             json = jParser.makeHttpRequest(getOrderURL, "GET", params);
             Log.d("All Order: ", json.toString());
             orders = json.getJSONArray("order");
-        } catch (Exception e) {
-            MemberOrder[] nullOrder = new MemberOrder[0];
-            return nullOrder;
-        }
-        try {
             if (orders.length() == 10) {
                 reviewRange = 10;
             } else {
@@ -1098,7 +1093,8 @@ public class Database {
             reviewIndex += reviewRange;
             return returnOrder;
         } catch (Exception e) {
-            return null;
+            MemberOrder[] nullOrder = new MemberOrder[0];
+            return nullOrder;
         }
     }
     public String AddOrder(MemberOrder memberOrder) {
@@ -1107,6 +1103,7 @@ public class Database {
         jParser = new JSONParser();
         params.add(new BasicNameValuePair("Member", memberOrder.getMember()));
         params.add(new BasicNameValuePair("Store", memberOrder.getStore()));
+        params.add(new BasicNameValuePair("Price", memberOrder.getPrice()));
         params.add(new BasicNameValuePair("Time", memberOrder.getTime()));
         params.add(new BasicNameValuePair("State", memberOrder.getState()));
         json = null;

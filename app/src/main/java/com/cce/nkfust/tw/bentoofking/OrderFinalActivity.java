@@ -40,6 +40,7 @@ public class OrderFinalActivity extends AppCompatActivity {
     private OrderMealAdapter adapter;
     private TextView orderStatisticsTextView;
     private ProgressDialog progressDialog;
+    private int count=0,total=0;
     String ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,6 @@ public class OrderFinalActivity extends AppCompatActivity {
         mealListView.setAdapter(adapter);
         orderButton.setOnClickListener(new OrderButtonHandler());
         orderStatisticsTextView = findViewById(R.id.orderStatisticsTextView);
-        int count=0,total=0;
         for(int i=0;i<passOrder.size();i++){
             count += Integer.parseInt(passOrder.get(i).getCount());
             total += Integer.parseInt(passOrder.get(i).getCount())*Integer.parseInt(passOrder.get(i).getPrice());
@@ -85,6 +85,7 @@ public class OrderFinalActivity extends AppCompatActivity {
             memberOrder.putMember(userInfo.getMember().getEmail());
             memberOrder.putTime(str);
             memberOrder.putStore(store.getID());
+            memberOrder.putPrice(Integer.toString(total));
             if(store.getState().equals("1")){
                 memberOrder.putState("0");
             }else {
