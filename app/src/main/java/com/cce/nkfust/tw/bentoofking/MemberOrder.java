@@ -5,7 +5,7 @@ package com.cce.nkfust.tw.bentoofking;
  */
 
 public class MemberOrder {
-    private String ID,Member,Store,Time,State;//0:店家未確認，1:會員未確認，2:已確認，3:送餐中，4:已完成
+    private String ID,Member,Store,Time,State;//0:店家未確認，1:會員未確認，2:已確認，3:送餐中，4:已完成，5:已刪除
     public MemberOrder(){}
     public MemberOrder(String ID,String Member,String Store,String Time,String State){
         this.ID = ID;

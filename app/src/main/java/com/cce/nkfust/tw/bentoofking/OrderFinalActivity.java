@@ -86,7 +86,7 @@ public class OrderFinalActivity extends AppCompatActivity {
             memberOrder.putTime(str);
             memberOrder.putStore(store.getID());
             if(store.getState().equals("1")){
-                memberOrder.putState("1");
+                memberOrder.putState("0");
             }else {
                 memberOrder.putState("4");
             }
