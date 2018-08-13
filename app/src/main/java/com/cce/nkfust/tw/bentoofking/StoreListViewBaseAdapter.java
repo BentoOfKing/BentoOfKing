@@ -32,6 +32,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
 
 
     public static class ViewHolder{
+        ImageView franchisee;
         ImageView storeIcon;
         ConstraintLayout storeListViewLayout;
         TextView storeName;
@@ -68,6 +69,7 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = this.inflater.inflate(R.layout.storelistview_item,null);
             viewHolder.storeIcon = convertView.findViewById(R.id.storeIcon);
+            viewHolder.franchisee =  convertView.findViewById(R.id.franchisee);
             viewHolder.storeName = convertView.findViewById(R.id.storeInfoLayout3);
             viewHolder.storeDistance = convertView.findViewById(R.id.storeDistance);
             viewHolder.storeEvaluation = convertView.findViewById(R.id.storeScore);
@@ -80,6 +82,10 @@ public class StoreListViewBaseAdapter extends BaseAdapter {
         }
         viewHolder.storeName.setText(getItem(position).getStorename());
         viewHolder.storePrice.setText("平均價位 : "+getItem(position).getPrice());
+        if(getItem(position).getStoreInfo().getEmail().equals(""))
+            viewHolder.franchisee.setVisibility(View.GONE);
+        else
+            viewHolder.franchisee.setVisibility(View.VISIBLE);
         if(getItem(position).getStatus().equals("未營業"))
             viewHolder.storeStatus.setImageResource(R.drawable.store_close);
         else

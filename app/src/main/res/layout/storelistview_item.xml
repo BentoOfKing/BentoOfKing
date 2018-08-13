@@ -90,6 +90,16 @@
             app:layout_constraintTop_toTopOf="@+id/storeScore"
             app:srcCompat="@drawable/star_on" />
 
+        <ImageView
+            android:id="@+id/franchisee"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="55dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintEnd_toEndOf="@+id/storeIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/franchisee" />
+
 
     </android.support.constraint.ConstraintLayout>
 </RelativeLayout>
