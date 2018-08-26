@@ -135,9 +135,11 @@ public class OrderActivity extends AppCompatActivity {
                         for(int i=0;i<orderMenuItem.size();i++){
                             for(int j=0;j<inputOrder.size();j++){
                                 if(orderMenuItem.get(i).getID().equals(inputOrder.get(j).getID())){
-                                    totalCount += Integer.parseInt(inputOrder.get(j).getCount());
-                                    totalPrice += Integer.parseInt(inputOrder.get(j).getCount())*Integer.parseInt(inputOrder.get(j).getPrice());
-                                    orderMenuItem.get(i).putCount(inputOrder.get(j).getCount());
+                                    if(!inputOrder.get(j).getCount().equals("-1")) {
+                                        totalCount += Integer.parseInt(inputOrder.get(j).getCount());
+                                        totalPrice += Integer.parseInt(inputOrder.get(j).getCount()) * Integer.parseInt(inputOrder.get(j).getPrice());
+                                        orderMenuItem.get(i).putCount(inputOrder.get(j).getCount());
+                                    }
                                     inputOrder.remove(j);
                                 }
                             }
@@ -153,6 +155,29 @@ public class OrderActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView arg0, View arg1, int arg2,final long arg3) {
                             if(orderMenuItem.get((int)arg3).getPrice().equals("-1")){
+                                orderMenuItem.get((int)arg3).putPrice("-2");
+                                int nowIndex = (int)arg3;
+                                nowIndex++;
+                                while(nowIndex<orderMenuItem.size()){
+                                    if(orderMenuItem.get(nowIndex).getPrice().equals("-1")|| orderMenuItem.get(nowIndex).getPrice().equals("-2"))
+                                        break;
+                                    orderMenuItem.get(nowIndex).putState("0");
+                                    nowIndex++;
+                                }
+                                adapter.notifyDataSetChanged();
+                                return;
+                            }
+                            if(orderMenuItem.get((int)arg3).getPrice().equals("-2")){
+                                orderMenuItem.get((int)arg3).putPrice("-1");
+                                int nowIndex = (int)arg3;
+                                nowIndex++;
+                                while(nowIndex<orderMenuItem.size()){
+                                    if(orderMenuItem.get(nowIndex).getPrice().equals("-1")|| orderMenuItem.get(nowIndex).getPrice().equals("-2"))
+                                        break;
+                                    orderMenuItem.get(nowIndex).putState("1");
+                                    nowIndex++;
+                                }
+                                adapter.notifyDataSetChanged();
                                 return;
                             }
                             inflater = LayoutInflater.from(OrderActivity.this);

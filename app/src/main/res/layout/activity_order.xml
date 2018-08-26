@@ -33,7 +33,9 @@
                 android:id="@+id/mealListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/orderStatisticsLinearLayout"></ListView>
+                android:layout_above="@+id/orderStatisticsLinearLayout"
+                android:divider="@null"/>
+
 
             <LinearLayout
                 android:id="@+id/orderStatisticsLinearLayout"

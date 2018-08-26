@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 
 public class MealClass implements Serializable {
-    private String ID,Store,Name,Sequence;
+    private String ID,Store,Name,Sequence,State;
     private ArrayList<Meal> meal;
     public MealClass(){
         meal = new ArrayList<Meal>();
