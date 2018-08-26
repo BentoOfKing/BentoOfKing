@@ -1101,11 +1101,16 @@ public class Database {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         jParser = null;
         jParser = new JSONParser();
-        params.add(new BasicNameValuePair("Member", memberOrder.getMember()));
-        params.add(new BasicNameValuePair("Store", memberOrder.getStore()));
-        params.add(new BasicNameValuePair("Price", memberOrder.getPrice()));
-        params.add(new BasicNameValuePair("Time", memberOrder.getTime()));
-        params.add(new BasicNameValuePair("State", memberOrder.getState()));
+        try {
+            params.add(new BasicNameValuePair("Member", memberOrder.getMember()));
+            params.add(new BasicNameValuePair("Store", memberOrder.getStore()));
+            params.add(new BasicNameValuePair("Price", memberOrder.getPrice()));
+            params.add(new BasicNameValuePair("Time", memberOrder.getTime()));
+            params.add(new BasicNameValuePair("State", memberOrder.getState()));
+            params.add(new BasicNameValuePair("Address", new String(memberOrder.getAddress().getBytes(), "8859_1")));
+        }catch (Exception e){
+            return "Fail.";
+        }
         json = null;
         json = jParser.makeHttpRequest(addOrderURL, "POST", params);
         Log.d("Add order.", json.toString());

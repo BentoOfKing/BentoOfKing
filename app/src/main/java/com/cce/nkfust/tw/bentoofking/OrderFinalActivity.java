@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,7 +65,7 @@ public class OrderFinalActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         adapter = new OrderMealAdapter(inflater,passOrder);
         mealListView.setAdapter(adapter);
-        orderButton.setOnClickListener(new OrderButtonHandler());
+        orderButton.setOnClickListener(new OrderAddressCheckHandler());
         orderStatisticsTextView = findViewById(R.id.orderStatisticsTextView);
         for(int i=0;i<passOrder.size();i++){
             count += Integer.parseInt(passOrder.get(i).getCount());
@@ -74,34 +76,97 @@ public class OrderFinalActivity extends AppCompatActivity {
 
     }
 
-    public class OrderButtonHandler implements View.OnClickListener{
-
+    public class OrderAddressCheckHandler implements View.OnClickListener{
+        LayoutInflater inflater;
+        AlertDialog alertDialog;
+        EditText addressEditText;
         @Override
-        public void onClick(View view) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-            Date curDate = new Date(System.currentTimeMillis()) ;
-            String str = formatter.format(curDate);
-            memberOrder = new MemberOrder();
-            memberOrder.putMember(userInfo.getMember().getEmail());
-            memberOrder.putTime(str);
-            memberOrder.putStore(store.getID());
-            memberOrder.putPrice(Integer.toString(total));
-            if(store.getState().equals("1")){
-                memberOrder.putState("0");
-            }else {
-                memberOrder.putState("4");
-            }
-            Thread thread = new Thread(new Order());
-            thread.start();
-            progressDialog = ProgressDialog.show(context, "請稍等...", "訂單傳送中...", true);
-            try {
-                thread.join();
-                getCallPermission();
-                progressDialog.dismiss();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                progressDialog.dismiss();
-                Toast.makeText(context, "訂單傳送失敗，請確認網路狀態！", Toast.LENGTH_SHORT).show();
+        public void onClick(View v) {
+            if(!store.getEmail().equals("")) {
+
+                inflater = LayoutInflater.from(OrderFinalActivity.this);
+                View view = inflater.inflate(R.layout.alertdialog_order_address, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(OrderFinalActivity.this);
+                builder.setTitle("請輸入送餐地址");
+                builder.setView(view);
+                addressEditText = view.findViewById(R.id.addressEditText);
+                SharedPreferences setting = getSharedPreferences("atm", MODE_PRIVATE);
+                addressEditText.setText(setting.getString("userAddress",""));
+                builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (addressEditText.getText().toString().equals("")) {
+                            Toast.makeText(context, "請輸入地址！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        memberOrder = new MemberOrder();
+                        memberOrder.putAddress(addressEditText.getText().toString());
+                        SharedPreferences setting = getSharedPreferences("atm", MODE_PRIVATE);
+                        setting.edit()
+                                .putString("userAddress", memberOrder.getAddress())
+                                .commit();
+                        dialog.dismiss();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+                        Date curDate = new Date(System.currentTimeMillis());
+                        String str = formatter.format(curDate);
+                        memberOrder.putMember(userInfo.getMember().getEmail());
+                        memberOrder.putTime(str);
+                        memberOrder.putStore(store.getID());
+                        memberOrder.putPrice(Integer.toString(total));
+                        if (store.getState().equals("1")) {
+                            memberOrder.putState("0");
+                        } else {
+                            memberOrder.putState("4");
+                        }
+                        Thread thread = new Thread(new Order());
+                        thread.start();
+                        progressDialog = ProgressDialog.show(context, "請稍等...", "訂單傳送中...", true);
+                        try {
+                            thread.join();
+                            getCallPermission();
+                            progressDialog.dismiss();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "訂單傳送失敗，請確認網路狀態！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                alertDialog = builder.create();
+                alertDialog.show();
+            }else{
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+                Date curDate = new Date(System.currentTimeMillis());
+                String str = formatter.format(curDate);
+                memberOrder = new MemberOrder();
+                memberOrder.putMember(userInfo.getMember().getEmail());
+                memberOrder.putTime(str);
+                memberOrder.putStore(store.getID());
+                memberOrder.putPrice(Integer.toString(total));
+                memberOrder.putAddress("");
+                if (store.getState().equals("1")) {
+                    memberOrder.putState("0");
+                } else {
+                    memberOrder.putState("4");
+                }
+                Thread thread = new Thread(new Order());
+                thread.start();
+                progressDialog = ProgressDialog.show(context, "請稍等...", "訂單傳送中...", true);
+                try {
+                    thread.join();
+                    getCallPermission();
+                    progressDialog.dismiss();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+                    Toast.makeText(context, "訂單傳送失敗，請確認網路狀態！", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -124,7 +189,7 @@ public class OrderFinalActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,new String[] {android.Manifest.permission.CALL_PHONE},REQUEST_CALL_PHONE);
             return ;
         }else{
-            if(store.getState().equals("1")){
+            if(!store.getEmail().equals("")){
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.hint)
                         .setMessage("您的訂單編號為 "+ID+"，訂單已發送給店家，直接告知店家訂單編號即可！")
