@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -9,8 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,6 +53,27 @@ public class CheckOrderActivity extends AppCompatActivity {
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.findOrders));
+        setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.deleteItem:
+                        class DeleteOrder implements Runnable{
+                            @Override
+                            public void run() {
+                                database.DeleteOrder(orderID);
+                            }
+                        }
+                        Thread DeleteT = new Thread(new DeleteOrder());
+                        DeleteT.start();
+                        Toast.makeText(context,"訂單已刪除", Toast.LENGTH_SHORT).show();
+                        finish();
+                        break;
+                }
+                return false;
+            }
+        });
         mealListView = findViewById(R.id.mealListView);
         database = new Database();
         checkButton = findViewById(R.id.checkButton);
@@ -142,5 +163,10 @@ public class CheckOrderActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.toolbar_delete, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

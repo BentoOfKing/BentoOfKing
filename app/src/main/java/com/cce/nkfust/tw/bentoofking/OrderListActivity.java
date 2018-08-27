@@ -1,5 +1,6 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -37,6 +38,7 @@ public class OrderListActivity extends AppCompatActivity {
     private MainThreadHandler mainThreadHandler;
     private Context context;
     private OrderListAdapter orderListAdapter;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,8 +112,10 @@ public class OrderListActivity extends AppCompatActivity {
                 switch (msg.what) {
                     case SUCCESS:
                         orderListAdapter.notifyDataSetChanged();
+                        progressDialog.dismiss();
                         break;
                     case FAIL:
+                        progressDialog.dismiss();
                         Toast.makeText(context, getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -127,6 +131,7 @@ public class OrderListActivity extends AppCompatActivity {
         database = new Database();
         Thread t = new Thread(new GetOrder());
         t.start();
+        progressDialog = ProgressDialog.show(OrderListActivity.this, "請稍等...", "資料載入中...", true);
     }
 }
 class OrderListAdapter extends BaseAdapter {

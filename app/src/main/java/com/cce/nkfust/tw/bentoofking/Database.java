@@ -65,6 +65,7 @@ public class Database {
     private static String updateTokenURL = "http://163.18.104.169/databaseConnect/updateToken.php";
     private static String updatePointURL = "http://163.18.104.169/databaseConnect/updatePoint.php";
     private static String checkOrderURL = "http://163.18.104.169/databaseConnect/checkOrder.php";
+    private static String deleteOrderURL = "http://163.18.104.169/databaseConnect/deleteOrder.php";
     private static final String TAG_APPEAL = "appeal";
     private static final String TAG_PUSH = "push";
     private static final String TAG_SUCCESS = "success";
@@ -913,6 +914,7 @@ public class Database {
             for(int i=0;i<meals.length();i++) {
                 JSONObject m = meals.getJSONObject(i);
                 OrderMenuItem orderMenuItem = new OrderMenuItem(m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Count),m.getString(TAG_ID));
+                orderMenuItem.putState("2");
                 returnOrderMenuItem.add(orderMenuItem);
             }
             return returnOrderMenuItem;
@@ -1454,5 +1456,13 @@ public class Database {
         params.add(new BasicNameValuePair("ID", ID));
         json = null;
         json = jParser.makeHttpRequest(checkOrderURL, "POST", params);
+    }
+    public void DeleteOrder(String ID){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("ID", ID));
+        json = null;
+        json = jParser.makeHttpRequest(deleteOrderURL, "POST", params);
     }
 }
