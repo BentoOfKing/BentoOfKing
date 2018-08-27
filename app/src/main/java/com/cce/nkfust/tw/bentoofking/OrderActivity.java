@@ -239,7 +239,9 @@ public class OrderActivity extends AppCompatActivity {
             passOrder = new ArrayList<OrderMenuItem>();
             for(int i=0;i<orderMenuItem.size();i++){
                 if(!orderMenuItem.get(i).getCount().equals("0")){
-                    passOrder.add(orderMenuItem.get(i));
+                    OrderMenuItem thisItem = orderMenuItem.get(i);
+                    thisItem.putState("2");
+                    passOrder.add(thisItem);
                 }
             }
             Intent intent = new Intent();

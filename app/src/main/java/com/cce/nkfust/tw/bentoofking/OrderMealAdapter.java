@@ -110,12 +110,17 @@ public class OrderMealAdapter extends BaseAdapter {
                     viewHolder.priceTextView.setVisibility(View.GONE);
                     viewHolder.nameTextView.setVisibility(View.GONE);
                     viewHolder.countTextView.setVisibility(View.GONE);
-                }else {
+                }else if(getItem(position).getState().equals("1")){
                     if(!getItem(position).getCount().equals("0")){
                         viewHolder.priceTextView.setTextColor(Color.RED);
                         viewHolder.nameTextView.setTextColor(Color.RED);
                         viewHolder.countTextView.setTextColor(Color.RED);
                     }
+                    viewHolder.nameTextView.setText(getItem(position).getName() + "，售價 " + getItem(position).getPrice() + " 元");
+                    viewHolder.nameTextView.setTypeface(viewHolder.nameTextView.getTypeface(), Typeface.NORMAL);
+                    viewHolder.countTextView.setText(getItem(position).getCount() + " 個");
+                    viewHolder.priceTextView.setText("小計 " + Integer.parseInt(getItem(position).getPrice()) * Integer.parseInt(getItem(position).getCount()) + " 元");
+                }else{
                     viewHolder.nameTextView.setText(getItem(position).getName() + "，售價 " + getItem(position).getPrice() + " 元");
                     viewHolder.nameTextView.setTypeface(viewHolder.nameTextView.getTypeface(), Typeface.NORMAL);
                     viewHolder.countTextView.setText(getItem(position).getCount() + " 個");
