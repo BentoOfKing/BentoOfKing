@@ -50,8 +50,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -523,6 +525,20 @@ public class MainActivity extends AppCompatActivity {
     private class StoreListClickHandler implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(userInfo.getIdentity() == 1){
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+                Date curDate = new Date(System.currentTimeMillis());
+                String str = formatter.format(curDate);
+                final Click click = new Click(userInfo.getMember().getEmail(),storeLists.get(position).getStoreInfo().getID(),str);
+                class AddClick implements Runnable{
+                    @Override
+                    public void run() {
+                        database.AddClick(click);
+                    }
+                }
+                Thread addC = new Thread(new AddClick());
+                addC.start();
+            }
             Intent intent = new Intent(MainActivity.this, CheckStoreInfo.class);
             UserInfo storeInfoBundle = new UserInfo();
             storeInfoBundle.setIdentity(2);

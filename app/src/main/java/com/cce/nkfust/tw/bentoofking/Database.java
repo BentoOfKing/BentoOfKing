@@ -66,6 +66,7 @@ public class Database {
     private static String updatePointURL = "http://163.18.104.169/databaseConnect/updatePoint.php";
     private static String checkOrderURL = "http://163.18.104.169/databaseConnect/checkOrder.php";
     private static String deleteOrderURL = "http://163.18.104.169/databaseConnect/deleteOrder.php";
+    private static String addClickURL = "http://163.18.104.169/databaseConnect/addClick.php";
     private static final String TAG_APPEAL = "appeal";
     private static final String TAG_PUSH = "push";
     private static final String TAG_SUCCESS = "success";
@@ -1464,5 +1465,27 @@ public class Database {
         params.add(new BasicNameValuePair("ID", ID));
         json = null;
         json = jParser.makeHttpRequest(deleteOrderURL, "POST", params);
+    }
+    public String AddClick(Click click) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        jParser = null;
+        jParser = new JSONParser();
+        params.add(new BasicNameValuePair("Member", click.getMember()));
+        params.add(new BasicNameValuePair("Store", click.getStore()));
+        params.add(new BasicNameValuePair("Time", click.getTime()));
+        json = null;
+        json = jParser.makeHttpRequest(addClickURL, "POST", params);
+        Log.d("Add Push.", json.toString());
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            if (success == 1) {
+                return "Successful.";
+            } else {
+                return "An error occurred.";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Fail.";
+        }
     }
 }
