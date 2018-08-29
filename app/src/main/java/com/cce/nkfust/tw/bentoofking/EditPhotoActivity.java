@@ -21,8 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -64,7 +66,7 @@ public class EditPhotoActivity extends AppCompatActivity{
     int index,photoCount;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog = null;
-
+    private String[] photoText = {"","","","","","","","",""};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,12 +155,15 @@ public class EditPhotoActivity extends AppCompatActivity{
                 store.putPrice(Integer.toString(price));
                 store.putID(database.addStore(store));
                 String photoString = store.getID() + ".jpg";
+                String photoTextStr = photoText[0];
                 postMainImage();
                 for (int i = 0; i < photoCount; i++) {
                     photoString += "," + store.getID() + "_" + Integer.toString(i) + ".jpg";
+                    photoTextStr += ","+photoText[i+1];
                     postOtherImage(i);
                 }
                 store.putPhoto(photoString);
+                store.putPhotoText(photoTextStr);
                 database.UpdateStore(store);
                 for(int i=0;i<mealClass.size();i++){
                     mealClass.get(i).putStore(store.getID());
@@ -274,6 +279,30 @@ public class EditPhotoActivity extends AppCompatActivity{
                                                         }
                                                     }
                                                 }
+                                                break;
+                                            case 2:
+                                                LayoutInflater inflater = LayoutInflater.from(EditPhotoActivity.this);
+                                                View view = inflater.inflate(R.layout.alertdialog_photo_text, null);
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(EditPhotoActivity.this);
+                                                builder.setTitle("輸入圖片備註");
+                                                builder.setView(view);
+                                                final EditText photoTextEditText = view.findViewById(R.id.photoTextEditText);
+                                                index++;
+                                                photoTextEditText.setText(photoText[index]);
+                                                builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        photoText[index] = photoTextEditText.getText().toString();
+                                                    }
+                                                });
+                                                AlertDialog alertDialog = builder.create();
+                                                alertDialog.show();
                                                 break;
                                         }
 

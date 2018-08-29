@@ -181,6 +181,7 @@
     <array name="editPhoto">
         <item>變更</item>
         <item>刪除</item>
+        <item>更改註記</item>
     </array>
     <string name="pleaseInputPhoto">請至少上傳店家主要照片</string>
     <string name="addStoreSuccessful">新增店家成功，審核時間約2~3天，\n請耐心等待</string>
