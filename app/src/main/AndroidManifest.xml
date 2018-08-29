@@ -94,7 +94,8 @@
 
         <activity android:name=".OrderListActivity" />
         <activity android:name=".CheckOrderActivity" />
-        <activity android:name=".OrderFinalActivity"></activity>
+        <activity android:name=".OrderFinalActivity" />
+        <activity android:name=".StoreAppealListActivity"></activity>
     </application>
 
 </manifest>

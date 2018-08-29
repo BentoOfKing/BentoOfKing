@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -179,7 +178,7 @@ class OrderListAdapter extends BaseAdapter {
             view = this.inflater.inflate(R.layout.order_item, null);
             viewHolder.storeTextView = view.findViewById(R.id.storeTextView);
             viewHolder.dateTextView = view.findViewById(R.id.dateTextView);
-            viewHolder.costTextView = view.findViewById(R.id.costTextView);
+            viewHolder.costTextView = view.findViewById(R.id.stateTextView);
             viewHolder.orderRelativeLayout = view.findViewById(R.id.orderRelativeLayout);
             view.setTag(viewHolder);
         } else {

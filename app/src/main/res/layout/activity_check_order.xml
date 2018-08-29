@@ -32,12 +32,12 @@
                 android:id="@+id/mealListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/costTextView">
+                android:layout_above="@+id/stateTextView">
 
             </ListView>
 
             <TextView
-                android:id="@+id/costTextView"
+                android:id="@+id/stateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/buttonLayout"

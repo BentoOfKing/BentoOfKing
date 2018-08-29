@@ -57,6 +57,7 @@ public class Database {
     private static String updateAppealURL = "http://163.18.104.169/databaseConnect/updateAppeal.php";
     private static String getAppealURL = "http://163.18.104.169/databaseConnect/getAppeal.php";
     private static String getOneStoreAppealURL = "http://163.18.104.169/databaseConnect/getOneStoreAppeal.php";
+    private static String getUserAppealURL = "http://163.18.104.169/databaseConnect/getUserAppeal.php";
     private static String addPushURL = "http://163.18.104.169/databaseConnect/addPush.php";
     private static String updatePushURL = "http://163.18.104.169/databaseConnect/updatePush.php";
     private static String deletePushURL = "http://163.18.104.169/databaseConnect/deletePush.php";
@@ -1304,6 +1305,41 @@ public class Database {
             for (int i = 0; i < reviewRange; i++) {
                 JSONObject c = appeals.getJSONObject(i);
                 returnAppeal[i] = new Appeal(c.getString(TAG_ID), c.getString(TAG_Declarant), c.getString(TAG_Appealed), c.getString(TAG_Type), c.getString(TAG_Title), c.getString(TAG_Content), c.getString(TAG_Result), c.getString(TAG_Note));
+            }
+            reviewIndex += reviewRange;
+            return returnAppeal;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public Appeal[] GetUserAppeal(String type,String declarant) {
+        JSONObject json;
+        JSONArray appeals = null;
+        jParser = null;
+        jParser = new JSONParser();
+        List<NameValuePair> params;
+        Appeal returnAppeal[];
+        try {
+            params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("Index", Integer.toString(reviewIndex)));
+            params.add(new BasicNameValuePair("Type", type));
+            params.add(new BasicNameValuePair("Declarant", declarant));
+            json = jParser.makeHttpRequest(getUserAppealURL, "GET", params);
+            Log.d("All Appeal: ", json.toString());
+            appeals = json.getJSONArray(TAG_APPEAL);
+        } catch (Exception e) {
+            return null;
+        }
+        try {
+            if (appeals.length() == 10) {
+                reviewRange = 10;
+            } else {
+                reviewRange = appeals.length();
+            }
+            returnAppeal = new Appeal[reviewRange];
+            for (int i = 0; i < reviewRange; i++) {
+                JSONObject c = appeals.getJSONObject(i);
+                returnAppeal[i] = new Appeal(c.getString(TAG_ID), c.getString(TAG_Declarant), c.getString(TAG_Appealed), c.getString(TAG_Type), c.getString(TAG_Title), c.getString(TAG_Content), c.getString(TAG_Result), "");
             }
             reviewIndex += reviewRange;
             return returnAppeal;

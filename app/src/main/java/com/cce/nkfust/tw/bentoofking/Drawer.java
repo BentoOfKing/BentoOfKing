@@ -312,6 +312,10 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 8:
                     //申訴
+                    intent.setClass(context,StoreAppealListActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
+                    /*
                     LayoutInflater inflater = LayoutInflater.from(context);
                     View v = inflater.inflate(R.layout.alertdialog_report, null);
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
@@ -371,7 +375,7 @@ public class Drawer extends AppCompatActivity{
                                 alertDialog.dismiss();
                             }
                         }
-                    });
+                    });*/
                     break;
                 case 9:
                     intent.setClass(context,AboutActivity.class);

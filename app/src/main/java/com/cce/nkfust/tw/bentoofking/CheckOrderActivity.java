@@ -1,6 +1,5 @@
 package com.cce.nkfust.tw.bentoofking;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -49,7 +48,7 @@ public class CheckOrderActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
-        costTextView = findViewById(R.id.costTextView);
+        costTextView = findViewById(R.id.stateTextView);
         Drawer drawer = new Drawer();
         drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
         toolbar.setTitle(getResources().getString(R.string.findOrders));
