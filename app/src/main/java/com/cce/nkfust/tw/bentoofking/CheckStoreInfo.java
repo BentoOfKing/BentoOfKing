@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -82,7 +83,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private int commentMode;
     private Comment editComment;
     private Button reportButton;
-    private ImageView storeIcon;
+    //private ImageView storeIcon;
     private TextView storeName;
     private TextView storeEvaluation;
     private ImageButton menuButton;
@@ -115,10 +116,14 @@ public class CheckStoreInfo extends AppCompatActivity {
     private ImageView storeInfo5;
     private ImageView storeInfo6;
     private ImageView storeInfo7;
+    private ViewPager storeIcon;
     private ImageView[] starArray;
     private TextView storeAveragePrice;
     private TextView storeBusiness;
+    private ArrayList<StoreImagePageView> pageList;
     private Bitmap storePhotoBitmap;
+    private ArrayList<Bitmap> storePhotoBitmapArray;
+    private ArrayList<String> storePhotoURLArray;
     private Handler_A anotherHandler;
     private RecyclerView commentRecyclerView;
     private LinearLayoutManager recyclerManager;
@@ -129,6 +134,7 @@ public class CheckStoreInfo extends AppCompatActivity {
     private ConstraintLayout.LayoutParams params;
     private Context context;
     private ArrayList<String> myFavoriteTokens;
+    private StorePhotoPagerAdapter storePhotoAdapter;
     private Boolean isFavorite;
 
     @Override
@@ -189,11 +195,14 @@ public class CheckStoreInfo extends AppCompatActivity {
         starArray = new ImageView[5];
         database = new Database();
         drawer = new Drawer();
+        storePhotoBitmapArray = new ArrayList<Bitmap>();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         commentArrayList = new ArrayList<Comment>();
         recyclerAdapter = new CommentListViewRecyclerAdapter(commentArrayList,storeInfoBundle.getStore().getStoreName());
         commentMode = SENT_COMMENT;
         databaseForComment = new Database();
+        pageList = new ArrayList<StoreImagePageView>();
+        storePhotoAdapter = new StorePhotoPagerAdapter(pageList);
         CheckStoreInfo.this.recyclerManager = new LinearLayoutManager(CheckStoreInfo.this);
         recyclerManager.setSmoothScrollbarEnabled(true);
         recyclerManager.setAutoMeasureEnabled(true);
@@ -211,6 +220,16 @@ public class CheckStoreInfo extends AppCompatActivity {
         commentRecyclerView.setAdapter(recyclerAdapter);
         commentRecyclerView.setFocusable(false);
         commentRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        storeIcon.setAdapter(storePhotoAdapter);/*
+        storeIcon.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            @Override
+            public void onPageSelected(int position) {}
+            @Override
+            public void onPageScrollStateChanged(int state) { if(state>0) storeIcon.getAdapter().notifyDataSetChanged(); }
+        });*/
+        params = (ConstraintLayout.LayoutParams)storeIcon.getLayoutParams();
         recyclerAdapter.setOnItemClickListener(new RecyclerListItemHandler());
         storeScroll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -413,6 +432,7 @@ public class CheckStoreInfo extends AppCompatActivity {
         });
         drawer.init(this,this.toolbar,drawerListView,drawerLayout,this.userInfo);
         drawer.setToolbarNavigation();
+
     }
 
     public class UpdateMember implements Runnable{
@@ -534,7 +554,6 @@ public class CheckStoreInfo extends AppCompatActivity {
         this.commentRecyclerView = findViewById(R.id.commentRecyclerView);
         this.storePictureLayout = findViewById(R.id.storePictureLayout);
         this.storeScroll = findViewById(R.id.scrollButton);
-        this.params = (ConstraintLayout.LayoutParams) storeIcon.getLayoutParams();
     }
 
 
@@ -584,7 +603,7 @@ public class CheckStoreInfo extends AppCompatActivity {
                     updateStoreScore();
                     CheckStoreInfo.this.params.height = getScreenWidth()*9/16;
                     storeIcon.setLayoutParams(CheckStoreInfo.this.params);
-                    storeIcon.setImageBitmap(storePhotoBitmap);
+                    storeIcon.getAdapter().notifyDataSetChanged();
                     recyclerAdapter.notifyDataSetChanged();
                     break;
                 case 998:
@@ -699,7 +718,13 @@ public class CheckStoreInfo extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case GET_BITMAP:
-                    storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
+                    //storePhotoBitmapArray.clear();
+                    pageList.clear();
+                    storePhotoURLArray = transformStorePictureURL(storeInfoBundle.getStore().getStoreIconURL(),storeInfoBundle.getStore().getPhoto());
+                    for(int i=0;i<storePhotoURLArray.size();i++)
+                        pageList.add(new StoreImagePageView(CheckStoreInfo.this,getBitmapFromURL(storePhotoURLArray.get(i)),getScreenWidth()));
+                        //storePhotoBitmapArray.add(getBitmapFromURL(storePhotoURLArray.get(i)));
+                        //storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
                     mainHandler.sendEmptyMessage(UPDATE_UI);
                     break;
             }
@@ -900,7 +925,20 @@ public class CheckStoreInfo extends AppCompatActivity {
 
     }
 
-
+    private ArrayList<String> transformStorePictureURL(String storeIconURL,String transformURL) {
+        String remainString = transformURL;
+        ArrayList<String> URLArray = new ArrayList<String>();
+        if(transformURL.indexOf(",")<0)
+            URLArray.add(storeIconURL+transformURL);
+        else {
+            while(remainString.indexOf(",")>=0) {
+                URLArray.add(storeIconURL+remainString.substring(0,remainString.indexOf(",")));
+                remainString = remainString.substring(remainString.indexOf(",")+1);
+            }
+            URLArray.add(storeIconURL+remainString);
+        }
+        return URLArray;
+    }
 
 
     private static Bitmap getBitmapFromURL(String imageUrl)
