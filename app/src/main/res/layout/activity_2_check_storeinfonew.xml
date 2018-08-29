@@ -45,7 +45,7 @@
                             android:id="@+id/storePicture"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:background="@android:color/black"
+                            android:background="@drawable/sakura"
                             app:layout_constraintDimensionRatio="16:9" />
                     </android.support.constraint.ConstraintLayout>
 
