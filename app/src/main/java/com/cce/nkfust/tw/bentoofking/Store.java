@@ -133,4 +133,5 @@ public class Store implements Serializable {
     String getDistance(){
         return Distance;
     }
+    String getStoreIconURL() { return storeIconURL; }
 }

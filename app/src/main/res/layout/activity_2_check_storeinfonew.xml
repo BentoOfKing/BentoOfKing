@@ -41,15 +41,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0">
 
-                        <ImageView
+                        <android.support.v4.view.ViewPager
                             android:id="@+id/storePicture"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0"
-                            android:adjustViewBounds="true"
-                            android:scaleType="centerCrop"
-                            app:layout_constraintDimensionRatio="16:9"
-                            app:srcCompat="@drawable/sakura" />
+                            android:layout_height="0dp"
+                            android:background="@android:color/black"
+                            app:layout_constraintDimensionRatio="16:9" />
                     </android.support.constraint.ConstraintLayout>
 
                     <LinearLayout
