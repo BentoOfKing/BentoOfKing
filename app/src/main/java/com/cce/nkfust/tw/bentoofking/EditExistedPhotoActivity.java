@@ -21,8 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -67,6 +69,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
     int index,photoCount;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog;
+    private String[] photoText = {"","","","","","","","",""};
     DownloadWebPicture[] downloadWebPicture;
     PhotoThreadHandler photoThreadHandler;
     @Override
@@ -79,6 +82,10 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         //store =(Store) intent.getSerializableExtra(passStoreInfo);
         //meal = (ArrayList<Meal>) intent.getSerializableExtra(passmenuInfo);
+        String photoSplitStr[] = userInfo.getStore().getPhotoText().split(",");
+        for(int i=0;i<photoSplitStr.length;i++){
+            photoText[i] = photoSplitStr[i];
+        }
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -262,11 +269,15 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
             try {
                 postMainImage();
                 String photoString = userInfo.getStore().getID() + ".jpg";
+                String photoTextStr = photoText[0];
                 for (int i = 0; i < photoCount; i++) {
                     photoString += "," + userInfo.getStore().getID() + "_" + Integer.toString(i) + ".jpg";
+                    photoTextStr += ","+photoText[i+1];
                     postOtherImage(i);
+
                 }
                 userInfo.getStore().putPhoto(photoString);
+                userInfo.getStore().putPhotoText(photoTextStr);
 
                 if(database.UpdateStore(userInfo.getStore()).equals("Successful.")) {
                     mainThreadHandler.sendEmptyMessage(SUCCESS);
@@ -274,6 +285,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                     mainThreadHandler.sendEmptyMessage(FAIL);
                 }
             }catch (Exception e){
+                System.out.print(e);
                 mainThreadHandler.sendEmptyMessage(FAIL);
             }
         }
@@ -381,6 +393,30 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                                                 }
                                             }
                                         }
+                                        break;
+                                    case 2:
+                                        LayoutInflater inflater = LayoutInflater.from(EditExistedPhotoActivity.this);
+                                        View view = inflater.inflate(R.layout.alertdialog_photo_text, null);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(EditExistedPhotoActivity.this);
+                                        builder.setTitle("輸入圖片備註");
+                                        builder.setView(view);
+                                        final EditText photoTextEditText = view.findViewById(R.id.photoTextEditText);
+                                        index++;
+                                        photoTextEditText.setText(photoText[index]);
+                                        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                photoText[index] = photoTextEditText.getText().toString();
+                                            }
+                                        });
+                                        AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
                                         break;
                                 }
 

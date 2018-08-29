@@ -429,8 +429,8 @@ public class Database {
                 Log.d("Get specified atore.", json.toString());
                 JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
                 JSONObject c = productObj.getJSONObject(0);
-                store[i] = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone) , c.getString(TAG_PhotoText), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
-                store[i].putPhotoText(c.getString(TAG_Photo));
+                store[i] = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone) , c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
+                store[i].putPhotoText(c.getString(TAG_PhotoText));
             } catch (Exception e) {
                 store = new Store[0];
                 return store;
@@ -454,7 +454,7 @@ public class Database {
             JSONArray productObj = json.getJSONArray(TAG_STORES); // JSON Array
             JSONObject c = productObj.getJSONObject(0);
             Store store = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
-            store.putPhotoText(c.getString(TAG_Photo));
+            store.putPhotoText(c.getString(TAG_PhotoText));
             return store;
 
         } catch (Exception e) {
@@ -507,7 +507,7 @@ public class Database {
 
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
-                returnStore[i].putPhotoText(c.getString(TAG_Photo));
+                returnStore[i].putPhotoText(c.getString(TAG_PhotoText));
             }
             index += range;
             return returnStore;
@@ -543,7 +543,8 @@ public class Database {
             JSONObject c = stores.getJSONObject(0);
             // Storing each json item in variable
             returnStore = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
-            returnStore.putPhotoText(c.getString(TAG_Photo));
+            returnStore.putPhotoText(c.getString(TAG_PhotoText));
+
             return returnStore;
         } catch (Exception e) {
             return null;
@@ -651,7 +652,7 @@ public class Database {
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putDistance(c.getString(TAG_Distance));
-                returnStore[i].putPhotoText(c.getString(TAG_Photo));
+                returnStore[i].putPhotoText(c.getString(TAG_PhotoText));
             }
             index += range;
             return returnStore;
@@ -703,7 +704,7 @@ public class Database {
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putDistance(c.getString(TAG_Distance));
-                returnStore[i].putPhotoText(c.getString(TAG_Photo));
+                returnStore[i].putPhotoText(c.getString(TAG_PhotoText));
             }
             index += range;
             return returnStore;
@@ -731,6 +732,7 @@ public class Database {
             params.add(new BasicNameValuePair("BusinessHours", store.getBusinessHours()));
             params.add(new BasicNameValuePair("Phone", store.getPhone()));
             params.add(new BasicNameValuePair("Photo", store.getPhoto()));
+            params.add(new BasicNameValuePair("PhotoText", new String(store.getPhotoText().getBytes(),"8859_1")));
             params.add(new BasicNameValuePair("Longitude", store.getLongitude()));
             params.add(new BasicNameValuePair("Latitude", store.getLatitude()));
         } catch (UnsupportedEncodingException e) {
