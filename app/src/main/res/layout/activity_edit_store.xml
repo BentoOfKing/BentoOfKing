@@ -353,7 +353,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/weekTextView"
+                            android:id="@+id/weekTextViewText"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -362,8 +362,8 @@
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/font_size" />
 
-                        <EditText
-                            android:id="@+id/weekEditText"
+                        <TextView
+                            android:id="@+id/weekTextView"
                             android:layout_width="0dp"
                             android:layout_height="29dp"
                             android:layout_marginBottom="8dp"
@@ -374,7 +374,10 @@
                             android:inputType="phone"
                             android:paddingEnd="10dp"
                             android:paddingStart="10dp"
-                            android:textColor="#59493f" />
+                            android:text="@string/touchToEdit"
+                            android:textAlignment="center"
+                            android:textColor="#59493f"
+                            android:textSize="18sp" />
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"

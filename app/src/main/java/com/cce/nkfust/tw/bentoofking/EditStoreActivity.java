@@ -48,7 +48,7 @@ public class EditStoreActivity extends AppCompatActivity {
     private EditText time2EditText;
     private EditText time3EditText;
     private EditText time4EditText;
-    private EditText weekEditText;
+    private TextView weekTextView;
     private TextView infoContentTextView;
     private String storeInfoString = "0000000";
     private int hour=0, minute=0;
@@ -59,7 +59,8 @@ public class EditStoreActivity extends AppCompatActivity {
     private Handler EditStoreThreadHandler;
     private HandlerThread EditStoreThread;
     private char[] week = {'一','二','三','四','五','六','日'};
-    private String weekStr = "";
+    private boolean[] storeWeekStringBool;
+    private String weekStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +92,9 @@ public class EditStoreActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         NewPasswordEditText = findViewById(R.id.NewPasswordEditText);
         passwordCheckEditText = findViewById(R.id.passwordCheckEditText);
-        weekEditText = findViewById(R.id.weekEditText);
+        weekTextView = findViewById(R.id.weekTextView);
+        weekStr = new String();
+        storeWeekStringBool = new boolean[7];
         time2EditText = findViewById(R.id.time2EditText);
         time3EditText = findViewById(R.id.time3EditText);
         time4EditText = findViewById(R.id.time4EditText);
@@ -162,11 +165,16 @@ public class EditStoreActivity extends AppCompatActivity {
                 else time4EditText.setText(intime4);
 
         for(i=0;i<7;i++){
-            if(timetemp.charAt(16+i) == '1'){
+            if(store.getBusinessHours().charAt(16+i) == '1'){
+                if(!weekStr.equals("")) weekStr += "、";
                 weekStr += week[i];
+                storeWeekStringBool[i] = true;
+            }else{
+                storeWeekStringBool[i] = false;
             }
         }
-        weekEditText.setText(weekStr);
+        weekTextView.setText(weekStr);
+        weekTextView.setOnClickListener(new weekClickHandler());
         char charinfo;
         String infotemp =store.Information.toString() ;
         String infoContentTextViewString="";
@@ -188,23 +196,61 @@ public class EditStoreActivity extends AppCompatActivity {
 
 
     }
+    public class weekClickHandler implements View.OnClickListener{
+        CharSequence[] weekInfo;
+        AlertDialog alertDialog;
 
+        @Override
+        public void onClick(View view) {
+            weekInfo = getResources().getStringArray(R.array.weekInfo);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMultiChoiceItems(weekInfo,storeWeekStringBool,new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    if(isChecked){
+                        storeWeekStringBool[which] = true;
 
+                    }else{
+                        storeWeekStringBool[which] = false;
+                    }
+                }});
+            builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    weekStr = "";
+                    String storeTimeTmp = store.getBusinessHours();
+                    for(int i=0;i<7;i++) {
+                        if (storeWeekStringBool[i]==true) {
+                            if(!weekStr.equals("")) weekStr += "、";
+                            weekStr += week[i];
+                        }
+                    }
+                    if(weekStr.equals("")) weekStr = getResources().getString(R.string.touchToEdit);
+                    weekTextView.setText(weekStr);
+                    dialog.dismiss();
+                }
+            });
+            alertDialog = builder.create();
+            alertDialog.show();
+        }
+    }
 
 
 
 
 
     public class InfoClickHandler implements View.OnClickListener{
-
         CharSequence[] storeInfo;
         AlertDialog alertDialog;
         char[] storeInfoStringTmp = storeInfoString.toCharArray();
         boolean[] storeInfoStringBool = new boolean[storeInfoStringTmp.length];
         String infoContentTextViewString;
-
-
-
 
         @Override
         public void onClick(View view) {
@@ -464,7 +510,13 @@ public class EditStoreActivity extends AppCompatActivity {
                             }
                         }
                     }
-
+                    for(i=0;i<7;i++){
+                        if(storeWeekStringBool[i] == true){
+                            worktime += "1";
+                        }else{
+                            worktime += "0";
+                        }
+                    }
 
                     storeInfoString = store.getInformation();
 
