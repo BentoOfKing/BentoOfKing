@@ -281,4 +281,13 @@
     <string name="pleaseEnterPoint">請輸入點數</string>
     <string name="checkError">查看錯誤</string>
     <string name="payPoint">支付點數</string>
+    <array name="weekInfo">
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+        <item>星期日</item>
+    </array>
 </resources>
