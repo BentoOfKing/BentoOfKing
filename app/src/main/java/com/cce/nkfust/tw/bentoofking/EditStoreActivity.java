@@ -48,6 +48,7 @@ public class EditStoreActivity extends AppCompatActivity {
     private EditText time2EditText;
     private EditText time3EditText;
     private EditText time4EditText;
+    private EditText weekEditText;
     private TextView infoContentTextView;
     private String storeInfoString = "0000000";
     private int hour=0, minute=0;
@@ -57,7 +58,8 @@ public class EditStoreActivity extends AppCompatActivity {
     private ProgressDialog progressDialog = null;
     private Handler EditStoreThreadHandler;
     private HandlerThread EditStoreThread;
-
+    private char[] week = {'一','二','三','四','五','六','日'};
+    private String weekStr = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,7 @@ public class EditStoreActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         NewPasswordEditText = findViewById(R.id.NewPasswordEditText);
         passwordCheckEditText = findViewById(R.id.passwordCheckEditText);
+        weekEditText = findViewById(R.id.weekEditText);
         time2EditText = findViewById(R.id.time2EditText);
         time3EditText = findViewById(R.id.time3EditText);
         time4EditText = findViewById(R.id.time4EditText);
@@ -158,7 +161,12 @@ public class EditStoreActivity extends AppCompatActivity {
             if(test4.equals("0000")) intime4="";
                 else time4EditText.setText(intime4);
 
-
+        for(i=0;i<7;i++){
+            if(timetemp.charAt(16+i) == '1'){
+                weekStr += week[i];
+            }
+        }
+        weekEditText.setText(weekStr);
         char charinfo;
         String infotemp =store.Information.toString() ;
         String infoContentTextViewString="";
