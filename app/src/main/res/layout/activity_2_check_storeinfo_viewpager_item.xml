@@ -18,14 +18,15 @@
 
     <TextView
         android:id="@+id/pictureMark"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:background="#6FFFFFFF"
         android:fontFamily="sans-serif-smallcaps"
+        android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="#FFFFFFFF"
+        android:textColor="@android:color/black"
         android:textSize="21sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/storePicture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
