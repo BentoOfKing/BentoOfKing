@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -31,6 +34,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
+    private static final int GET_APPEAL = 8,REFRESHING = 1;
     private UserInfo userInfo;
     private Toolbar toolbar;
     private Context context;
@@ -40,8 +44,11 @@ public class StoreAppealListActivity extends AppCompatActivity {
     private ArrayList<Appeal> appealArrayList;
     private ProgressDialog progressDialog;
     private Database database;
+    private DatabaseHandler databaseHandler;
+    private HandlerThread secondThread;
     private Appeal[] appeal;
     private MainThreadHandler mainThreadHandler;
+    private SwipeRefreshLayout swipeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +136,16 @@ public class StoreAppealListActivity extends AppCompatActivity {
         });
         database = new Database();
         mainThreadHandler = new MainThreadHandler();
+        secondThread = new HandlerThread("secondThread");
+        secondThread.start();
+        databaseHandler = new DatabaseHandler(secondThread.getLooper());
+        swipeLayout = findViewById(R.id.swipeLayout);
+        swipeLayout.setOnRefreshListener(new AppealListRefreshListener());
+        swipeLayout.setColorSchemeResources(
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light);
         appealListView = findViewById(R.id.appealListView);
         appealArrayList = new ArrayList<Appeal>();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -151,14 +168,17 @@ public class StoreAppealListActivity extends AppCompatActivity {
                 }
             }
         });
+        appealListView.setOnScrollListener(new AppealListScrollHandler());
         refreshAppeal();
     }
     public void refreshAppeal(){
+        if (!swipeLayout.isRefreshing()) mainThreadHandler.sendEmptyMessage(REFRESHING);
         progressDialog = ProgressDialog.show(context, "請稍等...", "資料載入中...", true);
         appealArrayList.clear();
         database.refreshReviewStoreIndex();
-        Thread t = new Thread(new GetAppeal());
-        t.start();
+        databaseHandler.sendEmptyMessage(GET_APPEAL);
+        //Thread t = new Thread(new GetAppeal());
+        //t.start();
     }
     class GetAppeal implements Runnable{
         @Override
@@ -186,10 +206,17 @@ public class StoreAppealListActivity extends AppCompatActivity {
                 case SUCCESS:
                     storeAppealItemAdapter.notifyDataSetChanged();
                     progressDialog.dismiss();
+                    swipeLayout.setRefreshing(false);
+                    appealListView.setEnabled(true);
                     break;
                 case FAIL:
                     progressDialog.dismiss();
                     Toast.makeText(context, getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
+                    swipeLayout.setRefreshing(false);
+                    appealListView.setEnabled(true);
+                    break;
+                case REFRESHING:
+                    swipeLayout.setRefreshing(true);
                     break;
             }
             super.handleMessage(msg);
@@ -197,10 +224,56 @@ public class StoreAppealListActivity extends AppCompatActivity {
         }
 
     }
+
+    private class DatabaseHandler extends Handler {
+        public DatabaseHandler(Looper looper) { super(looper); }
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case GET_APPEAL:
+                    try {
+                        appeal = database.GetUserAppeal("1",userInfo.getStore().getID());
+                        for(int i=0;i<appeal.length;i++){
+                            appealArrayList.add(appeal[i]);
+                        }
+                        mainThreadHandler.sendEmptyMessage(SUCCESS);
+                    }catch (Exception e){
+                        mainThreadHandler.sendEmptyMessage(FAIL);
+                    }
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.toolbar_add, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private class AppealListScrollHandler implements AbsListView.OnScrollListener {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                    if (!swipeLayout.isRefreshing()) mainThreadHandler.sendEmptyMessage(REFRESHING);
+                    databaseHandler.sendEmptyMessage(GET_APPEAL);
+                }
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+        }
+    }
+    private class AppealListRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            appealListView.setEnabled(false);
+            refreshAppeal();
+        }
     }
 }
 
@@ -258,4 +331,6 @@ class StoreAppealItemAdapter extends BaseAdapter {
         }
         return view;
     }
+
+
 }

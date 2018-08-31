@@ -118,7 +118,7 @@ public class Database {
     JSONParser jParser;
     JSONObject json;
 
-    private int range, index = 0,reviewRange,reviewIndex=0,commentIndex=0;
+    private int range, index = 0,reviewRange,reviewIndex=0,appealIndex=0,commentIndex=0;
     ArrayList<HashMap<String, String>> storesList;
 
     String result = "";
@@ -603,6 +603,7 @@ public class Database {
     }
     public void refreshReviewStoreIndex() { reviewIndex = 0; }
     public void refreshCommentIndex() { commentIndex=0; }
+
 
     public Store[] GetStoreByPosition(String Search,String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
         JSONObject json;

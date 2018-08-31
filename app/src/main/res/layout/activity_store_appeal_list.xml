@@ -24,11 +24,16 @@
         <!-- The main content view -->
 
         <!-- The navigation drawer -->
-        <ListView
-            android:id="@+id/appealListView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
+            <ListView
+                android:id="@+id/appealListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
         <ListView
             android:id="@+id/drawerListView"
             android:layout_width="240dp"
