@@ -17,11 +17,25 @@
         app:srcCompat="@drawable/sakura" />
 
     <TextView
+        android:id="@+id/markBackground"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:background="@drawable/store_mark_background"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        android:textSize="21sp"
+        app:layout_constraintBottom_toBottomOf="@+id/storePicture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/pictureMark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#6FFFFFFF"
         android:fontFamily="sans-serif-smallcaps"
+        android:text="主相片"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/black"
