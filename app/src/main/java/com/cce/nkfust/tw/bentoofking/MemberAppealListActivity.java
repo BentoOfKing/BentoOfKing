@@ -30,7 +30,7 @@ import android.widget.Toast;
 import java.io.SyncFailedException;
 import java.util.ArrayList;
 
-public class StoreAppealListActivity extends AppCompatActivity {
+public class MemberAppealListActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
@@ -40,7 +40,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
     private Context context;
     private ListView drawerListView,appealListView;
     private DrawerLayout drawerLayout;
-    private StoreAppealItemAdapter storeAppealItemAdapter;
+    private MemberAppealItemAdapter memberAppealItemAdapter;
     private ArrayList<Appeal> appealArrayList;
     private ProgressDialog progressDialog;
     private Database database;
@@ -52,7 +52,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_store_appeal_list);
+        setContentView(R.layout.activity_member_appeal_list);
         context = this;
         Intent intent = getIntent();
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
@@ -101,11 +101,11 @@ public class StoreAppealListActivity extends AppCompatActivity {
                                         }
                                     }
                                     appeal = new Appeal();
-                                    appeal.putDeclarant(userInfo.getStore().getID());
+                                    appeal.putDeclarant(userInfo.getMember().getEmail());
                                     appeal.putAppealed("");
                                     appeal.putTitle(titleEditText.getText().toString());
                                     appeal.putContent(contentEditText.getText().toString());
-                                    appeal.putType("1");
+                                    appeal.putType("0");
                                     Thread t = new Thread(new AddAppeal());
                                     progressDialog = ProgressDialog.show(context, "請稍等...", "申訴發送中...", true);
                                     t.start();
@@ -149,13 +149,13 @@ public class StoreAppealListActivity extends AppCompatActivity {
         appealListView = findViewById(R.id.appealListView);
         appealArrayList = new ArrayList<Appeal>();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        storeAppealItemAdapter = new StoreAppealItemAdapter(inflater,appealArrayList);
-        appealListView.setAdapter(storeAppealItemAdapter);
+        memberAppealItemAdapter = new MemberAppealItemAdapter(inflater,appealArrayList);
+        appealListView.setAdapter(memberAppealItemAdapter);
         appealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i,final long l) {
                 if(!appealArrayList.get((int) l).getResult().equals("")){
-                    new AlertDialog.Builder(StoreAppealListActivity.this)
+                    new AlertDialog.Builder(MemberAppealListActivity.this)
                             .setTitle("處理結果")
                             .setMessage(appealArrayList.get((int) l).getResult())
                             .setPositiveButton("確認", new DialogInterface.OnClickListener() {
@@ -184,7 +184,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                appeal = database.GetUserAppeal("1",userInfo.getStore().getID());
+                appeal = database.GetUserAppeal("0",userInfo.getMember().getEmail());
                 for(int i=0;i<appeal.length;i++){
                     appealArrayList.add(appeal[i]);
                 }
@@ -204,7 +204,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    storeAppealItemAdapter.notifyDataSetChanged();
+                    memberAppealItemAdapter.notifyDataSetChanged();
                     progressDialog.dismiss();
                     swipeLayout.setRefreshing(false);
                     appealListView.setEnabled(true);
@@ -232,7 +232,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
             switch (msg.what){
                 case GET_APPEAL:
                     try {
-                        appeal = database.GetUserAppeal("1",userInfo.getStore().getID());
+                        appeal = database.GetUserAppeal("0",userInfo.getMember().getEmail());
                         for(int i=0;i<appeal.length;i++){
                             appealArrayList.add(appeal[i]);
                         }
@@ -277,7 +277,7 @@ public class StoreAppealListActivity extends AppCompatActivity {
     }
 }
 
-class StoreAppealItemAdapter extends BaseAdapter {
+class MemberAppealItemAdapter extends BaseAdapter {
     private ArrayList<Appeal> appeal;
     private LayoutInflater inflater;
     private ViewHolder viewHolder;
@@ -289,7 +289,7 @@ class StoreAppealItemAdapter extends BaseAdapter {
         TextView stateTextView;
     }
 
-    public StoreAppealItemAdapter(LayoutInflater inflater, ArrayList<Appeal> appeal) {
+    public MemberAppealItemAdapter(LayoutInflater inflater, ArrayList<Appeal> appeal) {
         this.appeal = appeal;
         this.inflater = inflater;
     }

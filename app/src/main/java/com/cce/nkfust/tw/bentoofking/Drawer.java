@@ -176,66 +176,9 @@ public class Drawer extends AppCompatActivity{
                     break;
                 case 6:
                     //申訴
-                    LayoutInflater inflater = LayoutInflater.from(context);
-                    View v = inflater.inflate(R.layout.alertdialog_report, null);
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
-                    builder.setTitle("申訴");
-                    builder.setView(v);
-                    final EditText titleEditText = v.findViewById(R.id.titleEditText);
-                    final EditText contentEditText = v.findViewById(R.id.contentEditText);
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setPositiveButton("送出",null);
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                        Appeal appeal;
-                        Boolean suc = false;
-                        @Override
-                        public void onClick(View view) {
-                            if(titleEditText.getText().toString().equals("")){
-                                Toast.makeText(context, getResources().getString(R.string.pleaseEnterTitle), Toast.LENGTH_SHORT).show();
-                            }else if(contentEditText.getText().toString().equals("")){
-                                Toast.makeText(context, getResources().getString(R.string.pleaseEnterContent), Toast.LENGTH_SHORT).show();
-                            }else{
-                                class AddAppeal implements Runnable{
-                                    @Override
-                                    public void run() {
-                                        Database d = new Database();
-                                        if(d.AddAppeal(appeal).equals("Successful.")){
-                                            suc = true;
-                                        }
-                                    }
-                                }
-                                appeal = new Appeal();
-                                appeal.putDeclarant(userInfo.getMember().getEmail());
-                                appeal.putAppealed("");
-                                appeal.putTitle(titleEditText.getText().toString());
-                                appeal.putContent(contentEditText.getText().toString());
-                                appeal.putType("0");
-                                Thread t = new Thread(new AddAppeal());
-                                progressDialog = ProgressDialog.show(context, "請稍等...", "申訴發送中...", true);
-                                t.start();
-                                try {
-                                    t.join();
-                                    progressDialog.dismiss();
-                                    if(suc) {
-                                        Toast.makeText(context, "申訴成功", Toast.LENGTH_SHORT).show();
-                                    }else{
-                                        Toast.makeText(context, "申訴失敗", Toast.LENGTH_SHORT).show();
-                                    }
-                                }catch (Exception e){
-                                    progressDialog.dismiss();
-                                    Toast.makeText(context, "申訴失敗", Toast.LENGTH_SHORT).show();
-                                }
-                                alertDialog.dismiss();
-                            }
-                        }
-                    });
+                    intent.setClass(context,MemberAppealListActivity.class);
+                    intent.putExtra(passUserInfo,userInfo);
+                    context.startActivity(intent);
                     break;
                 case 7:
                     intent.setClass(context,AboutActivity.class);
@@ -315,67 +258,6 @@ public class Drawer extends AppCompatActivity{
                     intent.setClass(context,StoreAppealListActivity.class);
                     intent.putExtra(passUserInfo,userInfo);
                     context.startActivity(intent);
-                    /*
-                    LayoutInflater inflater = LayoutInflater.from(context);
-                    View v = inflater.inflate(R.layout.alertdialog_report, null);
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
-                    builder.setTitle("申訴");
-                    builder.setView(v);
-                    final EditText titleEditText = v.findViewById(R.id.titleEditText);
-                    final EditText contentEditText = v.findViewById(R.id.contentEditText);
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setPositiveButton("送出",null);
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                        Appeal appeal;
-                        Boolean suc = false;
-                        @Override
-                        public void onClick(View view) {
-                            if(titleEditText.getText().toString().equals("")){
-                                Toast.makeText(context, getResources().getString(R.string.pleaseEnterTitle), Toast.LENGTH_SHORT).show();
-                            }else if(contentEditText.getText().toString().equals("")){
-                                Toast.makeText(context, getResources().getString(R.string.pleaseEnterContent), Toast.LENGTH_SHORT).show();
-                            }else{
-                                class AddAppeal implements Runnable{
-                                    @Override
-                                    public void run() {
-                                        Database d = new Database();
-                                        if(d.AddAppeal(appeal).equals("Successful.")){
-                                            suc = true;
-                                        }
-                                    }
-                                }
-                                appeal = new Appeal();
-                                appeal.putDeclarant(userInfo.getStore().getID());
-                                appeal.putAppealed("");
-                                appeal.putTitle(titleEditText.getText().toString());
-                                appeal.putContent(contentEditText.getText().toString());
-                                appeal.putType("1");
-                                Thread t = new Thread(new AddAppeal());
-                                progressDialog = ProgressDialog.show(context, "請稍等...", "申訴發送中...", true);
-                                t.start();
-                                try {
-                                    t.join();
-                                    progressDialog.dismiss();
-                                    if(suc) {
-                                        Toast.makeText(context, "申訴成功", Toast.LENGTH_SHORT).show();
-                                    }else{
-                                        Toast.makeText(context, "申訴失敗", Toast.LENGTH_SHORT).show();
-                                    }
-                                }catch (Exception e){
-                                    progressDialog.dismiss();
-                                    Toast.makeText(context, "申訴失敗", Toast.LENGTH_SHORT).show();
-                                }
-                                alertDialog.dismiss();
-                            }
-                        }
-                    });*/
                     break;
                 case 9:
                     intent.setClass(context,AboutActivity.class);
