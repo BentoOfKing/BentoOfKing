@@ -41,6 +41,7 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
     private EditText time2EditText;
     private EditText time3EditText;
     private EditText time4EditText;
+    private TextView weekTextView;
     private TextView infoContentTextView;
     private String storeInfoString = "0000000";
     private int hour=0, minute=0;
@@ -48,7 +49,9 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
     private Store store;
     private Handler handler = new Handler();
     private ProgressDialog progressDialog = null;
-
+    private char[] week = {'一','二','三','四','五','六','日'};
+    private boolean[] storeWeekStringBool = {false,false,false,false,false,false,false};
+    private String weekStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,8 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
         time2EditText = findViewById(R.id.time2EditText);
         time3EditText = findViewById(R.id.time3EditText);
         time4EditText = findViewById(R.id.time4EditText);
+        weekTextView = findViewById(R.id.weekTextView);
+        weekStr = new String();
         time1EditText.setInputType(InputType.TYPE_NULL);
         time2EditText.setInputType(InputType.TYPE_NULL);
         time3EditText.setInputType(InputType.TYPE_NULL);
@@ -94,7 +99,51 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
         time2EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time3EditText.setOnClickListener(timeTextFieldOnClickHandler);
         time4EditText.setOnClickListener(timeTextFieldOnClickHandler);
+        weekTextView.setOnClickListener(new weekClickHandler());
+    }
+    public class weekClickHandler implements View.OnClickListener{
+        CharSequence[] weekInfo;
+        AlertDialog alertDialog;
 
+        @Override
+        public void onClick(View view) {
+            weekInfo = getResources().getStringArray(R.array.weekInfo);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMultiChoiceItems(weekInfo,storeWeekStringBool,new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    if(isChecked){
+                        storeWeekStringBool[which] = true;
+
+                    }else{
+                        storeWeekStringBool[which] = false;
+                    }
+                }});
+            builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    weekStr = "";
+                    String storeTimeTmp = store.getBusinessHours();
+                    for(int i=0;i<7;i++) {
+                        if (storeWeekStringBool[i]==true) {
+                            if(!weekStr.equals("")) weekStr += "、";
+                            weekStr += week[i];
+                        }
+                    }
+                    if(weekStr.equals("")) weekStr = getResources().getString(R.string.touchToEdit);
+                    weekTextView.setText(weekStr);
+                    dialog.dismiss();
+                }
+            });
+            alertDialog = builder.create();
+            alertDialog.show();
+        }
     }
     public class InfoClickHandler implements View.OnClickListener{
         CharSequence[] storeInfo;
@@ -289,10 +338,18 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 return;
             }
+            String bussinessTime = new String(bussinessTimeChar);
+            for(int i=0;i<7;i++){
+                if(storeWeekStringBool[i] == true){
+                    bussinessTime += "1";
+                }else{
+                    bussinessTime += "0";
+                }
+            }
             store.putStoreName(nameEditText.getText().toString());
             store.putAddress(addressEditText.getText().toString());
             store.putPhone(phoneEditText.getText().toString());
-            store.putBusinessHours(new String(bussinessTimeChar));
+            store.putBusinessHours(bussinessTime);
             store.putInformation(storeInfoString);
             Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
             try {
