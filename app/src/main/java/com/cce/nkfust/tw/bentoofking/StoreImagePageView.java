@@ -6,20 +6,24 @@ import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class StoreImagePageView extends ConstraintLayout {
     private Bitmap storeImageBitMap;
     private ImageView storePicture;
-    public StoreImagePageView( Context context, Bitmap bitmap, int currentWidth){
+    private TextView photoMark;
+    public StoreImagePageView( Context context, Bitmap bitmap, int currentWidth, String photoMark){
         super(context);
         View view = LayoutInflater.from(context).inflate(R.layout.activity_2_check_storeinfo_viewpager_item,null);
         storePicture = (ImageView)view.findViewById(R.id.storePicture);
+        this.photoMark = (TextView)view.findViewById(R.id.pictureMark);
         storeImageBitMap = bitmap;
         storePicture.setImageBitmap(storeImageBitMap);
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) storePicture.getLayoutParams();
         params.width = currentWidth;
         storePicture.setLayoutParams(params);
         storePicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        this.photoMark.setText(photoMark);
         addView(view);
 
     }

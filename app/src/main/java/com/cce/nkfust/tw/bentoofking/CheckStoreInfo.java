@@ -721,8 +721,9 @@ public class CheckStoreInfo extends AppCompatActivity {
                     //storePhotoBitmapArray.clear();
                     pageList.clear();
                     storePhotoURLArray = transformStorePictureURL(storeInfoBundle.getStore().getStoreIconURL(),storeInfoBundle.getStore().getPhoto());
+                    ArrayList<String> storePhotoMarkArray = transformStorePictureMark(storeInfoBundle.getStore().getPhotoText());
                     for(int i=0;i<storePhotoURLArray.size();i++)
-                        pageList.add(new StoreImagePageView(CheckStoreInfo.this,getBitmapFromURL(storePhotoURLArray.get(i)),getScreenWidth()));
+                        pageList.add(new StoreImagePageView(CheckStoreInfo.this,getBitmapFromURL(storePhotoURLArray.get(i)),getScreenWidth(),storePhotoMarkArray.get(i)));
                         //storePhotoBitmapArray.add(getBitmapFromURL(storePhotoURLArray.get(i)));
                         //storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
                     mainHandler.sendEmptyMessage(UPDATE_UI);
@@ -939,7 +940,20 @@ public class CheckStoreInfo extends AppCompatActivity {
         }
         return URLArray;
     }
-
+    private ArrayList<String> transformStorePictureMark(String transformMark) {
+        String remainString = transformMark;
+        ArrayList<String> markArray = new ArrayList<String>();
+        if(transformMark.indexOf(",")<0)
+            markArray.add(transformMark);
+        else {
+            while(remainString.indexOf(",")>=0) {
+                markArray.add(remainString.substring(0,remainString.indexOf(",")));
+                remainString = remainString.substring(remainString.indexOf(",")+1);
+            }
+            markArray.add(remainString);
+        }
+        return markArray;
+    }
 
     private static Bitmap getBitmapFromURL(String imageUrl)
     {

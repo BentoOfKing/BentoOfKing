@@ -15,4 +15,17 @@
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio=""
         app:srcCompat="@drawable/sakura" />
+
+    <TextView
+        android:id="@+id/pictureMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFFFF"
+        android:textSize="21sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
