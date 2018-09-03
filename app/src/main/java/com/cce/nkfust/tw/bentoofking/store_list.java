@@ -5,6 +5,7 @@ import android.text.format.Time;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Calendar;
 
 
 /**
@@ -45,10 +46,62 @@ public class store_list {
             pmStart = Integer.valueOf(storeTime.substring(8, 10)) * 60 + Integer.valueOf(storeTime.substring(10, 12));
             pmEnd = Integer.valueOf(storeTime.substring(12, 14)) * 60 + Integer.valueOf(storeTime.substring(14, 16));
         }
-        if((timeNow>=amStart&&timeNow<amEnd)||(timeNow>=pmStart&&timeNow<pmEnd))
-            this.status = "營業中";
-        else
+        if((timeNow>=amStart&&timeNow<amEnd)||(timeNow>=pmStart&&timeNow<pmEnd)) {
+            Calendar cal = Calendar.getInstance();
+            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+            switch(dayOfWeek){
+                case Calendar.MONDAY:
+                    if(storeTime.charAt(16) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                    break;
+                case Calendar.TUESDAY:
+                    if(storeTime.charAt(17) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                    break;
+                case Calendar.WEDNESDAY:
+                    if(storeTime.charAt(18) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                    break;
+                case Calendar.THURSDAY:
+                    if(storeTime.charAt(19) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                    break;
+                case Calendar.FRIDAY:
+                    if(storeTime.charAt(20) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                    break;
+                case Calendar.SATURDAY:
+                    if(storeTime.charAt(21) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                case Calendar.SUNDAY:
+                    if(storeTime.charAt(22) == '0'){
+                        this.status = "未營業";
+                    }else{
+                        this.status = "營業中";
+                    }
+                    break;
+            }
+        }else {
             this.status = "未營業";
+        }
     }
     public String getStorename(){
         return this.storename;

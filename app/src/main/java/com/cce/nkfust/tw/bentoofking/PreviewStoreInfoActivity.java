@@ -54,7 +54,10 @@ public class PreviewStoreInfoActivity extends AppCompatActivity {
     private ProgressDialog progressDialog = null;
     private Handler EditStoreThreadHandler;
     private HandlerThread EditStoreThread;
-
+    private char[] week = {'一','二','三','四','五','六','日'};
+    private boolean[] storeWeekStringBool;
+    private String weekStr;
+    private TextView weekTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +159,20 @@ public class PreviewStoreInfoActivity extends AppCompatActivity {
         else time3EditText.setText(intime3);
         if(test4.equals("0000")) intime4="";
         else time4EditText.setText(intime4);
-
+        weekTextView = findViewById(R.id.weekTextView);
+        weekStr = new String();
+        storeWeekStringBool = new boolean[7];
+        for(i=0;i<7;i++){
+            if(store.getBusinessHours().charAt(16+i) == '1'){
+                if(!weekStr.equals("")) weekStr += "、";
+                weekStr += week[i];
+                storeWeekStringBool[i] = true;
+            }else{
+                storeWeekStringBool[i] = false;
+            }
+        }
+        weekTextView.setText(weekStr);
+        weekTextView.setOnClickListener(new weekClickHandler());
 
         char charinfo;
         String infotemp =store.Information.toString() ;
@@ -179,7 +195,50 @@ public class PreviewStoreInfoActivity extends AppCompatActivity {
 
     }
 
+    public class weekClickHandler implements View.OnClickListener{
+        CharSequence[] weekInfo;
+        AlertDialog alertDialog;
 
+        @Override
+        public void onClick(View view) {
+            weekInfo = getResources().getStringArray(R.array.weekInfo);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMultiChoiceItems(weekInfo,storeWeekStringBool,new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    if(isChecked){
+                        storeWeekStringBool[which] = true;
+
+                    }else{
+                        storeWeekStringBool[which] = false;
+                    }
+                }});
+            builder.setNegativeButton(getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton(getResources().getString(R.string.check),new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    weekStr = "";
+                    String storeTimeTmp = store.getBusinessHours();
+                    for(int i=0;i<7;i++) {
+                        if (storeWeekStringBool[i]==true) {
+                            if(!weekStr.equals("")) weekStr += "、";
+                            weekStr += week[i];
+                        }
+                    }
+                    if(weekStr.equals("")) weekStr = getResources().getString(R.string.touchToEdit);
+                    weekTextView.setText(weekStr);
+                    dialog.dismiss();
+                }
+            });
+            alertDialog = builder.create();
+            alertDialog.show();
+        }
+    }
     public class InfoClickHandler implements View.OnClickListener{
 
         CharSequence[] storeInfo;
@@ -432,7 +491,13 @@ public class PreviewStoreInfoActivity extends AppCompatActivity {
                                 }
                             }
                         }
-
+                for(i=0;i<7;i++){
+                    if(storeWeekStringBool[i] == true){
+                        worktime += "1";
+                    }else{
+                        worktime += "0";
+                    }
+                }
 
                         storeInfoString = store.getInformation();
 
