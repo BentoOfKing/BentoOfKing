@@ -1,7 +1,9 @@
 package com.cce.nkfust.tw.bentoofking;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -206,6 +208,12 @@ public class EditMember extends AppCompatActivity {
             userInfo.getMember().putNickname(nicknameEditText.getText().toString());
             userInfo.getMember().putPassword(NewPasswordEditText.getText().toString());
             userInfo.getMember().putSex(sex);
+            SharedPreferences LoginRecord = getApplication().
+                    getSharedPreferences("LoginRecord", Context.MODE_PRIVATE);
+            LoginRecord.edit()
+                    .putString("Recordpassword",NewPasswordEditText.getText().toString())
+                    .commit();
+
             database = new Database();
             database.UpdateMember(userInfo.getMember());
             Toast toast = Toast.makeText(EditMember.this,
