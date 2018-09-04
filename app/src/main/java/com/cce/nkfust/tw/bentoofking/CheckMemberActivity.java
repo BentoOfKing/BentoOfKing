@@ -55,9 +55,6 @@ public class CheckMemberActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        drawer.setToolbarNavigation();
-        toolbar.setTitle(getResources().getString(R.string.checkMember));
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -101,6 +98,9 @@ public class CheckMemberActivity extends AppCompatActivity {
                 return false;
             }
         });
+        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
+        drawer.setToolbarNavigation();
+        toolbar.setTitle(getResources().getString(R.string.checkMember));
         emailTextView = findViewById(R.id.emailTextView);
         sexTextView = findViewById(R.id.sexTextView);
         nicknameTextView = findViewById(R.id.nicknameTextView);

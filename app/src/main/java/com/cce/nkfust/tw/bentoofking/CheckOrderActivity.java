@@ -50,9 +50,6 @@ public class CheckOrderActivity extends AppCompatActivity {
         drawerListView = findViewById(R.id.drawerListView);
         costTextView = findViewById(R.id.stateTextView);
         Drawer drawer = new Drawer();
-        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
-        toolbar.setTitle(getResources().getString(R.string.findOrders));
-        setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(android.view.MenuItem item) {
@@ -73,6 +70,9 @@ public class CheckOrderActivity extends AppCompatActivity {
                 return false;
             }
         });
+        drawer.init(this,toolbar,drawerListView,drawerLayout,userInfo);
+        toolbar.setTitle(getResources().getString(R.string.findOrders));
+        drawer.setToolbarNavigation();
         mealListView = findViewById(R.id.mealListView);
         database = new Database();
         checkButton = findViewById(R.id.checkButton);
