@@ -82,10 +82,6 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         //store =(Store) intent.getSerializableExtra(passStoreInfo);
         //meal = (ArrayList<Meal>) intent.getSerializableExtra(passmenuInfo);
-        String photoSplitStr[] = userInfo.getStore().getPhotoText().split(",");
-        for(int i=0;i<photoSplitStr.length;i++){
-            photoText[i] = photoSplitStr[i];
-        }
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -101,6 +97,10 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
             };
         }else {
             toolbar.setTitle(getResources().getString(R.string.editPhoto));
+        }
+        String photoSplitStr[] = userInfo.getStore().getPhotoText().split(",");
+        for(int i=0;i<photoSplitStr.length;i++){
+            photoText[i] = photoSplitStr[i];
         }
         nextButton = findViewById(R.id.completeButton);
         mainImageView = findViewById(R.id.mainImageView);

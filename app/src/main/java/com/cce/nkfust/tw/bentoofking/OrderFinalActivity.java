@@ -83,8 +83,13 @@ public class OrderFinalActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(!store.getEmail().equals("")) {
-
-                inflater = LayoutInflater.from(OrderFinalActivity.this);
+                Intent intent = new Intent();
+                intent.setClass(context,OrderInfoActivity.class);
+                intent.putExtra(passUserInfo,userInfo);
+                intent.putExtra(passStoreInfo,store);
+                intent.putExtra(passOrderInfo,passOrder);
+                context.startActivity(intent);
+                /*inflater = LayoutInflater.from(OrderFinalActivity.this);
                 View view = inflater.inflate(R.layout.alertdialog_order_address, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(OrderFinalActivity.this);
                 builder.setTitle("請輸入送餐地址");
@@ -139,7 +144,7 @@ public class OrderFinalActivity extends AppCompatActivity {
                     }
                 });
                 alertDialog = builder.create();
-                alertDialog.show();
+                alertDialog.show();*/
             }else{
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
                 Date curDate = new Date(System.currentTimeMillis());
