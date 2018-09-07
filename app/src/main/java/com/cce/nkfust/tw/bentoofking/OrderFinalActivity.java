@@ -29,6 +29,7 @@ public class OrderFinalActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passOrderInfo = "ORDER_INFO";
     private static String passStoreInfo = "STORE_INFO";
+    private static String passMemberOrderInfo = "MEMBER_ORDER_INFO";
     public static final int REQUEST_CALL_PHONE = 9;
     private UserInfo userInfo;
     private Toolbar toolbar;
@@ -83,11 +84,14 @@ public class OrderFinalActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(!store.getEmail().equals("")) {
+                memberOrder = new MemberOrder();
+                memberOrder.putPrice(Integer.toString(total));
                 Intent intent = new Intent();
                 intent.setClass(context,OrderInfoActivity.class);
                 intent.putExtra(passUserInfo,userInfo);
                 intent.putExtra(passStoreInfo,store);
                 intent.putExtra(passOrderInfo,passOrder);
+                intent.putExtra(passMemberOrderInfo,memberOrder);
                 context.startActivity(intent);
                 /*inflater = LayoutInflater.from(OrderFinalActivity.this);
                 View view = inflater.inflate(R.layout.alertdialog_order_address, null);
@@ -155,11 +159,7 @@ public class OrderFinalActivity extends AppCompatActivity {
                 memberOrder.putStore(store.getID());
                 memberOrder.putPrice(Integer.toString(total));
                 memberOrder.putAddress("");
-                if (store.getState().equals("1")) {
-                    memberOrder.putState("0");
-                } else {
-                    memberOrder.putState("4");
-                }
+                memberOrder.putState("4");
                 Thread thread = new Thread(new Order());
                 thread.start();
                 progressDialog = ProgressDialog.show(context, "請稍等...", "訂單傳送中...", true);

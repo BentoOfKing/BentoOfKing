@@ -1,10 +1,21 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,12 +33,15 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OrderInfoActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passOrderInfo = "ORDER_INFO";
     private static String passStoreInfo = "STORE_INFO";
+    private static String passMemberOrderInfo = "MEMBER_ORDER_INFO";
     public static final int REQUEST_CALL_PHONE = 9;
     private UserInfo userInfo;
     private Toolbar toolbar;
@@ -37,7 +51,6 @@ public class OrderInfoActivity extends AppCompatActivity {
     private Store store;
     private Button orderButton;
     private ArrayList<OrderMenuItem> passOrder;
-    private MemberOrder memberOrder;
     private ProgressDialog progressDialog;
     private Spinner countrySpinner,citySpinner;
     private String[] cityAllString;
@@ -51,6 +64,7 @@ public class OrderInfoActivity extends AppCompatActivity {
     private Button checkButton;
     private int hour=0, minute=0;
     private SharedPreferences setting;
+    private MemberOrder memberOrder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +74,7 @@ public class OrderInfoActivity extends AppCompatActivity {
         userInfo = (UserInfo) intent.getSerializableExtra(passUserInfo);
         store =(Store) intent.getSerializableExtra(passStoreInfo);
         passOrder = (ArrayList<OrderMenuItem>) intent.getSerializableExtra(passOrderInfo);
+        memberOrder = (MemberOrder)intent.getSerializableExtra(passMemberOrderInfo);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -216,6 +231,88 @@ public class OrderInfoActivity extends AppCompatActivity {
             setting.edit().putString("userHour", Integer.toString(hour)).commit();
             setting.edit().putString("userMinute", Integer.toString(minute)).commit();
             address = getResources().getStringArray(R.array.countryForAddress)[countrySelected]+cityString[citySelected]+address;
+            memberOrder.putAddress(address);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+            Date curDate = new Date(System.currentTimeMillis());
+            String str = formatter.format(curDate);
+            memberOrder.putTime(str);
+            memberOrder.putMember(userInfo.getMember().getEmail());
+            memberOrder.putStore(store.getID());
+            memberOrder.putState("0");
+            memberOrder.putPhone(phone);
+            memberOrder.putName(name);
+            memberOrder.putSendTime(sendTime);
+            Thread thread = new Thread(new Order());
+            thread.start();
+            progressDialog = ProgressDialog.show(context, "請稍等...", "訂單傳送中...", true);
+            try {
+                thread.join();
+                getCallPermission();
+                progressDialog.dismiss();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+                Toast.makeText(context, "訂單傳送失敗，請確認網路狀態！", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    class Order implements Runnable{
+        @Override
+        public void run() {
+            try {
+                Database database = new Database();
+                String ID = database.AddOrder(memberOrder);
+                database.AddOrderMeal(ID,passOrder);
+                memberOrder.putID(ID);
+            }catch (Exception e){
+            }
+        }
+    }
+    public void getCallPermission(){
+        int permission = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[] {android.Manifest.permission.CALL_PHONE},REQUEST_CALL_PHONE);
+            return ;
+        }else{
+            NotificationManager manager= (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= 26){
+                String id = "channel_1";
+                String description = "123";
+                int importance = NotificationManager.IMPORTANCE_LOW;
+                NotificationChannel mChannel = new NotificationChannel(id, "123", importance);
+                manager.createNotificationChannel(mChannel);
+                Notification notification = new Notification.Builder(context, id).setContentTitle("Title")
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                        .setContentTitle("便當王訂單")
+                        .setContentText("訂單編號："+store.getID()+"-"+memberOrder.getTime()+"-"+memberOrder.getID())
+                        .setAutoCancel(true)
+                        .build();
+                manager.notify(1, notification);
+            }else{
+                NotificationCompat.Builder builder=new NotificationCompat.Builder(this,"OrderInfo");
+                Notification notification =new NotificationCompat.Builder(this,"default")
+                        .setContentTitle("便當王訂單")
+                        .setContentText("訂單編號："+store.getID()+"-"+memberOrder.getTime()+"-"+memberOrder.getID())
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .build();
+                manager.notify(1,notification);
+            }
+
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.hint)
+                        .setMessage("您的訂單編號為 "+store.getID()+"-"+memberOrder.getTime()+"-"+memberOrder.getID()+"，訂單已發送給店家，直接告知店家訂單編號即可！")
+                        .setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent myIntentDial = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store.getPhone()));
+                                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
+                                    startActivity(myIntentDial);
+                            }
+                        })
+                        .show();
+
         }
     }
 }

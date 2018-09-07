@@ -1123,6 +1123,9 @@ public class Database {
             params.add(new BasicNameValuePair("Time", memberOrder.getTime()));
             params.add(new BasicNameValuePair("State", memberOrder.getState()));
             params.add(new BasicNameValuePair("Address", new String(memberOrder.getAddress().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("Phone", memberOrder.getPhone()));
+            params.add(new BasicNameValuePair("Name", new String(memberOrder.getName().getBytes(), "8859_1")));
+            params.add(new BasicNameValuePair("SendTime", new String(memberOrder.getSendTime().getBytes(), "8859_1")));
         }catch (Exception e){
             return "Fail.";
         }
