@@ -181,6 +181,11 @@ public class CheckStoreInfo extends AppCompatActivity {
                     snackbar.show();
                     return;
                 }
+                if (userInfo.getIdentity() == 2) {
+                    snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView), "店家帳號無法使用菜單功能", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    return;
+                }
                 intent.setClass(CheckStoreInfo.this,OrderActivity.class);
                 intent.putExtra(passStoreInfo,storeInfoBundle.getStore());
                 intent.putExtra(passUserInfo,userInfo);
