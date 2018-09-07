@@ -181,6 +181,11 @@ public class CheckStoreInfo extends AppCompatActivity {
                     snackbar.show();
                     return;
                 }
+                if (userInfo.getIdentity() == 2) {
+                    snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView), "店家帳號無法使用菜單功能", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    return;
+                }
                 intent.setClass(CheckStoreInfo.this,OrderActivity.class);
                 intent.putExtra(passStoreInfo,storeInfoBundle.getStore());
                 intent.putExtra(passUserInfo,userInfo);
@@ -808,7 +813,9 @@ public class CheckStoreInfo extends AppCompatActivity {
         public void onItemClick(View view, int position) {
             final Comment selectComment = commentArrayList.get(position);
             final ArrayList<String> selections = new ArrayList<String>();
-            selections.add("關於"+selectComment.getMemberNickName());
+            if(userInfo.getIdentity()!=1&&userInfo.getIdentity()!=0) {
+                selections.add("關於" + selectComment.getMemberNickName());
+            }
             if(userInfo.getIdentity()==3){
                 selections.add("回覆");
                 selections.add("編輯");
