@@ -180,8 +180,11 @@ public class CheckStoreInfo extends AppCompatActivity {
                     snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView), "訪客無法使用菜單功能", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     return;
-                }
-                if (userInfo.getIdentity() == 2) {
+                }else if (userInfo.getIdentity() == 1 && userInfo.getMember().getState().equals("1")) {
+                    snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView), "停權會員無法使用菜單功能", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    return;
+                }else if (userInfo.getIdentity() == 2) {
                     snackbar = Snackbar.make(CheckStoreInfo.this.findViewById(R.id.contentView), "店家帳號無法使用菜單功能", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     return;
