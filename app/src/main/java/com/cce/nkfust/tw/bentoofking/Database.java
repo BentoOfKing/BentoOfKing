@@ -114,7 +114,7 @@ public class Database {
     private static final String TAG_Content = "Content";
     private static final String TAG_Result = "Result";
     private static final String TAG_Count = "Count";
-
+    private static final String TAG_TemporaryRest = "TemporaryRest";
     JSONParser jParser;
     JSONObject json;
 
@@ -378,6 +378,7 @@ public class Database {
                 JSONObject s = productObj.getJSONObject(0);
                 Store store = new Store(s.getString(TAG_ID), s.getString(TAG_Email), s.getString(TAG_Password), s.getString(TAG_Name), s.getString(TAG_Address), s.getString(TAG_Information), s.getString(TAG_BusinessHours), s.getString(TAG_Phone), s.getString(TAG_Photo), s.getString(TAG_Point), s.getString(TAG_State), s.getString(TAG_Note), s.getString(TAG_Longitude), s.getString(TAG_Latitude), s.getString(TAG_Rank), s.getString(TAG_Price));
                 store.putPhotoText(s.getString(TAG_PhotoText));
+                store.putTemporaryRest(s.getString(TAG_TemporaryRest));
                 return store;
             } else {
                 Store store = new Store();
@@ -432,6 +433,7 @@ public class Database {
                 JSONObject c = productObj.getJSONObject(0);
                 store[i] = new Store(c.getString(TAG_ID), "", "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone) , c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 store[i].putPhotoText(c.getString(TAG_PhotoText));
+                store[i].putTemporaryRest(c.getString(TAG_TemporaryRest));
             } catch (Exception e) {
                 store = new Store[0];
                 return store;
@@ -509,6 +511,7 @@ public class Database {
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putPhotoText(c.getString(TAG_PhotoText));
+                returnStore[i].putTemporaryRest(c.getString(TAG_TemporaryRest));
             }
             index += range;
             return returnStore;
@@ -545,7 +548,7 @@ public class Database {
             // Storing each json item in variable
             returnStore = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
             returnStore.putPhotoText(c.getString(TAG_PhotoText));
-
+            returnStore.putTemporaryRest(c.getString(TAG_TemporaryRest));
             return returnStore;
         } catch (Exception e) {
             return null;
@@ -587,6 +590,7 @@ public class Database {
                 // Storing each json item in variable
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putPhotoText(c.getString(TAG_Photo));
+                returnStore[i].putTemporaryRest(c.getString(TAG_TemporaryRest));
             }
             reviewIndex += reviewRange;
             return returnStore;
@@ -655,6 +659,7 @@ public class Database {
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), c.getString(TAG_Password), c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putDistance(c.getString(TAG_Distance));
                 returnStore[i].putPhotoText(c.getString(TAG_PhotoText));
+                returnStore[i].putTemporaryRest(c.getString(TAG_TemporaryRest));
             }
             index += range;
             return returnStore;
@@ -707,6 +712,7 @@ public class Database {
                 returnStore[i] = new Store(c.getString(TAG_ID), c.getString(TAG_Email), "", c.getString(TAG_Name), c.getString(TAG_Address), c.getString(TAG_Information), c.getString(TAG_BusinessHours), c.getString(TAG_Phone), c.getString(TAG_Photo), c.getString(TAG_Point), c.getString(TAG_State), c.getString(TAG_Note), c.getString(TAG_Longitude), c.getString(TAG_Latitude), c.getString(TAG_Rank), c.getString(TAG_Price));
                 returnStore[i].putDistance(c.getString(TAG_Distance));
                 returnStore[i].putPhotoText(c.getString(TAG_PhotoText));
+                returnStore[i].putTemporaryRest(c.getString(TAG_TemporaryRest));
             }
             index += range;
             return returnStore;
