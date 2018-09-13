@@ -93,8 +93,10 @@ public class EditExistedMenuActivity extends AppCompatActivity {
         TextView mealNameTextView;
         TextView priceTextView;
         TextView sequenceTextView;
+        TextView descriptionTextView;
         EditText mealNameEditText;
         EditText priceEditText;
+        EditText descriptionEditText;
         Button upButton;
         Button downButton;
         int classIndex,mealIndex,sequence,nowSequence;
@@ -109,6 +111,8 @@ public class EditExistedMenuActivity extends AppCompatActivity {
             sequenceTextView = view.findViewById(R.id.sequenceTextView);
             mealNameEditText = view.findViewById(R.id.mealNameEditText);
             priceEditText = view.findViewById(R.id.priceEditText);
+            descriptionTextView = view.findViewById(R.id.descriptionTextView);
+            descriptionEditText = view.findViewById(R.id.descriptionEditText);
             upButton = view.findViewById(R.id.upButton);
             downButton = view.findViewById(R.id.downButton);
             if(menuItem.get((int)id).Price.equals("-1")){
@@ -122,6 +126,8 @@ public class EditExistedMenuActivity extends AppCompatActivity {
                 mealNameEditText.setText(mealClass.get(classIndex).getName());
                 priceTextView.setVisibility(View.GONE);
                 priceEditText.setVisibility(View.GONE);
+                descriptionTextView.setVisibility(View.GONE);
+                descriptionEditText.setVisibility(View.GONE);
                 nowSequence = Integer.parseInt(mealClass.get(classIndex).getSequence());
                 upButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,7 +201,10 @@ public class EditExistedMenuActivity extends AppCompatActivity {
                 mealNameEditText.setText(mealClass.get(classIndex).getMeal().get(mealIndex).getName());
                 priceTextView.setVisibility(View.VISIBLE);
                 priceEditText.setVisibility(View.VISIBLE);
+                descriptionTextView.setVisibility(View.VISIBLE);
+                descriptionEditText.setVisibility(View.VISIBLE);
                 priceEditText.setText(mealClass.get(classIndex).getMeal().get(mealIndex).getPrice());
+                descriptionEditText.setText(mealClass.get(classIndex).getMeal().get(mealIndex).getDescription());
                 nowSequence = Integer.parseInt(mealClass.get(classIndex).getMeal().get(mealIndex).getSequence());
                 upButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -313,6 +322,7 @@ public class EditExistedMenuActivity extends AppCompatActivity {
                                 }else{
                                     mealClass.get(classIndex).getMeal().get(mealIndex).putName(mealNameEditText.getText().toString());
                                     mealClass.get(classIndex).getMeal().get(mealIndex).putPrice(priceEditText.getText().toString());
+                                    mealClass.get(classIndex).getMeal().get(mealIndex).putDescription(descriptionEditText.getText().toString());
                                 }
                                 getData();
                                 editMealAdapter.notifyDataSetChanged();
@@ -382,8 +392,10 @@ public class EditExistedMenuActivity extends AppCompatActivity {
         TextView mealNameTextView;
         TextView priceTextView;
         TextView sequenceTextView;
+        TextView descriptionTextView;
         EditText mealNameEditText;
         EditText priceEditText;
+        EditText descriptionEditText;
         Spinner classSpinner;
         Spinner addTypeSpinner;
         @Override
@@ -397,6 +409,8 @@ public class EditExistedMenuActivity extends AppCompatActivity {
             priceEditText = view.findViewById(R.id.priceEditText);
             classSpinner = view.findViewById(R.id.classSpinner);
             addTypeSpinner = view.findViewById(R.id.addTypeSpinner);
+            descriptionTextView = view.findViewById(R.id.descriptionTextView);
+            descriptionEditText = view.findViewById(R.id.descriptionEditText);
             classSpinner.setSelection(0);
             ArrayAdapter<CharSequence> mealAddType = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
             mealAddType.add("新增類別");
@@ -420,12 +434,16 @@ public class EditExistedMenuActivity extends AppCompatActivity {
                         sequenceTextView.setVisibility(View.GONE);
                         priceEditText.setVisibility(View.GONE);
                         classSpinner.setVisibility(View.GONE);
+                        descriptionTextView.setVisibility(View.GONE);
+                        descriptionEditText.setVisibility(View.GONE);
                     }else{
                         mealNameTextView.setText("餐點名稱");
                         priceTextView.setVisibility(View.VISIBLE);
                         sequenceTextView.setVisibility(View.VISIBLE);
                         priceEditText.setVisibility(View.VISIBLE);
                         classSpinner.setVisibility(View.VISIBLE);
+                        descriptionTextView.setVisibility(View.VISIBLE);
+                        descriptionEditText.setVisibility(View.VISIBLE);
                         ArrayAdapter<CharSequence> mealClassName = new ArrayAdapter<CharSequence>(context,android.R.layout.simple_spinner_dropdown_item);
                         for(int i=0;i<mealClass.size();i++){
                             for(int j=0;j<mealClass.size();j++){
@@ -480,6 +498,7 @@ public class EditExistedMenuActivity extends AppCompatActivity {
                                         thismeal.putPrice(priceEditText.getText().toString());
                                         thismeal.putMealClass(Integer.toString((int)classSpinner.getSelectedItemId()));
                                         thismeal.putSequence(Integer.toString(mealClass.get(i).getMeal().size()));
+                                        thismeal.putDescription(descriptionEditText.getText().toString());
                                         mealClass.get(i).getMeal().add(thismeal);
                                     }
                                 }

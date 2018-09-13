@@ -129,7 +129,6 @@ public class BecomeNotHaveStoreActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     weekStr = "";
-                    String storeTimeTmp = store.getBusinessHours();
                     for(int i=0;i<7;i++) {
                         if (storeWeekStringBool[i]==true) {
                             if(!weekStr.equals("")) weekStr += "、";

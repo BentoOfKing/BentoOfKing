@@ -117,11 +117,11 @@ public class OrderActivity extends AppCompatActivity {
                     for(int i=0;i<mealClass.size();i++){
                         for(int j=0;j<mealClass.size();j++){
                             if(Integer.toString(i).equals(mealClass.get(j).getSequence())){
-                                orderMenuItem.add(new OrderMenuItem(mealClass.get(j).getName(),"-1","0",""));
+                                orderMenuItem.add(new OrderMenuItem(mealClass.get(j).getName(),"-1","0","",""));
                                 for(int ii=0;ii<mealClass.get(j).getMeal().size();ii++){
                                     for(int jj=0;jj<mealClass.get(j).getMeal().size();jj++){
                                         if(Integer.toString(ii).equals(mealClass.get(j).getMeal().get(jj).getSequence())){
-                                            orderMenuItem.add(new OrderMenuItem(mealClass.get(j).getMeal().get(jj).getName(),mealClass.get(j).getMeal().get(jj).getPrice(),"0",mealClass.get(j).getMeal().get(jj).getID()));
+                                            orderMenuItem.add(new OrderMenuItem(mealClass.get(j).getMeal().get(jj).getName(),mealClass.get(j).getMeal().get(jj).getPrice(),"0",mealClass.get(j).getMeal().get(jj).getID(),mealClass.get(j).getMeal().get(jj).getDescription()));
                                             break;
                                         }
                                     }
@@ -151,12 +151,13 @@ public class OrderActivity extends AppCompatActivity {
                     mealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         LayoutInflater inflater;
                         NumberPicker numberPicker;
+                        TextView descriptionTextView;
                         AlertDialog alertDialog;
                         @Override
                         public void onItemClick(AdapterView arg0, View arg1, int arg2,final long arg3) {
+                            int nowIndex = (int)arg3;
                             if(orderMenuItem.get((int)arg3).getPrice().equals("-1")){
                                 orderMenuItem.get((int)arg3).putPrice("-2");
-                                int nowIndex = (int)arg3;
                                 nowIndex++;
                                 while(nowIndex<orderMenuItem.size()){
                                     if(orderMenuItem.get(nowIndex).getPrice().equals("-1")|| orderMenuItem.get(nowIndex).getPrice().equals("-2"))
@@ -169,7 +170,6 @@ public class OrderActivity extends AppCompatActivity {
                             }
                             if(orderMenuItem.get((int)arg3).getPrice().equals("-2")){
                                 orderMenuItem.get((int)arg3).putPrice("-1");
-                                int nowIndex = (int)arg3;
                                 nowIndex++;
                                 while(nowIndex<orderMenuItem.size()){
                                     if(orderMenuItem.get(nowIndex).getPrice().equals("-1")|| orderMenuItem.get(nowIndex).getPrice().equals("-2"))
@@ -183,8 +183,14 @@ public class OrderActivity extends AppCompatActivity {
                             inflater = LayoutInflater.from(OrderActivity.this);
                             View view = inflater.inflate(R.layout.alertdialog_order,null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
-                            builder.setTitle(getResources().getString(R.string.pickNumber));
+                            builder.setTitle(orderMenuItem.get(nowIndex).getName());
                             builder.setView(view);
+                            descriptionTextView = view.findViewById(R.id.descriptionTextView);
+                            if(orderMenuItem.get(nowIndex).getDescription().equals("")){
+                                descriptionTextView.setVisibility(View.GONE);
+                            }else{
+                                descriptionTextView.setText(orderMenuItem.get(nowIndex).getDescription());
+                            }
                             numberPicker = view.findViewById(R.id.numberPicker);
                             numberPicker.setMinValue(0);
                             numberPicker.setMaxValue(1000);

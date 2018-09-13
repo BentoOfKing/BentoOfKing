@@ -115,6 +115,7 @@ public class Database {
     private static final String TAG_Result = "Result";
     private static final String TAG_Count = "Count";
     private static final String TAG_TemporaryRest = "TemporaryRest";
+    private static final String TAG_Description = "Description";
     JSONParser jParser;
     JSONObject json;
 
@@ -897,6 +898,7 @@ public class Database {
                     params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getMeal().get(j).getName().getBytes(), "8859_1")));
                     params.add(new BasicNameValuePair("Price", mealClass.get(i).getMeal().get(j).getPrice()));
                     params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getMeal().get(j).getSequence()));
+                    params.add(new BasicNameValuePair("Description", new String(mealClass.get(i).getMeal().get(j).getDescription().getBytes(), "8859_1")));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -929,10 +931,10 @@ public class Database {
         try {
             meals = json.getJSONArray(TAG_Meal);
             ArrayList<OrderMenuItem> returnOrderMenuItem = new ArrayList<OrderMenuItem>();
-            returnOrderMenuItem.add(new OrderMenuItem(json.getString(TAG_Phone),json.getString(TAG_State),"",json.getString(TAG_Store)));
+            returnOrderMenuItem.add(new OrderMenuItem(json.getString(TAG_Phone),json.getString(TAG_State),"",json.getString(TAG_Store),""));
             for(int i=0;i<meals.length();i++) {
                 JSONObject m = meals.getJSONObject(i);
-                OrderMenuItem orderMenuItem = new OrderMenuItem(m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Count),m.getString(TAG_ID));
+                OrderMenuItem orderMenuItem = new OrderMenuItem(m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Count),m.getString(TAG_ID),"");
                 orderMenuItem.putState("2");
                 returnOrderMenuItem.add(orderMenuItem);
             }
@@ -970,7 +972,10 @@ public class Database {
                 meals = json.getJSONArray(TAG_Meal);
                 for(int j=0;j<meals.length();j++){
                     JSONObject m = meals.getJSONObject(j);
-                    meal.add(new Meal(m.getString(TAG_ID),mc.getString(TAG_ID),m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Sequence)));
+                    Meal thisMeal = new Meal(m.getString(TAG_ID),mc.getString(TAG_ID),m.getString(TAG_Name),m.getString(TAG_Price),m.getString(TAG_Sequence));
+                    thisMeal.putDescription(m.getString(TAG_Description));
+                    meal.add(thisMeal);
+
                 }
                 mealClass.add(new MealClass(mc.getString(TAG_ID), storeID, mc.getString(TAG_Name), mc.getString(TAG_Sequence),meal));
             }
@@ -1043,6 +1048,7 @@ public class Database {
                         params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getMeal().get(j).getName().getBytes(), "8859_1")));
                         params.add(new BasicNameValuePair("Price", mealClass.get(i).getMeal().get(j).getPrice()));
                         params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getMeal().get(j).getSequence()));
+                        params.add(new BasicNameValuePair("Description", new String(mealClass.get(i).getMeal().get(j).getDescription().getBytes(), "8859_1")));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -1066,6 +1072,7 @@ public class Database {
                         params.add(new BasicNameValuePair("Name", new String(mealClass.get(i).getMeal().get(j).getName().getBytes(), "8859_1")));
                         params.add(new BasicNameValuePair("Price", mealClass.get(i).getMeal().get(j).getPrice()));
                         params.add(new BasicNameValuePair("Sequence", mealClass.get(i).getMeal().get(j).getSequence()));
+                        params.add(new BasicNameValuePair("Description", new String(mealClass.get(i).getMeal().get(j).getDescription().getBytes(), "8859_1")));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
