@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class Meal implements Serializable {
-    private String ID,MealClass,Name,Price,Sequence;
+    private String ID,MealClass,Name,Price,Sequence,Description;
     public Meal(){};
     public Meal(String ID,String MealClass,String Name,String Price,String Sequence){
         this.ID = ID;
@@ -15,15 +15,18 @@ public class Meal implements Serializable {
         this.Name = Name;
         this.Price = Price;
         this.Sequence = Sequence;
+        this.Description = "";
     };
     public String getID(){return ID;}
     public String getMealClass(){return MealClass;}
     public String getName(){return Name;}
     public String getPrice(){return Price;}
     public String getSequence(){return Sequence;}
+    public String getDescription(){return Description;}
     public void putID(String ID){this.ID = ID;}
     public void putMealClass(String MealClass){this.MealClass = MealClass;}
     public void putName(String Name){this.Name = Name;}
     public void putPrice(String Price){this.Price = Price;}
     public void putSequence(String Sequence){this.Sequence = Sequence;}
+    public void putDescription(String Description){this.Description = Description;}
 }

@@ -47,6 +47,25 @@
         android:inputType="number" />
 
     <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:text="餐點敘述"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:ems="10"
+        android:inputType="text" />
+    <TextView
         android:id="@+id/sequenceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

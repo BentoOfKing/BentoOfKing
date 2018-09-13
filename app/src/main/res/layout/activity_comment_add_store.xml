@@ -203,6 +203,30 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/weekTextViewText"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="每週營業"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/font_size" />
+
+                        <TextView
+                            android:id="@+id/weekTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:text="@string/touchToEdit"
+                            android:textColor="@color/wallet_link_text_light"
+                            android:textSize="@dimen/font_size" />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
                             android:id="@+id/infoTextView"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
