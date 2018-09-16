@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -23,10 +24,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -47,6 +54,8 @@ import okhttp3.RequestBody;
 public class EditExistedPhotoActivity extends AppCompatActivity{
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
+    private static final int MEAL_SUCCESS = 67;
+    private static final int MEAL_FAIL = 39;
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static String passmenuInfo = "MENU_INFO";
@@ -72,6 +81,8 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
     private String[] photoText = {"","","","","","","","",""};
     DownloadWebPicture[] downloadWebPicture;
     PhotoThreadHandler photoThreadHandler;
+    private ArrayList<MealClass> mealClass;
+    private ArrayList<MenuItem> menuItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,9 +131,43 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         mainThreadHandler = new MainThreadHandler(Looper.getMainLooper());
         nextButton.setOnClickListener(compeleteHandler);
         photoThreadHandler = new PhotoThreadHandler();
+        mealClass = new ArrayList<MealClass>();
+        menuItem = new ArrayList<MenuItem>();
         progressDialog = ProgressDialog.show(context, "請稍等...", "照片載入中...", true);
         Thread t = new Thread(new LoadImage());
         t.start();
+    }
+    class GetMeal implements Runnable{
+        @Override
+        public void run() {
+            try {
+                Database database = new Database();
+                mealClass = database.getMeal(userInfo.getStore().getID());
+                mainThreadHandler.sendEmptyMessage(MEAL_SUCCESS);
+            }catch (Exception e){
+                mainThreadHandler.sendEmptyMessage(MEAL_FAIL);
+            }
+        }
+    }
+    private void getData() {
+        menuItem.clear();
+        menuItem.add(new MenuItem("自訂","0"));
+        for(int i=0;i<mealClass.size();i++){
+            for(int j=0;j<mealClass.size();j++){
+                if(Integer.toString(i).equals(mealClass.get(j).getSequence())){
+                    menuItem.add(new MenuItem(mealClass.get(j).getName(),"-1"));
+                    for(int ii=0;ii<mealClass.get(j).getMeal().size();ii++){
+                        for(int jj=0;jj<mealClass.get(j).getMeal().size();jj++){
+                            if(Integer.toString(ii).equals(mealClass.get(j).getMeal().get(jj).getSequence())){
+                                menuItem.add(new MenuItem(mealClass.get(j).getMeal().get(jj).getName(),mealClass.get(j).getMeal().get(jj).getID()));
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
     }
     public class CompeleteHandler implements View.OnClickListener{
 
@@ -169,7 +214,8 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                     downloadWebPicture[i] .getUrlPic(photoString[i], i);
                     photoThreadHandler.sendEmptyMessage(i);
                 }
-                progressDialog.dismiss();
+                Thread t2 = new Thread(new GetMeal());
+                t2.start();
             }catch (Exception e){
                 progressDialog.dismiss();
                 photoThreadHandler.sendEmptyMessage(FAIL);
@@ -398,11 +444,27 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                                         LayoutInflater inflater = LayoutInflater.from(EditExistedPhotoActivity.this);
                                         View view = inflater.inflate(R.layout.alertdialog_photo_text, null);
                                         AlertDialog.Builder builder = new AlertDialog.Builder(EditExistedPhotoActivity.this);
-                                        builder.setTitle("輸入圖片備註");
+                                        builder.setTitle("輸入圖片敘述");
                                         builder.setView(view);
+                                        final Spinner photoSpinner = view.findViewById(R.id.photoSpinner);
                                         final EditText photoTextEditText = view.findViewById(R.id.photoTextEditText);
                                         index++;
                                         photoTextEditText.setText(photoText[index]);
+                                        photoSpinner.setAdapter(new SpinnerAdapter(context,menuItem));
+                                        photoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                            @Override
+                                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                                if(!menuItem.get(i).getPrice().equals("0")){
+                                                    photoTextEditText.setVisibility(View.GONE);
+                                                }else{
+                                                    photoTextEditText.setVisibility(View.VISIBLE);
+                                                }
+                                            }
+                                            @Override
+                                            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                            }
+                                        });
                                         builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -503,9 +565,62 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                     Toast.makeText(context,getResources().getString(R.string.imageUpdateFail), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                     break;
+                case MEAL_SUCCESS:
+                    getData();
+                    progressDialog.dismiss();
+                    break;
+                case MEAL_FAIL:
+                    progressDialog.dismiss();
+                    Toast.makeText(context,getResources().getString(R.string.loadFail), Toast.LENGTH_SHORT).show();
+                    break;
             }
             super.handleMessage(msg);
         }
     }
 
+}
+class SpinnerAdapter extends BaseAdapter {
+
+    private LayoutInflater inflator;
+    ArrayList<MenuItem> menuItem;
+
+    public SpinnerAdapter(Context context, ArrayList<MenuItem> menuItem){
+        inflator = LayoutInflater.from(context);
+        this.menuItem = menuItem;
+    }
+
+    @Override
+    public int getCount() {
+        return menuItem.size();
+    }
+
+    @Override
+    public MenuItem getItem(int i) {
+        return menuItem.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        convertView = inflator.inflate(R.layout.photo_text_spinner, null);
+        TextView mealTextView = convertView.findViewById(R.id.mealTextView);
+        LinearLayout mealLinearLayout = convertView.findViewById(R.id.mealLinearLayout);
+        if(getItem(position).getPrice().equals("-1")){
+            mealTextView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            mealTextView.setClickable(true);
+            mealLinearLayout.setClickable(true);
+        }else{
+            mealTextView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+            mealTextView.setClickable(false);
+            mealLinearLayout.setClickable(false);
+        }
+        mealTextView.setText(getItem(position).getName());
+        return convertView;
+
+    }
 }
