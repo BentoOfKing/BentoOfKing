@@ -5,7 +5,10 @@ import android.text.format.Time;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -30,10 +33,21 @@ public class store_list {
         this.evaluation=store.getRank();
         this.price=store.getPrice();
         this.distance=store.getDistance();
-        setDoBusiness(inputStore.getBusinessHours());
+        setDoBusiness(inputStore.getBusinessHours(),inputStore.getTemporaryRest());
     }
 
-    private void setDoBusiness(String storeTime){
+    private void setDoBusiness(String storeTime,String dayOff){
+        if(!dayOff.equals("")) {
+            ArrayList<String> dayOffArray = transformDayOffString(dayOff);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+            Date date = new Date(System.currentTimeMillis());
+            for(int i = 0; i < dayOffArray.size(); i++){
+                if(dayOffArray.get(i).equals(simpleDateFormat.format(date))){
+                    this.status = "未營業";
+                    return;
+                }
+            }
+        }
         Time time = new Time();
         time.setToNow();
         int timeNow = time.hour*60 + time.minute;
@@ -102,6 +116,20 @@ public class store_list {
         }else {
             this.status = "未營業";
         }
+    }
+    private ArrayList<String> transformDayOffString(String transformString) {
+        String remainString = transformString;
+        ArrayList<String> dayOffArray = new ArrayList<String>();
+        if(transformString.indexOf(",")<0)
+            dayOffArray.add(transformString);
+        else {
+            while(remainString.indexOf(",")>=0) {
+                dayOffArray.add(remainString.substring(0,remainString.indexOf(",")));
+                remainString = remainString.substring(remainString.indexOf(",")+1);
+            }
+            dayOffArray.add(remainString);
+        }
+        return dayOffArray;
     }
     public String getStorename(){
         return this.storename;
