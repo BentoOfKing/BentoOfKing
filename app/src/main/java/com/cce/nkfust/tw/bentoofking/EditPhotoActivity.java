@@ -155,11 +155,11 @@ public class EditPhotoActivity extends AppCompatActivity{
                 store.putPrice(Integer.toString(price));
                 store.putID(database.addStore(store));
                 String photoString = store.getID() + ".jpg";
-                String photoTextStr = photoText[0];
+                String photoTextStr = "*"+photoText[0];
                 postMainImage();
                 for (int i = 0; i < photoCount; i++) {
                     photoString += "," + store.getID() + "_" + Integer.toString(i) + ".jpg";
-                    photoTextStr += ","+photoText[i+1];
+                    photoTextStr += ",*"+photoText[i+1];
                     postOtherImage(i);
                 }
                 store.putPhoto(photoString);

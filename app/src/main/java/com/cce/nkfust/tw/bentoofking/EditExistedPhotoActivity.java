@@ -393,6 +393,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         });
     }
     public class ImageViewClickHandler implements View.OnClickListener{
+        int spinnerSelect;
         @Override
         public void onClick(View view) {
             requestImageView = findViewById(view.getId());
@@ -449,11 +450,25 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                                         final Spinner photoSpinner = view.findViewById(R.id.photoSpinner);
                                         final EditText photoTextEditText = view.findViewById(R.id.photoTextEditText);
                                         index++;
-                                        photoTextEditText.setText(photoText[index]);
                                         photoSpinner.setAdapter(new SpinnerAdapter(context,menuItem));
+                                        if(photoText[index].charAt(0) == '*'){
+                                            photoSpinner.setSelection(0);
+                                            photoTextEditText.setVisibility(View.VISIBLE);
+                                            photoTextEditText.setText(photoText[index].substring(1,photoText[index].length()));
+                                        }else{
+                                            for(int i=0;i<menuItem.size();i++){
+                                                if(menuItem.get(i).getPrice().equals(photoText[index])){
+                                                    photoSpinner.setSelection(i);
+                                                    photoTextEditText.setVisibility(View.GONE);
+                                                    break;
+                                                }
+                                            }
+                                        }
+
                                         photoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                             @Override
                                             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                                spinnerSelect = i;
                                                 if(!menuItem.get(i).getPrice().equals("0")){
                                                     photoTextEditText.setVisibility(View.GONE);
                                                 }else{
@@ -474,7 +489,11 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                                         builder.setPositiveButton(getResources().getString(R.string.check), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                photoText[index] = photoTextEditText.getText().toString();
+                                                if(spinnerSelect == 0) {
+                                                    photoText[index] = "*"+photoTextEditText.getText().toString();
+                                                }else{
+                                                    photoText[index] = menuItem.get(spinnerSelect).getPrice();
+                                                }
                                             }
                                         });
                                         AlertDialog alertDialog = builder.create();
