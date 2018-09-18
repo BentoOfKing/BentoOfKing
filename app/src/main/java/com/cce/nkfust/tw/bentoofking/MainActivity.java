@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private Button filterButton;
     private SwipeRefreshLayout swipeLayout;
     private CharSequence[] countryList;
-    private int locationState = 15, distanceState = 0, rankState = 1, priceState = 0, distanceKm = 25;
+    private int locationState = 15, orderSetting = 3, distanceKm = 25;
+    private String orderStr[] ={"distance ASC","distance DESC","Rank ASC","Rank DESC","Price ASC","Price DESC","Click ASC","Click DESC"};
     private boolean bussinessState = false;
     private String Longitude, Latitude;
     private LocationManager status;
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         Spinner distanceSpinner;
         Spinner rankSpinner;
         Spinner priceSpinner;
+        Spinner clickSpinner;
         LayoutInflater inflater;
         View view;
         AlertDialog.Builder builder;
@@ -203,10 +205,8 @@ public class MainActivity extends AppCompatActivity {
         TextView distanceTextView;
         int distanceKmTmp = distanceKm;
         CheckBox bussinessCheckBox;
-
-        String[] sortState = {getResources().getStringArray(R.array.distanceSetting)[distanceState], getResources().getStringArray(R.array.rankSetting)[rankState], getResources().getStringArray(R.array.priceSetting)[priceState]};
         int locationStateTmp = locationState;
-
+        int select = orderSetting;
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -243,12 +243,14 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(getResources().getString(R.string.chooseSort));
                     builder.setView(view);
+
                     distanceSpinner = view.findViewById(R.id.distanceSpinner);
                     rankSpinner = view.findViewById(R.id.rankSpinner);
                     priceSpinner = view.findViewById(R.id.priceSpinner);
+                    clickSpinner = view.findViewById(R.id.clickSpinner);
                     ArrayAdapter<CharSequence> distanceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.distanceSetting, android.R.layout.simple_spinner_dropdown_item);
+
                     distanceSpinner.setAdapter(distanceList);
-                    distanceSpinner.setSelection(distanceState);
                     if (locationState != 0) {
                         distanceSpinner.setOnTouchListener(new View.OnTouchListener() {
                             @Override
@@ -257,13 +259,113 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }
+                    distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            if(i!=0){
+                                rankSpinner.setSelection(0);
+                                priceSpinner.setSelection(0);
+                                clickSpinner.setSelection(0);
+                            }
+                            if(i==1){
+                                select = 0;
+                            }else if(i==2){
+                                select = 1;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {}
+                    });
                     ArrayAdapter<CharSequence> rankList = ArrayAdapter.createFromResource(MainActivity.this, R.array.rankSetting, android.R.layout.simple_spinner_dropdown_item);
                     rankSpinner.setAdapter(rankList);
-                    rankSpinner.setSelection(rankState);
+                    rankSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            if(i!=0){
+                                distanceSpinner.setSelection(0);
+                                priceSpinner.setSelection(0);
+                                clickSpinner.setSelection(0);
+                            }
+                            if(i==1){
+                                select = 2;
+                            }else if(i==2){
+                                select = 3;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {}
+                    });
                     ArrayAdapter<CharSequence> priceList = ArrayAdapter.createFromResource(MainActivity.this, R.array.priceSetting, android.R.layout.simple_spinner_dropdown_item);
                     priceSpinner.setAdapter(priceList);
-                    priceSpinner.setSelection(priceState);
+                    priceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            if(i!=0){
+                                distanceSpinner.setSelection(0);
+                                rankSpinner.setSelection(0);
+                                clickSpinner.setSelection(0);
+                            }
+                            if(i==1){
+                                select = 4;
+                            }else if(i==2){
+                                select = 5;
+                            }
+                        }
 
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {}
+                    });
+                    clickSpinner.setAdapter(priceList);
+                    clickSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            if(i!=0){
+                                rankSpinner.setSelection(0);
+                                distanceSpinner.setSelection(0);
+                                priceSpinner.setSelection(0);
+                            }
+                            if(i==1){
+                                select = 6;
+                            }else if(i==2){
+                                select = 7;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {}
+                    });
+                    distanceSpinner.setSelection(0);
+                    rankSpinner.setSelection(0);
+                    priceSpinner.setSelection(0);
+                    clickSpinner.setSelection(0);
+                    switch(orderSetting){
+                        case 0:
+                            distanceSpinner.setSelection(1);
+                            break;
+                        case 1:
+                            distanceSpinner.setSelection(2);
+                            break;
+                        case 2:
+                            rankSpinner.setSelection(1);
+                            break;
+                        case 3:
+                            rankSpinner.setSelection(2);
+                            break;
+                        case 4:
+                            priceSpinner.setSelection(1);
+                            break;
+                        case 5:
+                            priceSpinner.setSelection(2);
+                            break;
+                        case 6:
+                            clickSpinner.setSelection(1);
+                            break;
+                        case 7:
+                            clickSpinner.setSelection(2);
+                            break;
+                    }
                     builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -274,9 +376,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //缺更新資料
-                            distanceState = (int) distanceSpinner.getSelectedItemId();
-                            rankState = (int) rankSpinner.getSelectedItemId();
-                            priceState = (int) priceSpinner.getSelectedItemId();
+
+                            orderSetting = select;
                             CDBTHandler.sendEmptyMessage(SEND_FILTER_REFRESH);
                             dialog.dismiss();
                         }
@@ -370,9 +471,9 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case MORE_STORE:
                     if (msg.getData().getInt("locationStateNow") != 0)
-                        store = database.GetStore(MainActivity.this.searchString,getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow")); //,msg.getData().getInt
+                        store = database.GetStore(MainActivity.this.searchString,getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], orderStr[msg.getData().getInt("order")]); //,msg.getData().getInt
                     else
-                        store = database.GetStoreByPosition(MainActivity.this.searchString,msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
+                        store = database.GetStoreByPosition(MainActivity.this.searchString,msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), orderStr[msg.getData().getInt("order")], msg.getData().getInt("distanceNow"));
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
                         if ((!msg.getData().getBoolean("businessStateNow")) || additem.getStatus().equals("營業中"))
@@ -383,9 +484,9 @@ public class MainActivity extends AppCompatActivity {
                 case REFRESH_STORELIST:
                     database.refreshStoreIndex();
                     if (msg.getData().getInt("locationStateNow") != 0)
-                        store = database.GetStore(MainActivity.this.searchString,getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"));
+                        store = database.GetStore(MainActivity.this.searchString,getResources().getStringArray(R.array.country)[msg.getData().getInt("locationStateNow")], orderStr[msg.getData().getInt("order")]);
                     else
-                        store = database.GetStoreByPosition(MainActivity.this.searchString,msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), msg.getData().getInt("distanceStateNow"), msg.getData().getInt("rankStateNow"), msg.getData().getInt("priceStateNow"), msg.getData().getInt("distanceNow"));
+                        store = database.GetStoreByPosition(MainActivity.this.searchString,msg.getData().getString("LongitudeNow"), msg.getData().getString("LatitudeNow"), orderStr[msg.getData().getInt("order")], msg.getData().getInt("distanceNow"));
                     storeLists.clear();
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
@@ -405,8 +506,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     bag.putBoolean("businessStateNow", MainActivity.this.bussinessState);
                     bag.putInt("locationStateNow", MainActivity.this.locationState);
-                    bag.putInt("rankStateNow", MainActivity.this.rankState);
-                    bag.putInt("priceStateNow", MainActivity.this.priceState);
+                    bag.putInt("order", MainActivity.this.orderSetting);
                     filter.setData(bag);
                     CDBTHandler.sendMessage(filter);
                     break;
@@ -418,13 +518,12 @@ public class MainActivity extends AppCompatActivity {
                     if (MainActivity.this.locationState == 0) {
                         lastBag.putString("LongitudeNow", MainActivity.this.Longitude);
                         lastBag.putString("LatitudeNow", MainActivity.this.Latitude);
-                        lastBag.putInt("distanceStateNow", MainActivity.this.distanceState);
+                        lastBag.putInt("order", MainActivity.this.orderSetting);
                         lastBag.putInt("distanceNow", MainActivity.this.distanceKm);
                     }
                     lastBag.putBoolean("businessStateNow", MainActivity.this.bussinessState);
                     lastBag.putInt("locationStateNow", MainActivity.this.locationState);
-                    lastBag.putInt("rankStateNow", MainActivity.this.rankState);
-                    lastBag.putInt("priceStateNow", MainActivity.this.priceState);
+                    lastBag.putInt("order", MainActivity.this.orderSetting);
                     lastFilter.setData(lastBag);
                     CDBTHandler.sendMessage(lastFilter);
                     break;
@@ -435,12 +534,10 @@ public class MainActivity extends AppCompatActivity {
                     Bundle GPSbag = new Bundle();
                     GPSbag.putString("LongitudeNow", MainActivity.this.Longitude);
                     GPSbag.putString("LatitudeNow", MainActivity.this.Latitude);
-                    GPSbag.putInt("distanceStateNow", MainActivity.this.distanceState);
+                    GPSbag.putInt("order", MainActivity.this.orderSetting);
                     GPSbag.putInt("distanceNow", MainActivity.this.distanceKm);
                     GPSbag.putBoolean("businessStateNow", MainActivity.this.bussinessState);
                     GPSbag.putInt("locationStateNow", MainActivity.this.locationState);
-                    GPSbag.putInt("rankStateNow", MainActivity.this.rankState);
-                    GPSbag.putInt("priceStateNow", MainActivity.this.priceState);
                     GPSfilter.setData(GPSbag);
                     CDBTHandler.sendMessage(GPSfilter);
                     break;

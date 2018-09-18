@@ -162,7 +162,7 @@ public class CheckOpponentList extends AppCompatActivity {
             switch (msg.what) {
                 case MORE_STORE:
                     if (!swipeLayout.isRefreshing()) mainHandler.sendEmptyMessage(REFRESHING);
-                    store = database.GetStoreByPosition(CheckOpponentList.this.searchString,userInfo.getStore().getLongitude(), userInfo.getStore().getLatitude(), CheckOpponentList.this.distanceState, CheckOpponentList.this.rankState, CheckOpponentList.this.priceState, CheckOpponentList.this.distanceKm);
+                    store = database.GetStoreByPosition(CheckOpponentList.this.searchString,userInfo.getStore().getLongitude(), userInfo.getStore().getLatitude(), "distance ASC", CheckOpponentList.this.distanceKm);
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);
                         if ((!msg.getData().getBoolean("businessStateNow")) || additem.getStatus().equals("營業中"))
@@ -173,7 +173,7 @@ public class CheckOpponentList extends AppCompatActivity {
                 case REFRESH_STORELIST:
                     if (!swipeLayout.isRefreshing()) mainHandler.sendEmptyMessage(REFRESHING);
                     database.refreshStoreIndex();
-                    store = database.GetStoreByPosition(CheckOpponentList.this.searchString,userInfo.getStore().getLongitude(), userInfo.getStore().getLatitude(), CheckOpponentList.this.distanceState, CheckOpponentList.this.rankState, CheckOpponentList.this.priceState, CheckOpponentList.this.distanceKm);
+                    store = database.GetStoreByPosition(CheckOpponentList.this.searchString,userInfo.getStore().getLongitude(), userInfo.getStore().getLatitude(), "distance ASC", CheckOpponentList.this.distanceKm);
                     storeLists.clear();
                     for (int i = 0; i < store.length; i++) {
                         store_list additem = new store_list(store[i]);

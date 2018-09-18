@@ -466,17 +466,13 @@ public class Database {
         }
     }
 
-    public Store[] GetStore(String Search,String country, int rankState, int priceState) {
+    public Store[] GetStore(String Search,String country, String orderStr) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
         jParser = new JSONParser();
         List<NameValuePair> params;
         String rankString, priceString;
-        if (rankState == 0) rankString = "ASC";
-        else rankString = "DESC";
-        if (priceState == 0) priceString = "ASC";
-        else priceString = "DESC";
         Store returnStore[];
         country += "%";
         try {
@@ -484,8 +480,7 @@ public class Database {
             params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Index", Integer.toString(index)));
             params.add(new BasicNameValuePair("Country", country));
-            params.add(new BasicNameValuePair("RankString", rankString));
-            params.add(new BasicNameValuePair("PriceString", priceString));
+            params.add(new BasicNameValuePair("OrderStr", orderStr));
             params.add(new BasicNameValuePair("Search", Search));
             json = jParser.makeHttpRequest(getStoreURL, "GET", params);
             Log.d("All Stores: ", json.toString());
@@ -610,19 +605,13 @@ public class Database {
     public void refreshCommentIndex() { commentIndex=0; }
 
 
-    public Store[] GetStoreByPosition(String Search,String Longitude, String Latitude, int distanceState, int rankState, int priceState, int distance) {
+    public Store[] GetStoreByPosition(String Search,String Longitude, String Latitude, String orderStr, int distance) {
         JSONObject json;
         JSONArray stores = null;
         jParser = null;
         jParser = new JSONParser();
         List<NameValuePair> params;
         String rankString, priceString, distanceString;
-        if (rankState == 0) rankString = "ASC";
-        else rankString = "DESC";
-        if (priceState == 0) priceString = "ASC";
-        else priceString = "DESC";
-        if (distanceState == 0) distanceString = "ASC";
-        else distanceString = "DESC";
         Store returnStore[];
         try {
             storesList = new ArrayList<HashMap<String, String>>();
@@ -630,9 +619,7 @@ public class Database {
             params.add(new BasicNameValuePair("Index", Integer.toString(index)));
             params.add(new BasicNameValuePair("Longitude", Longitude));
             params.add(new BasicNameValuePair("Latitude", Latitude));
-            params.add(new BasicNameValuePair("DistanceString", distanceString));
-            params.add(new BasicNameValuePair("RankString", rankString));
-            params.add(new BasicNameValuePair("PriceString", priceString));
+            params.add(new BasicNameValuePair("OrderStr", orderStr));
             params.add(new BasicNameValuePair("Distance", Integer.toString(distance)));
             params.add(new BasicNameValuePair("Search", Search));
             json = jParser.makeHttpRequest(getStoreByPositionURL, "GET", params);

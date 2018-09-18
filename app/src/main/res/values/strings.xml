@@ -128,14 +128,17 @@
     <string name="rank">評分</string>
     <string name="price">售價</string>
     <array name="distanceSetting">
+        <item>不限</item>
         <item>近到遠</item>
         <item>遠到近</item>
     </array>
     <array name="rankSetting">
+        <item>不限</item>
         <item>低到高</item>
         <item>高到低</item>
     </array>
     <array name="priceSetting">
+        <item>不限</item>
         <item>低到高</item>
         <item>高到低</item>
     </array>
