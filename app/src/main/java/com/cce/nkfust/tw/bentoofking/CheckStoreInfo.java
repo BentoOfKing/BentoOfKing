@@ -47,8 +47,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -122,8 +124,9 @@ public class CheckStoreInfo extends AppCompatActivity {
     private TextView storeBusiness;
     private ArrayList<StoreImagePageView> pageList;
     private Bitmap storePhotoBitmap;
-    private ArrayList<Bitmap> storePhotoBitmapArray;
+    private ArrayList<byte[]> mealBitmapByteArray;
     private ArrayList<String> storePhotoURLArray;
+    private ArrayList<String> mealIDArray;
     private Handler_A anotherHandler;
     private RecyclerView commentRecyclerView;
     private LinearLayoutManager recyclerManager;
@@ -190,20 +193,24 @@ public class CheckStoreInfo extends AppCompatActivity {
                     return;
                 }
                 intent.setClass(CheckStoreInfo.this,OrderActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("special_meal_bitmap", mealBitmapByteArray);
+                bundle.putSerializable("special_meal_ID",mealIDArray);
+                intent.putExtras(bundle);
                 intent.putExtra(passStoreInfo,storeInfoBundle.getStore());
                 intent.putExtra(passUserInfo,userInfo);
                 startActivity(intent);
             }
         });
         sentCommentButton.setOnClickListener(new SentComment());
-
     }
     private void variableSetup(){
         mainHandler = new MainThreadHandler(Looper.getMainLooper());
         starArray = new ImageView[5];
         database = new Database();
         drawer = new Drawer();
-        storePhotoBitmapArray = new ArrayList<Bitmap>();
+        mealBitmapByteArray = new ArrayList<byte[]>();
+        mealIDArray = new ArrayList<String>();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         commentArrayList = new ArrayList<Comment>();
         recyclerAdapter = new CommentListViewRecyclerAdapter(commentArrayList,storeInfoBundle.getStore().getStoreName());
@@ -728,12 +735,20 @@ public class CheckStoreInfo extends AppCompatActivity {
                 case GET_BITMAP:
                     //storePhotoBitmapArray.clear();
                     pageList.clear();
+                    mealBitmapByteArray.clear();
+                    mealIDArray.clear();
                     storePhotoURLArray = transformStorePictureURL(storeInfoBundle.getStore().getStoreIconURL(),storeInfoBundle.getStore().getPhoto());
                     ArrayList<String> storePhotoMarkArray = transformStorePictureMark(storeInfoBundle.getStore().getPhotoText());
-                    for(int i=0;i<storePhotoURLArray.size();i++)
-                        pageList.add(new StoreImagePageView(CheckStoreInfo.this,getBitmapFromURL(storePhotoURLArray.get(i)),getScreenWidth(),storePhotoMarkArray.get(i)));
-                        //storePhotoBitmapArray.add(getBitmapFromURL(storePhotoURLArray.get(i)));
-                        //storePhotoBitmap = getBitmapFromURL(storeInfoBundle.getStore().getFirstPhoto());
+                    for(int i=0;i<storePhotoURLArray.size();i++) {
+                        Bitmap bitmap = getBitmapFromURL(storePhotoURLArray.get(i));
+                        pageList.add(new StoreImagePageView(CheckStoreInfo.this, bitmap, getScreenWidth(), storePhotoMarkArray.get(i)));
+                        if(storePhotoMarkArray.get(i).charAt(0) != '*') {
+                            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG,100,bs);
+                            mealBitmapByteArray.add(bs.toByteArray());
+                            mealIDArray.add(storePhotoMarkArray.get(i));
+                        }
+                    }
                     mainHandler.sendEmptyMessage(UPDATE_UI);
                     break;
             }
@@ -983,6 +998,27 @@ public class CheckStoreInfo extends AppCompatActivity {
             return null;
         }
     }
+
+  public class MealInfo  implements Serializable {
+     private String meal_ID;
+     private byte[] meal_photo;
+
+     public MealInfo(String ID, Bitmap bitmap) {
+         meal_ID = ID;
+         ByteArrayOutputStream bs = new ByteArrayOutputStream();
+         bitmap.compress(Bitmap.CompressFormat.JPEG,100,bs);
+         meal_photo = bs.toByteArray();
+     }
+
+     public String getMealID() {
+         return meal_ID;
+     }
+/*
+     public Bitmap getMealBitmap() {
+         return BitmapFactory.decodeByteArray(meal_photo, 0, meal_photo.length);
+     }*/
+ }
+
 
     @Override
     public void finish() {

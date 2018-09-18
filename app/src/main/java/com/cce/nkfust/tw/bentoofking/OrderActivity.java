@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -41,7 +42,8 @@ public class OrderActivity extends AppCompatActivity {
     private static String passUserInfo = "USER_INFO";
     private static String passStoreInfo = "STORE_INFO";
     private static String passOrderInfo = "ORDER_INFO";
-
+    private ArrayList<String> mealIDs;
+    private ArrayList<byte[]> mealBitmaps;
     private UserInfo userInfo;
     private Toolbar toolbar;
     private ListView drawerListView,mealListView;
@@ -68,6 +70,8 @@ public class OrderActivity extends AppCompatActivity {
         }catch(Exception e){
             inputOrder = null;
         }
+        mealIDs = (ArrayList<String>) intent.getExtras().getSerializable("special_meal_ID");
+        mealBitmaps = (ArrayList<byte[]>) intent.getExtras().getSerializable("special_meal_bitmap");
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         drawerListView = findViewById(R.id.drawerListView);
@@ -190,6 +194,14 @@ public class OrderActivity extends AppCompatActivity {
                                 descriptionTextView.setVisibility(View.GONE);
                             }else{
                                 descriptionTextView.setText(orderMenuItem.get(nowIndex).getDescription());
+                            }
+                            ImageView mealPhoto = view.findViewById(R.id.mealPhoto);
+                            mealPhoto.setVisibility(View.GONE);
+                            for(int i = 0;i<mealIDs.size();i++){
+                                if(mealIDs.get(i).equals(orderMenuItem.get((int)arg3).getID())){
+                                    mealPhoto.setImageBitmap(BitmapFactory.decodeByteArray(mealBitmaps.get(i), 0, mealBitmaps.get(i).length));
+                                    mealPhoto.setVisibility(View.VISIBLE);
+                                }
                             }
                             numberPicker = view.findViewById(R.id.numberPicker);
                             numberPicker.setMinValue(0);

@@ -35,7 +35,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="相片標籤"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/black"

@@ -23,7 +23,8 @@ public class StoreImagePageView extends ConstraintLayout {
         params.width = currentWidth;
         storePicture.setLayoutParams(params);
         storePicture.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        this.photoMark.setText(photoMark);
+        if(photoMark.charAt(0) == '*')
+            this.photoMark.setText(photoMark.substring(1));
         addView(view);
 
     }
