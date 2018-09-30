@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ReviewPushActivity extends AppCompatActivity {
@@ -41,6 +42,7 @@ public class ReviewPushActivity extends AppCompatActivity {
     private Database database;
     private Push editPush;
     private MainThreadHandler mainThreadHandler;
+    private ArrayList<PushInfo> pushInfos;
     private ProgressDialog progressDialog;
     private ArrayList<Push> pushList;
     private ArrayList<Store> pushStoreList;
@@ -62,11 +64,13 @@ public class ReviewPushActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.pushmanage));
         pushListView = findViewById(R.id.pushListView);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        pushInfos = new ArrayList<PushInfo>();
         pushList = new ArrayList<Push>();
         pushStoreList = new ArrayList<Store>();
-        reviewPushAdapter = new ReviewPushAdapter(inflater,pushList,pushStoreList);
+        reviewPushAdapter = new ReviewPushAdapter(inflater,pushInfos);
         pushListView.setAdapter(reviewPushAdapter);
         pushListView.setOnItemClickListener(new ItemClickHandler());
+        reflashList();
     }
 
     class ItemClickHandler implements AdapterView.OnItemClickListener {
@@ -131,7 +135,9 @@ public class ReviewPushActivity extends AppCompatActivity {
                 if (push.length != 0) {
                     for (int i = 0; i < push.length; i++) {
                         pushList.add(push[i]);
-                        pushStoreList.add(database.GetSingleStore(push[i].getStore()));
+                        Store LocalStore = database.GetSingleStore(push[i].getStore());
+                        pushStoreList.add(LocalStore);
+                        pushInfos.add(new PushInfo(push[i],LocalStore));
                     }
                 }
                 mainThreadHandler.sendEmptyMessage(GET_SUCCESS);
@@ -183,7 +189,9 @@ public class ReviewPushActivity extends AppCompatActivity {
     }
 
     void reflashList(){
+        pushInfos.clear();
         pushList.clear();
+        pushStoreList.clear();
         database.refreshStoreIndex();
         progressDialog = ProgressDialog.show(context, "請稍等...", "資料更新中...", true);
         Thread t = new Thread(new GetPush());
@@ -193,11 +201,22 @@ public class ReviewPushActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        reflashList();
+    }
+
+    public class PushInfo{
+        private Push push;
+        private Store store;
+        public PushInfo( Push push,Store store ){
+            this.push = push;
+            this.store = store;
+        }
+        public Push getPush(){ return push; }
+        public Store getStore(){ return store; }
     }
 
 }
 class ReviewPushAdapter extends BaseAdapter {
+    private ArrayList<ReviewPushActivity.PushInfo> pushInfos;
     private ArrayList<Push> push;
     private ArrayList<Store> store;
     private LayoutInflater inflater;
@@ -210,22 +229,21 @@ class ReviewPushAdapter extends BaseAdapter {
         TextView stateTextView;
     }
 
-    public ReviewPushAdapter(LayoutInflater inflater, ArrayList<Push> push, ArrayList<Store> store) {
-        this.push = push;
-        this.store = store;
+    public ReviewPushAdapter(LayoutInflater inflater, ArrayList<ReviewPushActivity.PushInfo> infoList) {
+        this.pushInfos = infoList;
         this.inflater = inflater;
     }
 
-
     @Override
-    public int getCount() {
-        return push.size();
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 
     @Override
-    public Push getItem(int i) {
-        return push.get(i);
-    }
+    public int getCount() { return pushInfos.size(); }
+
+    @Override
+    public ReviewPushActivity.PushInfo getItem(int i) { return pushInfos.get(i); }
 
     @Override
     public long getItemId(int i) {
@@ -244,8 +262,8 @@ class ReviewPushAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.contentTextView.setText(getItem(position).getContent());
-        viewHolder.stateTextView.setText(store.get(position).getStoreName());
+        viewHolder.contentTextView.setText(getItem(position).getPush().getContent());
+        viewHolder.stateTextView.setText(getItem(position).getStore().getStoreName());
         return view;
     }
 }
