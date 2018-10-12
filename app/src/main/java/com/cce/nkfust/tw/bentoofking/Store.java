@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class Store implements Serializable {
-    private static String storeIconURL = "http://163.18.104.169/storeImage/";
+    private static String storeIconURL = "http://52.192.154.129/storeImage/";
     String ID,Email,Password,Name,Address,Information,BusinessHours,Phone,Photo,PhotoText,Point,State,Note,Longitude,Latitude,Rank,Price,Distance,firstPhotoURL,TemporaryRest;
     public Store(){}
     public Store(String ID,String Email,String Password,String Name,String Address,String Information,String BusinessHours,String Phone,String Photo,String Point,String State,String Note,String Longitude,String Latitude,String Rank,String Price){

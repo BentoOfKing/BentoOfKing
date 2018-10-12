@@ -347,7 +347,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("http://163.18.104.169/storeImage/upload.php")
+                .url("http://52.192.154.129/storeImage/upload.php")
                 .post(build)
                 .build();
 
@@ -375,7 +375,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("http://163.18.104.169/storeImage/upload.php")
+                .url("http://52.192.154.129/storeImage/upload.php")
                 .post(build)
                 .build();
 
