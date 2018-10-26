@@ -1,5 +1,7 @@
 package com.cce.nkfust.tw.bentoofking;
 
+import android.app.Application;
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
@@ -18,8 +20,8 @@ import java.util.List;
  * Created by John on 2018/4/7.
  */
 
-public class Database {
-    private static String URL = "http://52.192.154.129/";
+public class Database extends Application {
+    private static String URL = "http://163.18.104.169/";
     private static String getStoreURL = URL+"databaseConnect/getStore.php";
     private static String getStoreByPositionURL = URL+"databaseConnect/getStoreByPosition.php";
     private static String getStoreByMapURL = URL+"databaseConnect/getStoreByMap.php";

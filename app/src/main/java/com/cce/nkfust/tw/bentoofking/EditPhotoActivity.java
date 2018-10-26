@@ -42,6 +42,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 public class EditPhotoActivity extends AppCompatActivity{
+    private String severURL = "http://163.18.104.169/";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private static String passUserInfo = "USER_INFO";
@@ -187,7 +188,7 @@ public class EditPhotoActivity extends AppCompatActivity{
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("http://52.192.154.129/storeImage/upload.php")
+                .url(severURL+"storeImage/upload.php")
                 .post(build)
                 .build();
 
@@ -214,7 +215,7 @@ public class EditPhotoActivity extends AppCompatActivity{
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("http://52.192.154.129/storeImage/upload.php")
+                .url(severURL+"storeImage/upload.php")
                 .post(build)
                 .build();
 

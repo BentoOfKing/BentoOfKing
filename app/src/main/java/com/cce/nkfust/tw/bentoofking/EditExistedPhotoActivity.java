@@ -52,6 +52,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 public class EditExistedPhotoActivity extends AppCompatActivity{
+    private String severURL = "http://163.18.104.169/";
     private static final int SUCCESS = 66;
     private static final int FAIL = 38;
     private static final int MEAL_SUCCESS = 67;
@@ -209,7 +210,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
                     otherImageView[photoString.length - 1].setImageDrawable(getResources().getDrawable(R.drawable.ic_image_add));
                 }
                 for (int i = 0; i < photoString.length; i++) {
-                    photoString[i] = new String("http://163.18.104.169/storeImage/" + photoString[i]);
+                    photoString[i] = new String(severURL+"storeImage/" + photoString[i]);
                     downloadWebPicture[i] = new DownloadWebPicture();
                     downloadWebPicture[i] .getUrlPic(photoString[i], i);
                     photoThreadHandler.sendEmptyMessage(i);
@@ -347,7 +348,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("http://52.192.154.129/storeImage/upload.php")
+                .url("http://163.18.104.169/storeImage/upload.php")
                 .post(build)
                 .build();
 
@@ -375,7 +376,7 @@ public class EditExistedPhotoActivity extends AppCompatActivity{
         MultipartBody build = builder.build();
 
         okhttp3.Request bi = new okhttp3.Request.Builder()
-                .url("http://52.192.154.129/storeImage/upload.php")
+                .url(severURL+"storeImage/storeImage/upload.php")
                 .post(build)
                 .build();
 
